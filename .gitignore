@@ -1,0 +1,30 @@
+# Virtual environment
+/venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment variables
+.env
+.env.*
+
+# Flask
+instance/
+.webassets-cache
+
+# Logs
+*.log
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+
+# SQLite database (common in Flask)
+*.sqlite3
