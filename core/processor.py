@@ -1,3 +1,15 @@
+"""
+Chat Processor
+==============
+
+This module acts as the central engine (Controller) of the system.
+It coordinates the interaction between:
+1. Data Stores (holding the state)
+2. Strategy Interfaces (executing the logic)
+
+It is responsible for the full lifecycle of a message:
+Ingestion -> Embedding -> Reduction -> Clustering -> Assignment -> Retrieval.
+"""
 import logging
 from dataclasses import dataclass
 from typing import Optional, List, Callable, Set, Dict, Any, Tuple
@@ -10,11 +22,33 @@ from .interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComput
 
 logger = logging.getLogger(__name__)
 
+
 def new_thread_id() -> str:
+    """Generates a unique, URL-safe thread identifier."""
     return f"thread_{uuid.uuid4().hex[:10]}"
+
 
 @dataclass
 class ChatProcessor:
+    """
+    The main coordinator class.
+
+    Attributes:
+        messages (MessageStore): Storage for raw message objects.
+        threads (ThreadStore): Storage for thread clusters.
+        memberships (MembershipStore): Storage for message-thread links.
+        embeddings (EmbeddingStore): Storage for vectors.
+
+        embedder (Embedder): Strategy to convert text to vectors.
+        reducer (Reducer): Optional strategy to lower vector dimensionality.
+        clusterer (Clusterer): Optional strategy to group vectors (HDBSCAN, etc.).
+
+        thread_rep_computer (ThreadRepComputer): Strategy to calculate centroids.
+        assigner (Assigner): Strategy to match new messages to threads.
+        update_strategy (UpdateStrategy): Policy for real-time updates (buffer vs immediate).
+
+        formatter (Formatter): Strategy to prepare text for embedding.
+    """
     messages: MessageStore
     threads: ThreadStore
     memberships: MembershipStore
@@ -30,12 +64,23 @@ class ChatProcessor:
 
     formatter: Formatter
 
-    msg_space: SpaceId = "msg:full"
-    msg_cluster_space: SpaceId = "msg:cluster"
-
-    thread_centroid_space: SpaceId = "thread:centroid"
+    # Configuration for vector spaces
+    msg_space: SpaceId = "msg:full"  # Raw high-dim embeddings
+    msg_cluster_space: SpaceId = "msg:cluster"  # Reduced/Projected embeddings
+    thread_centroid_space: SpaceId = "thread:centroid"  # Thread representation vectors
 
     def run_batch(self) -> None:
+        """
+        Executes the 'Cold Start' pipeline on all currently stored messages.
+
+        Steps:
+            Format all messages.
+            Embed texts (Bulk).
+            Reduce dimensions (optional).
+            Cluster (e.g. HDBSCAN).
+            Generate Thread objects and Memberships.
+            Compute Thread Centroids.
+        """
         logger.info("run_batch: start")
         msgs = self.messages.all()
         mids = self.messages.ids()
@@ -69,8 +114,12 @@ class ChatProcessor:
         if self.clusterer:
             logger.info("run_batch: clustering")
             labels, scores = self.clusterer.cluster(Xc)
-            n_noise = int(np.sum(labels == -1)) if hasattr(labels, "__len__") else 0
-            n_clusters = int(len(set(map(int, labels))) - (1 if -1 in set(map(int, labels)) else 0)) if hasattr(labels, "__len__") else 0
+
+            # Logging stats
+            unique_labels = set(labels)
+            n_noise = np.sum(labels == -1)
+            n_clusters = len(unique_labels) - (1 if -1 in unique_labels else 0)
+
             logger.info("run_batch: clustering done clusters=%d noise=%d", n_clusters, n_noise)
 
             self._labels_to_threads(mids, labels, scores)
@@ -79,11 +128,13 @@ class ChatProcessor:
         else:
             logger.info("run_batch: clusterer=None, skipping clustering")
 
+        # Compute centroids for all threads found
         tids = self.threads.ids()
         logger.info("run_batch: computing thread reps for tids=%d", len(tids))
         if tids:
             R = self.thread_rep_computer.compute_all(tids)
-            logger.info("run_batch: thread reps shape=%s dtype=%s", getattr(R, "shape", None), getattr(R, "dtype", None))
+            logger.info("run_batch: thread reps shape=%s dtype=%s", getattr(R, "shape", None),
+                        getattr(R, "dtype", None))
             self.embeddings.add(self.thread_centroid_space, tids, R)
             logger.info("run_batch: stored thread reps space=%s count=%d", self.thread_centroid_space, len(tids))
         else:
@@ -92,23 +143,32 @@ class ChatProcessor:
         logger.info("run_batch: done")
 
     def ingest_new_message(self, msg: Message) -> None:
+        """
+        Handles the arrival of a single real-time message.
+
+        Steps:
+        1. Persist message to store.
+        2. Embed and Reduce (immediately).
+        3. Delegate to UpdateStrategy (decides whether to assign now or buffer).
+        """
         logger.info("ingest_new_message: id=%s user=%s ts=%s", msg.id, msg.user, msg.timestamp)
         self.messages.add([msg])
         logger.info("ingest_new_message: messages_total=%d", len(self.messages.all()))
 
-        # embed immediately so it's available
+        # embed immediately so it's available for the strategy
         msgs = self.messages.all()
+        # Note: formatting entire history is O(N), consider optimizing to context window only
         text = self.formatter.format(len(msgs) - 1, msgs)
         v = self.embedder.embed_texts([text])[0]
         self.embeddings.add(self.msg_space, [msg.id], v[None, :])
         logger.info("ingest_new_message: stored msg embedding space=%s id=%s shape=%s",
-                     self.msg_space, msg.id, getattr(v, "shape", None))
+                    self.msg_space, msg.id, getattr(v, "shape", None))
 
         if self.reducer:
             vc = self.reducer.transform(v[None, :])[0]
             self.embeddings.add(self.msg_cluster_space, [msg.id], vc[None, :])
             logger.info("ingest_new_message: stored reduced embedding space=%s id=%s shape=%s",
-                         self.msg_cluster_space, msg.id, getattr(vc, "shape", None))
+                        self.msg_cluster_space, msg.id, getattr(vc, "shape", None))
         else:
             logger.info("ingest_new_message: reducer=None, skipping reduction")
 
@@ -117,6 +177,10 @@ class ChatProcessor:
         logger.info("ingest_new_message: done id=%s", msg.id)
 
     def _labels_to_threads(self, message_ids: List[str], labels: np.ndarray, scores: np.ndarray) -> None:
+        """
+        Internal helper: Converts raw clustering output (integer labels) into
+        Thread objects and Membership records.
+        """
         logger.info("_labels_to_threads: start messages=%d", len(message_ids))
         label_to_tid = {}
         unique = set(int(x) for x in labels)
@@ -154,6 +218,12 @@ class ChatProcessor:
             add_to: List[ThreadId],
             remove_from: List[ThreadId],
     ) -> None:
+        """
+        Applies a 'Human-in-the-Loop' correction.
+            Soft-deletes (rejects) old memberships.
+            Adds new 'user' origin memberships.
+            Recalculates centroids for all affected threads.
+        """
         logger.info("apply_user_fix: message_id=%s add_to=%d remove_from=%d",
                     message_id, len(add_to), len(remove_from))
         touched: Set[ThreadId] = set(add_to) | set(remove_from)
@@ -195,6 +265,7 @@ class ChatProcessor:
         logger.info("apply_user_fix: updated_centroids=%d done", updated)
 
     def _cosine(self, a: np.ndarray, b: np.ndarray) -> float:
+        """Computes Cosine Similarity between two vectors."""
         a = a / (np.linalg.norm(a) + 1e-12)
         b = b / (np.linalg.norm(b) + 1e-12)
         return float(np.dot(a, b))
@@ -207,6 +278,11 @@ class ChatProcessor:
             min_thread_sim: float = 0.25,
             min_msg_sim: float = 0.25,
     ) -> List[Dict[str, Any]]:
+        """
+        Performs a two-stage semantic search.
+            Find threads similar to query (using Thread Centroids).
+            Find messages within those threads similar to query.
+        """
         logger.info("semantic_search: query_len=%d top_threads=%d top_msgs=%d min_thread_sim=%.3f min_msg_sim=%.3f",
                     len(query), top_threads, top_messages_per_thread, min_thread_sim, min_msg_sim)
 
@@ -256,7 +332,7 @@ class ChatProcessor:
             msg_hits = msg_hits[:top_messages_per_thread]
 
             logger.info("semantic_search: thread=%s tscore=%.3f members=%d missing_msg_vecs=%d hits=%d",
-                         tid, tscore, len(mids), missing_msg_vecs, len(msg_hits))
+                        tid, tscore, len(mids), missing_msg_vecs, len(msg_hits))
 
             # materialize message objects
             msg_payload = []

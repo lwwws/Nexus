@@ -1,51 +1,113 @@
+"""
+Core Interfaces (Protocols)
+===========================
+
+This module defines the abstract contracts (Protocols) for the interchangeable
+strategies in the processing pipeline. Implementing these interfaces allows
+hot-swapping of components (e.g., changing from TF-IDF to BERT or switching
+clustering algorithms) without modifying the core logic.
+
+Protocols:
+    Formatter: Prepares message text for embedding (e.g. adding context).
+    Embedder: Converts text strings into vector representations.
+    Reducer: Reduces vector dimensionality (e.g., UMAP, PCA).
+    Clusterer: Identifies semantic groups in vector space (e.g., HDBSCAN).
+    ThreadRepComputer: Calculates the representative vector for a thread.
+    Assigner: Matches new messages to existing threads.
+    UpdateStrategy: Manages the lifecycle of new messages (buffering vs. immediate).
+"""
 from typing import Protocol, List, Optional, Sequence, Tuple
 import numpy as np
 from .models import Message, ThreadId, MessageId
 
 class Formatter(Protocol):
+    """
+    Strategy for converting Message objects into a string format suitable for embedding.
+    Useful for adding context (e.g. "User: [Text]") or combining multiple messages.
+    """
     def format(self, idx: int, messages: List[Message]) -> str:
+        """Format a single message (potentially looking at neighbors)."""
         pass
 
     def format_all(self, messages: List[Message]) -> List[str]:
-        """Override if needed"""
+        """Batch format messages. Override for efficiency if needed."""
         return [self.format(i, messages) for i in range(len(messages))]
 
+
 class Embedder(Protocol):
+    """
+    Strategy for converting text into high-dimensional vectors.
+    """
     def embed_texts(self, texts: List[str]) -> np.ndarray:
-        """(n texts) -> (n, d)"""
+        """
+        Embed a list of texts.
+        Returns: Matrix of shape (n_samples, n_features).
+        """
         pass
+
 
 class Reducer(Protocol):
+    """
+    Strategy for dimensionality reduction (optional step before clustering).
+    """
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
+        """Fit the reducer and transform the data."""
         pass
+
     def transform(self, X: np.ndarray) -> np.ndarray:
+        """Transform new data using the fitted reducer."""
         pass
+
 
 class Clusterer(Protocol):
+    """
+    Strategy for discovering structure in data.
+    """
     def cluster(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        """(n, k) -> labels shape (n,), scores shape (n,)
-        scores can be all 1.0 if method doesn't provide."""
+        """
+        Cluster the input data.
+        Returns:
+            labels: Array of shape (n,) containing cluster IDs (or -1 for noise).
+            scores: Array of shape (n,) containing confidence scores (0.0-1.0).
+        """
         pass
 
+
 class ThreadRepComputer(Protocol):
+    """
+    Strategy for calculating the mathematical representation of a thread
+    (e.g., computing the Centroid or Medoid).
+    """
     def compute(self, thread_id: ThreadId) -> np.ndarray:
-        """Compute thread representation (e.g. centroid)."""
+        """Compute the representation vector for a single thread."""
         pass
 
     def compute_all(self, thread_ids: List[ThreadId]) -> np.ndarray:
-        """Override if needed"""
+        """Compute representations for multiple threads. Override for batch efficiency."""
         return np.stack([self.compute(id) for id in thread_ids], axis=0)
 
+
 class Assigner(Protocol):
+    """
+    Strategy for classifying new messages into existing threads.
+    """
     def assign(self, message_id: MessageId) -> List[Tuple[ThreadId, float]]:
-        """Return list of (thread_id, score) for multi-membership."""
+        """
+        Determine which thread(s) a message belongs to.
+        Returns a list of (thread_id, similarity_score).
+        """
         pass
 
+
 class UpdateStrategy(Protocol):
+    """
+    Policy for handling real-time updates.
+    Decides whether to process a message immediately or buffer it.
+    """
     def on_new_message(self, message_id: MessageId) -> None:
-        """What to do when a new message arrives (e.g. immediate vs buffer)."""
+        """Hook called when a new message is ingested."""
         pass
 
     def flush(self) -> None:
-        """Process pending messages if needed."""
+        """Force processing of any buffered messages."""
         pass
