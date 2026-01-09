@@ -115,3 +115,14 @@ class UpdateStrategy(Protocol):
     def flush(self) -> None:
         """Force processing of any buffered messages."""
         pass
+
+class ThreadLabeler(Protocol):
+    """
+    Strategy for generating human-readable metadata (title, summary) for a thread
+    based on its content.
+    """
+    def label(self, messages: List[Message]) -> Tuple[str, str]:
+        """
+        Analyze a list of messages and return a tuple: (Title, Summary).
+        """
+        pass

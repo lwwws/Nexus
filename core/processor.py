@@ -15,10 +15,14 @@ from dataclasses import dataclass
 from typing import Optional, List, Callable, Set, Dict, Any, Tuple
 import numpy as np
 import uuid
+import datetime as dt
+
+from tqdm import tqdm
 
 from .models import Message, Thread, Membership, SpaceId, MessageId, ThreadId
 from .stores import MessageStore, ThreadStore, MembershipStore, EmbeddingStore
-from .interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComputer, Assigner, UpdateStrategy
+from .interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComputer, Assigner, UpdateStrategy, \
+    ThreadLabeler
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +46,7 @@ class ChatProcessor:
         embedder (Embedder): Strategy to convert text to vectors.
         reducer (Reducer): Optional strategy to lower vector dimensionality.
         clusterer (Clusterer): Optional strategy to group vectors (HDBSCAN, etc.).
+        labeler (ThreadLabeler): Optional strategy to label threads.
 
         thread_rep_computer (ThreadRepComputer): Strategy to calculate centroids.
         assigner (Assigner): Strategy to match new messages to threads.
@@ -57,6 +62,7 @@ class ChatProcessor:
     embedder: Embedder
     reducer: Optional[Reducer]
     clusterer: Optional[Clusterer]
+    labeler: Optional[ThreadLabeler]
 
     thread_rep_computer: ThreadRepComputer
     assigner: Assigner
@@ -226,6 +232,37 @@ class ChatProcessor:
         self.memberships.add(ms)
         logger.info("_labels_to_threads: done total_memberships=%d", kept)
 
+        if self.labeler and label_to_tid:
+            logger.info("_labels_to_threads: generating labels for %d threads", len(label_to_tid))
+
+            updated_threads = []
+
+            for lab, tid in tqdm(label_to_tid.items(), desc="Labeling Threads", unit="thread"):
+                # Fetch all messages belonging to this thread
+                all_thread_msgs = self.get_messages_for_thread(tid)
+
+                if not all_thread_msgs:
+                    continue
+
+                sample_msgs = self._get_representative_sample(all_thread_msgs, top_k=15)
+
+                try:
+                    # Send sample to LLM
+                    title, summary = self.labeler.label(sample_msgs)
+
+                    t_obj = self.threads.get(tid)
+                    t_obj.title = title
+                    t_obj.summary = summary
+                    t_obj.updated_at = dt.datetime.now()
+
+                    updated_threads.append(t_obj)
+                except Exception as e:
+                    logger.error(f"Labeling failed for thread {tid}: {e}")
+
+            # Batch update the thread store
+            self.threads.add(updated_threads)
+            logger.info("_labels_to_threads: labeling complete")
+
     def apply_user_fix(
             self,
             message_id: MessageId,
@@ -370,3 +407,70 @@ class ChatProcessor:
 
         logger.info("semantic_search: returning_threads=%d", len(results))
         return results
+
+    def get_messages_for_thread(self, thread_id: ThreadId) -> List[Message]:
+        """
+        Convenience method to retrieve actual Message objects for a specific thread.
+        Sorts them by timestamp naturally if MessageStore preserves order.
+        """
+        # Get membership links (IDs)
+        memberships = self.memberships.for_thread(thread_id, status="active")
+
+        # Resolve Message IDs to Message Objects
+        # We filter out any IDs that might be missing from message store (safety check)
+        messages = [
+            self.messages.get(m.message_id)
+            for m in memberships
+            if self.messages.has(m.message_id)
+        ]
+
+        # Ensure chronological order
+        messages.sort(key=lambda m: m.timestamp)
+
+        return messages
+
+    def _get_representative_sample(self, messages: List[Message], top_k: int = 15) -> List[Message]:
+        """
+        Selects the most representative messages for a thread using vector similarity.
+        1. Computes the centroid (average) of the message vectors.
+        2. Finds messages closest to that centroid.
+        3. Re-sorts them chronologically so the LLM can read them naturally.
+        """
+        if len(messages) <= top_k:
+            return messages
+
+        # Gather vectors for these messages
+        valid_msgs = []
+        vecs = []
+
+        for m in messages:
+            if self.embeddings.has(self.msg_space, m.id):
+                valid_msgs.append(m)
+                vecs.append(self.embeddings.get(self.msg_space, m.id))
+
+        if not vecs:
+            return messages[:top_k]  # Fallback if no embeddings found
+
+        X = np.stack(vecs)  # Shape (N, Dim)
+
+        # Compute Centroid
+        centroid = np.mean(X, axis=0)  # Shape (Dim,)
+
+        # Compute Cosine Similarity to Centroid
+        # (Dot product of normalized vectors)
+        norm_X = np.linalg.norm(X, axis=1)
+        norm_c = np.linalg.norm(centroid)
+
+        sims = np.dot(X, centroid) / (norm_X * norm_c + 1e-10)
+
+        # Get Top K indices
+        # argsort gives ascending, so we take tail and reverse
+        top_indices = np.argsort(sims)[-top_k:]
+
+        representative_msgs = [valid_msgs[i] for i in top_indices]
+
+        # Sort by timestamp
+        # An LLM needs to read a conversation in flow, not in random relevance order.
+        representative_msgs.sort(key=lambda m: m.timestamp)
+
+        return representative_msgs
