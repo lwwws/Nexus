@@ -116,11 +116,11 @@ class ChatProcessor:
             labels, scores = self.clusterer.cluster(Xc)
 
             # Logging stats
-            unique_labels = set(labels)
-            n_noise = np.sum(labels == -1)
-            n_clusters = len(unique_labels) - (1 if -1 in unique_labels else 0)
+            unique_labels = {lbl for sublist in labels for lbl in sublist}
+            n_noise = sum(1 for sublist in labels if not sublist)
+            n_clusters = len(unique_labels - {-1})
 
-            logger.info("run_batch: clustering done clusters=%d noise=%d", n_clusters, n_noise)
+            logger.info("run_batch: clustering done clusters=%d noise_msgs=%d", n_clusters, n_noise)
 
             self._labels_to_threads(mids, labels, scores)
             logger.info("run_batch: threads after labels=%d memberships_total=%d",
@@ -176,20 +176,27 @@ class ChatProcessor:
         self.update_strategy.on_new_message(msg.id)
         logger.info("ingest_new_message: done id=%s", msg.id)
 
-    def _labels_to_threads(self, message_ids: List[str], labels: np.ndarray, scores: np.ndarray) -> None:
+    def _labels_to_threads(self, message_ids: List[str],
+                           labels: List[List[int]],
+                           scores: List[List[float]]) -> None:
         """
-        Internal helper: Converts raw clustering output (integer labels) into
+        Internal helper: Converts multi-label clustering output into
         Thread objects and Membership records.
         """
         logger.info("_labels_to_threads: start messages=%d", len(message_ids))
-        label_to_tid = {}
-        unique = set(int(x) for x in labels)
-        logger.info("_labels_to_threads: unique_labels=%d (including -1=%s)", len(unique), (-1 in unique))
 
+        # Flatten all labels to find unique clusters to create
+        # We use a set comprehension over the nested lists
+        all_labels_flat = {lab for sublist in labels for lab in sublist}
+
+        label_to_tid = {}
         created_threads = 0
-        for lab in unique:
+
+        for lab in all_labels_flat:
+            lab = int(lab)
             if lab == -1:
-                continue
+                continue  # Skip noise if present
+
             tid = new_thread_id()
             self.threads.add([Thread(id=tid, title=f"Topic {lab}")])
             label_to_tid[lab] = tid
@@ -199,18 +206,25 @@ class ChatProcessor:
 
         ms = []
         kept = 0
-        for mid, lab, score in zip(message_ids, labels, scores):
-            lab = int(lab)
-            if lab == -1:
-                continue
-            ms.append(Membership(message_id=mid, thread_id=label_to_tid[lab], score=score, reason="cluster"))
-            kept += 1
+
+        # Iterate through the triplet (MessageID, LabelList, ScoreList)
+        for mid, label_list, score_list in zip(message_ids, labels, scores):
+
+            # Handle multiple clusters for this single message
+            for lab, score in zip(label_list, score_list):
+                lab = int(lab)
+                if lab == -1: continue
+
+                ms.append(Membership(
+                    message_id=mid,
+                    thread_id=label_to_tid[lab],
+                    score=score,
+                    reason="cluster"
+                ))
+                kept += 1
 
         self.memberships.add(ms)
-        logger.info("_labels_to_threads: memberships_added=%d noise_skipped=%d",
-                    kept, int(np.sum(labels == -1)) if hasattr(labels, "__len__") else 0)
-        logger.info("_labels_to_threads: done total_threads=%d total_memberships=%d",
-                    len(self.threads.ids()), len(getattr(self.memberships, "_all", [])))
+        logger.info("_labels_to_threads: done total_memberships=%d", kept)
 
     def apply_user_fix(
             self,

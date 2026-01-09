@@ -63,12 +63,16 @@ class Clusterer(Protocol):
     """
     Strategy for discovering structure in data.
     """
-    def cluster(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+
+    def cluster(self, X: np.ndarray) -> Tuple[List[List[int]], List[List[float]]]:
         """
-        Cluster the input data.
+        Cluster the input data allowing for multiple labels per item.
+
         Returns:
-            labels: Array of shape (n,) containing cluster IDs (or -1 for noise).
-            scores: Array of shape (n,) containing confidence scores (0.0-1.0).
+            labels: A list where index `i` contains a list of cluster IDs for message `i`.
+                    Example: [[1, 5], [2], [], [1]]
+            scores: A list where index `i` contains a list of confidence scores matching the labels.
+                    Example: [[0.9, 0.4], [1.0], [], [0.8]]
         """
         pass
 
