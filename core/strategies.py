@@ -243,7 +243,7 @@ class LlamaThreadLabeler(ThreadLabeler):
 
 Instructions:
 1. Provide a short label (3-5 words) for this conversation.
-2. Provide a 1-sentence summary.
+2. Provide a summary, made up of 2-4 sentences at most.
 
 Output format:
 Title: [Label]
