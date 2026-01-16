@@ -12,6 +12,9 @@ def infer_datetime_format(sample_text):
     """
     # Regex definitions
     patterns = {
+        # Ex: [13:55, 1/15/2026] - (Brackets, Time first)
+        'brackets': r'\[\d{1,2}:\d{2},\s\d{1,2}/\d{1,2}/\d{2,4}\]\s',
+
         # Ex: 2026/01/14, 21:00:35 - (Year-First, 24hr with seconds)
         'iso_sec': r'(?<!\d)\d{4}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{2}:\d{2}\s-\s',
 
@@ -65,6 +68,7 @@ def raw2df(file, key='auto'):
         logger.info(f"Auto-detected format: {key}")
 
     split_formats = {
+        'brackets': r'\[\d{1,2}:\d{2},\s\d{1,2}/\d{1,2}/\d{2,4}\]\s',
         'iso_sec': r'(?<!\d)\d{4}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{2}:\d{2}\s-\s',
         '12hr': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s[APap][mM]\s-\s',
         '12hr_sec': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2}\s[APap][mM]\s-\s',
@@ -73,6 +77,7 @@ def raw2df(file, key='auto'):
     }
 
     datetime_formats = {
+        'brackets': '[%H:%M, %d/%m/%Y] ',
         'iso_sec': '%Y/%m/%d, %H:%M:%S - ',
         '12hr': '%d/%m/%Y, %I:%M %p - ',
         '12hr_sec': '%d/%m/%Y, %I:%M:%S %p - ',
