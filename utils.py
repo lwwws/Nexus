@@ -2,54 +2,128 @@ import re
 import datetime
 import numpy as np
 import pandas as pd
+import logging
 
-def raw2df(file, key):
+logger = logging.getLogger(__name__)
+
+def infer_datetime_format(sample_text):
+    """
+    Auto-detects the WhatsApp date format from a sample text.
+    """
+    # Regex definitions
+    patterns = {
+        # Ex: 2026/01/14, 21:00:35 - (Year-First, 24hr with seconds)
+        'iso_sec': r'(?<!\d)\d{4}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{2}:\d{2}\s-\s',
+
+        # Ex: 24/01/2020, 8:25 pm - (Day/Month/Year, 12hr)
+        '12hr': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s[APap][mM]\s-\s',
+
+        # Ex: 26/01/2020, 4:19:30 pm - (Day/Month/Year, 12hr with seconds)
+        '12hr_sec': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2}\s[APap][mM]\s-\s',
+
+        # Ex: 25/12/2025, 23:58 - (Day/Month/Year, 24hr)
+        '24hr': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s-\s',
+
+        # Ex: 25/12/2025, 23:58:00 - (Day/Month/Year, 24hr with seconds)
+        '24hr_sec': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2}\s-\s'
+    }
+
+    # Count matches for each pattern
+    matches = {}
+    for key, regex in patterns.items():
+        matches[key] = len(re.findall(regex, sample_text))
+
+    # Get the key with the most matches (if any)
+    best_match = max(matches, key=matches.get)
+
+    if matches[best_match] == 0:
+        raise ValueError("Could not detect a valid WhatsApp date format in the file.")
+
+    return best_match
+
+def raw2df(file, key='auto'):
     """
     Converts raw .txt file into a Data Frame
 
-    By tusharnankani, taken from github.com/tusharnankani/whatsapp-chat-data-analysis
+    Args:
+        file: Path to the WhatsApp chat export file
+        key: Format key - 'auto' (default), '12hr', '24hr', or 'custom'
+
+    Returns:
+        pd.DataFrame: DataFrame with columns: date_time, user, message
     """
 
+    with open(file, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    if not content:
+        raise ValueError("File is empty.")
+
+    # Auto-detect format if key is 'auto'
+    if key == 'auto':
+        key = infer_datetime_format(content[:5000])
+        logger.info(f"Auto-detected format: {key}")
+
     split_formats = {
-        '12hr' : '\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s[APap][mM]\s-\s',
-        '24hr' : '\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s-\s',
-        'custom' : ''
+        'iso_sec': r'(?<!\d)\d{4}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{2}:\d{2}\s-\s',
+        '12hr': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s[APap][mM]\s-\s',
+        '12hr_sec': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2}\s[APap][mM]\s-\s',
+        '24hr': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}\s-\s',
+        '24hr_sec': r'(?<!\d)\d{1,2}/\d{1,2}/\d{2,4},\s\d{1,2}:\d{2}:\d{2}\s-\s'
     }
+
     datetime_formats = {
-        '12hr' : '%d/%m/%Y, %I:%M %p - ',
-        '24hr' : '%d/%m/%Y, %H:%M - ',
-        'custom': ''
+        'iso_sec': '%Y/%m/%d, %H:%M:%S - ',
+        '12hr': '%d/%m/%Y, %I:%M %p - ',
+        '12hr_sec': '%d/%m/%Y, %I:%M:%S %p - ',
+        '24hr': '%d/%m/%Y, %H:%M - ',
+        '24hr_sec': '%d/%m/%Y, %H:%M:%S - '
     }
 
-    with open(file, 'r', encoding='utf-8') as raw_data:
-        # print(raw_data.read())
-        raw_string = ' '.join(raw_data.read().split('\n')) # converting the list split by newline char. as one whole string as there can be multi-line messages
-        user_msg = re.split(split_formats[key], raw_string) [1:] # splits at all the date-time pattern, resulting in list of all the messages with user names
-        date_time = re.findall(split_formats[key], raw_string) # finds all the date-time patterns
+    # Split and parse
+    # Replacing newlines with spaces handles multi-line messages
+    raw_string = ' '.join(content.split('\n'))
 
-        df = pd.DataFrame({'date_time': date_time, 'user_msg': user_msg}) # exporting it to a df
+    # Split by the detected date regex
+    user_msg = re.split(split_formats[key], raw_string)[1:]
+    date_time = re.findall(split_formats[key], raw_string)
 
-    # converting date-time pattern which is of type String to type datetime,
-    # format is to be specified for the whole string where the placeholders are extracted by the method
-    df['date_time'] = pd.to_datetime(df['date_time'], format=datetime_formats[key])
+    if len(date_time) != len(user_msg):
+        # Fallback if something went wrong, though findall/split usually align
+        min_len = min(len(date_time), len(user_msg))
+        date_time = date_time[:min_len]
+        user_msg = user_msg[:min_len]
 
-    # split user and msg
+    df = pd.DataFrame({'date_time': date_time, 'user_msg': user_msg})
+
+    # Convert to datetime object
+    try:
+        df['date_time'] = pd.to_datetime(df['date_time'], format=datetime_formats[key])
+    except ValueError as e:
+        print(f"Error parsing datetime: {e}")
+        # Fallback: try parsing without strict format (slower but safer)
+        df['date_time'] = pd.to_datetime(df['date_time'], errors='coerce')
+
+    # Extracting user and message
     usernames = []
     msgs = []
+
     for i in df['user_msg']:
-        a = re.split('([\w\W]+?):\s', i) # lazy pattern match to first {user_name}: pattern and spliting it aka each msg from a user
-        if(a[1:]): # user typed messages
+        # Lazy match for "User Name: Message"
+        a = re.split(r'([\w\W]+?):\s', i)
+
+        if len(a) > 1:
+            # Normal message
             usernames.append(a[1])
             msgs.append(a[2])
-        else: # other notifications in the group(eg: someone was added, some left ...)
+        else:
+            # System message
             usernames.append("group_notification")
             msgs.append(a[0])
 
-    # creating new columns
     df['user'] = usernames
     df['message'] = msgs
-
-    # dropping the old user_msg col.
     df.drop('user_msg', axis=1, inplace=True)
 
+    print(f"Successfully parsed {len(df)} messages.")
     return df
