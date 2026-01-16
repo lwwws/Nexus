@@ -110,10 +110,10 @@ def _require_chat(chat_id: str) -> ChatSession:
 
 
 def _try_parse_whatsapp(filepath: str):
-    try:
-        return raw2df(filepath, "12hr")
-    except Exception:
-        return raw2df(filepath, "24hr")
+    """
+    Parse WhatsApp chat export file with auto-detection of datetime format.
+    """
+    return raw2df(filepath, "auto")
 
 
 def _fallback_summary_for_thread(chat: ChatSession, tid: str) -> str:
