@@ -21,7 +21,7 @@ from core.strategies import (
     HDBSCANClusterer,
     CentroidThreadRepComputer,
     LlamaThreadLabeler,
-    NoOpUpdateStrategy,
+    NoOpUpdateStrategy, NoOpAssigner,
 )
 from utils import raw2df
 
@@ -34,10 +34,7 @@ app.config["MODEL_PATH"] = "./models/Llama-3.2-3B-Instruct-Q4_K_M.gguf"
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-FORMATTER = ContextWindowFormatter(window_back=2, window_fwd=1)
-BASE_EMBEDDER = MiniLMEmbedder("all-MiniLM-L6-v2")
-
-# if llama is not downloaded, download it
+# Download Model
 if not os.path.exists(app.config["MODEL_PATH"]):
     model_path = hf_hub_download(
         repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
@@ -49,7 +46,11 @@ if not os.path.exists(app.config["MODEL_PATH"]):
 LABELER = None
 if os.path.exists(app.config["MODEL_PATH"]):
     try:
-        LABELER = LlamaThreadLabeler(model_path=app.config["MODEL_PATH"], n_ctx=2048)
+        LABELER = LlamaThreadLabeler(
+            model_path=app.config["MODEL_PATH"],
+            n_ctx=2048,
+            max_msg_chars=300
+        )
     except Exception as e:
         logger.warning("Failed to init LlamaThreadLabeler: %s", e)
         LABELER = None
@@ -87,10 +88,6 @@ class JobState:
     error: Optional[str] = None
     started_at: Optional[str] = None
     finished_at: Optional[str] = None
-
-    # labeling diagnostics
-    labeler_available: bool = False
-    label_failures: int = 0
 
 
 CHATS: Dict[str, ChatSession] = {}
@@ -137,22 +134,8 @@ def _fallback_summary_for_thread(chat: ChatSession, tid: str) -> str:
     return " • ".join(snippets) if snippets else "Summary not available."
 
 
-def _strip_leading_number(title: str) -> str:
-    """
-    Remove leading patterns like '1.' / '1)' / 'Topic 1' etc, so we can re-prefix consistently.
-    """
-    t = (title or "").strip()
-    # common patterns
-    for pref in ["Topic ", "topic ", "Label:", "label:", "Title:", "title:"]:
-        if t.startswith(pref):
-            t = t[len(pref):].strip()
-    # strip a leading "N." or "N)"
-    import re
-    t = re.sub(r"^\s*\d+\s*[\.\)]\s*", "", t).strip()
-    return t or "Untitled"
-
-
 class ProgressEmbedder:
+    """Wraps the embedder to update Job UI during the embedding phase."""
     def __init__(self, base_embedder: MiniLMEmbedder, job: JobState,
                  start_pct: int, end_pct: int, batch_size: int = 64):
         self.model = base_embedder.model
@@ -184,15 +167,18 @@ class ProgressEmbedder:
 
 
 def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcessor:
-    reducer = UMAPReducer(n_neighbors=30, n_components=5, min_dist=0.0)
-    clusterer = HDBSCANClusterer(min_cluster_size=30, min_samples=3)
+    embedder = MiniLMEmbedder("all-MiniLM-L6-v2")
+    if job is not None:
+        # Wrap embedder to provide visual progress
+        embedder = ProgressEmbedder(embedder, job, start_pct=28, end_pct=68, batch_size=64)
+
+    reducer = UMAPReducer(n_neighbors=15, n_components=10, min_dist=0.0)
+    clusterer = HDBSCANClusterer(min_cluster_size=15, min_samples=5)
 
     thread_rep = CentroidThreadRepComputer(memberships=chat.memberships, embeddings=chat.embeddings)
     update_strategy = NoOpUpdateStrategy()
-
-    embedder = BASE_EMBEDDER
-    if job is not None:
-        embedder = ProgressEmbedder(BASE_EMBEDDER, job, start_pct=28, end_pct=68, batch_size=64)
+    assigner = NoOpAssigner()
+    formatter = ContextWindowFormatter(window_back=2, window_fwd=1, time_threshold_minutes=10, repeat_center=2)
 
     processor = ChatProcessor(
         messages=chat.messages,
@@ -202,164 +188,35 @@ def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcesso
         embedder=embedder,
         reducer=reducer,
         clusterer=clusterer,
-        labeler=LABELER,                # stays here
+        labeler=LABELER,
         thread_rep_computer=thread_rep,
-        assigner=None,
+        assigner=assigner,
         update_strategy=update_strategy,
-        formatter=FORMATTER,
+        formatter=formatter,
     )
     return processor
 
 
-def _labels_to_threads_with_progress(chat: ChatSession, processor: ChatProcessor,
-                                    message_ids: List[str],
-                                    labels: List[List[int]],
-                                    scores: List[List[float]],
-                                    job: JobState) -> None:
-    """
-    Like processor._labels_to_threads, but:
-      - updates job progress live
-      - uses processor.labeler (if available)
-      - enforces 'k. Title' formatting where k is the cluster label + 1
-    """
-    # Flatten all label ids
-    all_labels_flat = sorted({int(lab) for sub in labels for lab in sub if int(lab) != -1})
-
-    # Map HDBSCAN label -> ThreadId and display number
-    label_to_tid: Dict[int, str] = {}
-    label_to_k: Dict[int, int] = {}
-
-    for lab in all_labels_flat:
-        tid = new_thread_id()
-        k = int(lab) + 1
-        label_to_tid[lab] = tid
-        label_to_k[lab] = k
-        # Placeholder title (will be overwritten by labeler)
-        chat.threads.add([Thread(id=tid, title=f"{k}. Topic", summary="")])
-
-    with LOCK:
-        job.detail = f"Clustering produced {len(all_labels_flat)} topics"
-        job.progress = max(job.progress, 74)
-
-    # memberships
-    ms: List[Membership] = []
-    for mid, lab_list, sc_list in zip(message_ids, labels, scores):
-        for lab, sc in zip(lab_list, sc_list):
-            lab = int(lab)
-            if lab == -1:
-                continue
-            ms.append(Membership(
-                message_id=mid,
-                thread_id=label_to_tid[lab],
-                score=float(sc),
-                reason="cluster",
-            ))
-    chat.memberships.add(ms)
-
-    with LOCK:
-        job.detail = f"Assigning messages to topics: {len(ms)} memberships"
-        job.progress = max(job.progress, 78)
-
-    # Label topics (use processor.labeler!)
-    labeler = getattr(processor, "labeler", None)
-    job.labeler_available = bool(labeler)
-
-    tids = [label_to_tid[lab] for lab in all_labels_flat]
-    total = len(tids)
-    updated_threads: List[Thread] = []
-
-    for i, lab in enumerate(all_labels_flat):
-        tid = label_to_tid[lab]
-        k = label_to_k[lab]
-
-        pct = 78 + int((92 - 78) * ((i + 1) / max(1, total)))
-        with LOCK:
-            job.progress = max(job.progress, pct)
-            job.detail = f"Labeling topics: {i+1}/{total}" + ("" if job.labeler_available else " (Llama not available)")
-
-        t_obj = chat.threads.get(tid)
-        thread_msgs = processor.get_messages_for_thread(tid)
-        sample_msgs = thread_msgs[-15:] if len(thread_msgs) > 15 else thread_msgs
-
-        used_llama = False
-        if labeler is not None and sample_msgs:
-            try:
-                title, summary = labeler.label(sample_msgs)
-                title_clean = _strip_leading_number(title)
-                t_obj.title = f"{k}. {title_clean}"
-                t_obj.summary = (summary or "").strip()
-                used_llama = True
-            except Exception as e:
-                job.label_failures += 1
-                logger.warning("Labeling failed for %s: %s", tid, e)
-
-        # If llama didn't run or returned empty summary, use fallback.
-        if not used_llama or not (t_obj.summary or "").strip():
-            # keep numbered title even if fallback
-            if not t_obj.title or t_obj.title.strip().lower().endswith(". topic"):
-                t_obj.title = f"{k}. Untitled"
-            t_obj.summary = _fallback_summary_for_thread(chat, tid)
-
-        t_obj.updated_at = dt.datetime.now()
-        updated_threads.append(t_obj)
-
-    chat.threads.add(updated_threads)
-
-
 def _run_batch_with_progress(chat: ChatSession, job: JobState) -> None:
+    """
+    Delegates pipeline execution to the Processor, bridging updates to the JobState.
+    """
     processor = chat.processor
     assert processor is not None
 
-    msgs = chat.messages.all()
-    mids = chat.messages.ids()
+    def on_progress(stage: str, percent: int):
+        with LOCK:
+            job.stage = stage
+            job.progress = max(job.progress, percent)
+            job.detail = f"({percent}%)"
+
+    # 4. Run the Processor (This handles Formatting -> Embedding -> Clustering -> Labeling)
+    processor.run_batch(progress_callback=on_progress)
 
     with LOCK:
-        job.stage = "Embedding + clustering + labeling topics"
-        job.progress = max(job.progress, 25)
-        job.detail = f"{len(mids)} messages"
-
-    with LOCK:
-        job.detail = "Formatting messages"
-        job.progress = max(job.progress, 28)
-
-    texts = processor.formatter.format_all(msgs)
-
-    # embedding (live updates inside ProgressEmbedder)
-    X = processor.embedder.embed_texts(texts)
-    chat.embeddings.add(processor.msg_space, mids, X)
-
-    with LOCK:
-        job.detail = "Reducing embeddings"
-        job.progress = max(job.progress, 70)
-
-    Xc = processor.reducer.fit_transform(X) if processor.reducer else X
-    chat.embeddings.add(processor.msg_cluster_space, mids, Xc)
-
-    with LOCK:
-        job.detail = "Clustering messages"
-        job.progress = max(job.progress, 72)
-
-    labels, scores = processor.clusterer.cluster(Xc) if processor.clusterer else ([[] for _ in mids], [[] for _ in mids])
-
-    _labels_to_threads_with_progress(chat, processor, mids, labels, scores, job)
-
-    with LOCK:
-        job.detail = "Computing topic centroids"
-        job.progress = max(job.progress, 94)
-
-    tids = chat.threads.ids()
-    if tids:
-        R = processor.thread_rep_computer.compute_all(tids)
-        chat.embeddings.add(processor.thread_centroid_space, tids, R)
-
-    with LOCK:
-        if job.labeler_available and job.label_failures:
-            job.detail = f"Done • {len(chat.threads.all())} topics • Llama failures: {job.label_failures}"
-        elif job.labeler_available:
-            job.detail = f"Done • {len(chat.threads.all())} topics • Llama OK"
-        else:
-            job.detail = f"Done • {len(chat.threads.all())} topics • Llama not available"
-        job.progress = 99
+        job.progress = 100
+        job.stage = "Done"
+        job.detail = f"Processed {len(chat.threads.all())} topics."
 
 
 def _run_job_process_chat(job: JobState, filepath: str) -> None:
@@ -715,12 +572,45 @@ def api_message_context(chat_id: str, message_id: str):
         })
     return jsonify(out)
 
+@app.route("/api/chats/<chat_id>/search", methods=["GET"])
+def api_search_chat(chat_id: str):
+    """
+    Performs semantic search using the Processor.
+    Query param: ?q=search_term
+    """
+    try:
+        chat = _require_chat(chat_id)
+    except KeyError:
+        return jsonify({"error": "Chat not found"}), 404
+
+    if not chat.is_ready or not chat.processor:
+        return jsonify({"error": "Chat not processed yet"}), 400
+
+    query = request.args.get("q", "").strip()
+    if not query:
+        return jsonify({"error": "Missing query param 'q'"}), 400
+
+    try:
+        # Delegate to the processor's robust logic
+        results = chat.processor.semantic_search(
+            query,
+            top_threads=5,
+            top_messages_per_thread=5,
+            min_thread_sim = 0.25,
+            min_msg_sim = 0.25
+        )
+        return jsonify(results)
+    except Exception as e:
+        logger.exception("Search failed")
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route("/api/chats/<chat_id>/message", methods=["POST"])
 def api_post_message(chat_id: str):
     """
     Append message, embed+reduce immediately via processor.ingest_new_message,
     then assign to best topic by centroid similarity or create new topic.
+    # TODO: connect properly to processor.ingest_new_message instead, which delegates it to UpdateStrategy
     """
     try:
         chat = _require_chat(chat_id)

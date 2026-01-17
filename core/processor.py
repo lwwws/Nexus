@@ -18,6 +18,7 @@ import uuid
 import datetime as dt
 
 from tqdm import tqdm
+from typing import Callable
 
 from .models import Message, Thread, Membership, SpaceId, MessageId, ThreadId
 from .stores import MessageStore, ThreadStore, MembershipStore, EmbeddingStore
@@ -75,9 +76,12 @@ class ChatProcessor:
     msg_cluster_space: SpaceId = "msg:cluster"  # Reduced/Projected embeddings
     thread_centroid_space: SpaceId = "thread:centroid"  # Thread representation vectors
 
-    def run_batch(self) -> None:
+    def run_batch(self, progress_callback: Optional[Callable[[str, int], None]] = None) -> None:
         """
         Executes the 'Cold Start' pipeline on all currently stored messages.
+
+        Args:
+            progress_callback: A function(stage_name, percent_complete) to update UI.
 
         Steps:
             Format all messages.
@@ -87,6 +91,13 @@ class ChatProcessor:
             Generate Thread objects and Memberships.
             Compute Thread Centroids.
         """
+        def report(stage: str, pct: int):
+            if progress_callback:
+                progress_callback(stage, pct)
+            logger.info(f"Pipeline: {stage} ({pct}%)")
+
+        report("Starting pipeline", 5)
+
         logger.info("run_batch: start")
         msgs = self.messages.all()
         mids = self.messages.ids()
@@ -97,10 +108,13 @@ class ChatProcessor:
             return
 
         logger.info("run_batch: formatting messages")
+        report("Formatting messages", 10)
         texts = self.formatter.format_all(msgs)
         logger.info("run_batch: formatted texts=%d", len(texts))
 
         logger.info("run_batch: embedding texts")
+        report("Embedding messages", 20)
+        # Note: If using a ProgressEmbedder wrapper, it might handle its own granular updates
         X = self.embedder.embed_texts(texts)
         logger.info("run_batch: embeddings shape=%s dtype=%s", getattr(X, "shape", None), getattr(X, "dtype", None))
         self.embeddings.add(self.msg_space, mids, X)
@@ -108,6 +122,7 @@ class ChatProcessor:
 
         if self.reducer:
             logger.info("run_batch: reducing embeddings")
+            report("Reducing dimensions", 60)
             Xc = self.reducer.fit_transform(X)
             logger.info("run_batch: reduced shape=%s dtype=%s", getattr(Xc, "shape", None), getattr(Xc, "dtype", None))
         else:
@@ -119,6 +134,7 @@ class ChatProcessor:
 
         if self.clusterer:
             logger.info("run_batch: clustering")
+            report("Clustering topics", 70)
             labels, scores = self.clusterer.cluster(Xc)
 
             # Logging stats
@@ -128,13 +144,14 @@ class ChatProcessor:
 
             logger.info("run_batch: clustering done clusters=%d noise_msgs=%d", n_clusters, n_noise)
 
-            self._labels_to_threads(mids, labels, scores)
+            self._labels_to_threads(mids, labels, scores, progress_callback)
             logger.info("run_batch: threads after labels=%d memberships_total=%d",
                         len(self.threads.ids()), len(getattr(self.memberships, "_all", [])))
         else:
             logger.info("run_batch: clusterer=None, skipping clustering")
 
         # Compute centroids for all threads found
+        report("Computing centroids", 95)
         tids = self.threads.ids()
         logger.info("run_batch: computing thread reps for tids=%d", len(tids))
         if tids:
@@ -146,6 +163,7 @@ class ChatProcessor:
         else:
             logger.info("run_batch: no threads to compute reps for")
 
+        report("Done", 100)
         logger.info("run_batch: done")
 
     def ingest_new_message(self, msg: Message) -> None:
@@ -184,7 +202,8 @@ class ChatProcessor:
 
     def _labels_to_threads(self, message_ids: List[str],
                            labels: List[List[int]],
-                           scores: List[List[float]]) -> None:
+                           scores: List[List[float]],
+                           progress_callback: Optional[Callable[[str, int], None]] = None) -> None:
         """
         Internal helper: Converts multi-label clustering output into
         Thread objects and Membership records.
@@ -236,19 +255,36 @@ class ChatProcessor:
             logger.info("_labels_to_threads: generating labels for %d threads", len(label_to_tid))
 
             updated_threads = []
+            total_threads = len(label_to_tid)
 
-            for lab, tid in tqdm(label_to_tid.items(), desc="Labeling Threads", unit="thread"):
+            # Using list(items()) to be safe during iteration, though not strictly required
+            thread_items = list(label_to_tid.items())
+
+            for i, (lab, tid) in enumerate(thread_items):
+                # Update UI Progress if callback exists
+                if progress_callback:
+                    # Map iteration to 75% -> 95% range
+                    pct = 75 + int(20 * (i / max(1, total_threads)))
+                    progress_callback(f"Labeling topic {i+1}/{total_threads}", pct)
+
                 # Fetch all messages belonging to this thread
                 all_thread_msgs = self.get_messages_for_thread(tid)
 
                 if not all_thread_msgs:
                     continue
 
-                sample_msgs = self._get_representative_sample(all_thread_msgs, top_k=15)
+                # Smart Selection Logic: Centroids + Context
+                rep_msgs = self._get_representative_sample(all_thread_msgs, top_k=10)
+                final_sample = self._hydrate_with_context(
+                    all_thread_msgs,
+                    rep_msgs,
+                    window_before=1,
+                    window_after=1
+                )
 
                 try:
                     # Send sample to LLM
-                    title, summary = self.labeler.label(sample_msgs)
+                    title, summary = self.labeler.label(final_sample)
 
                     t_obj = self.threads.get(tid)
                     t_obj.title = title
@@ -474,3 +510,43 @@ class ChatProcessor:
         representative_msgs.sort(key=lambda m: m.timestamp)
 
         return representative_msgs
+
+    def _hydrate_with_context(self,
+                              all_msgs: List[Message],
+                              rep_msgs: List[Message],
+                              window_before: int = 1,
+                              window_after: int = 1) -> List[Message]:
+        """
+        Expands representative messages to include context before AND after.
+        Automatically handles overlaps and keeps chronological order.
+        """
+        if not all_msgs or not rep_msgs:
+            return []
+
+        # Map ID -> Index for fast lookups
+        id_to_index = {m.id: i for i, m in enumerate(all_msgs)}
+
+        # Collect indices (Set prevents duplicates)
+        indices_to_keep = set()
+        max_idx = len(all_msgs) - 1
+
+        for rm in rep_msgs:
+            if rm.id not in id_to_index: continue
+
+            curr = id_to_index[rm.id]
+            indices_to_keep.add(curr)  # Keep the representative message
+
+            # Add Previous Messages
+            for k in range(1, window_before + 1):
+                if curr - k >= 0:
+                    indices_to_keep.add(curr - k)
+
+            # Add Next Messages
+            for k in range(1, window_after + 1):
+                if curr + k <= max_idx:
+                    indices_to_keep.add(curr + k)
+
+        # Sort indices to restore time order
+        sorted_indices = sorted(list(indices_to_keep))
+
+        return [all_msgs[i] for i in sorted_indices]
