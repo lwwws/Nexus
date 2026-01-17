@@ -115,7 +115,7 @@ def raw2df(file, key='auto'):
 
     for i in df['user_msg']:
         # Lazy match for "User Name: Message"
-        a = re.split(r'([\w\W]+?):\s', i)
+        a = re.split(r'([\w\W]+?):\s', i, maxsplit=1)
 
         if len(a) > 1:
             # Normal message
