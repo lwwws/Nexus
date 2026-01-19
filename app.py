@@ -59,6 +59,8 @@ else:
 
 LOCK = threading.Lock()
 
+# Defining embedder
+EMBEDDER = MiniLMEmbedder("all-MiniLM-L6-v2")
 
 @dataclass
 class ChatSession:
@@ -167,10 +169,11 @@ class ProgressEmbedder:
 
 
 def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcessor:
-    embedder = MiniLMEmbedder("all-MiniLM-L6-v2")
     if job is not None:
         # Wrap embedder to provide visual progress
-        embedder = ProgressEmbedder(embedder, job, start_pct=28, end_pct=68, batch_size=64)
+        embedder = ProgressEmbedder(EMBEDDER, job, start_pct=28, end_pct=68, batch_size=64)
+    else:
+        embedder = EMBEDDER
 
     reducer = UMAPReducer(n_neighbors=15, n_components=10, min_dist=0.0)
     clusterer = HDBSCANClusterer(min_cluster_size=15, min_samples=5)
