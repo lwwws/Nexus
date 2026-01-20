@@ -540,41 +540,6 @@ def api_between(chat_id: str):
     return jsonify({"messages": out, "count": len(out)})
 
 
-@app.route("/api/chats/<chat_id>/context/<message_id>", methods=["GET"])
-def api_message_context(chat_id: str, message_id: str):
-    """
-    Small context window around a specific message (timeline-based).
-    """
-    try:
-        chat = _require_chat(chat_id)
-    except KeyError:
-        return jsonify({"error": "Chat not found"}), 404
-
-    window = int(request.args.get("window", 5))
-    all_ids = chat.messages.ids()
-
-    try:
-        idx = all_ids.index(message_id)
-    except ValueError:
-        return jsonify({"error": "Message not found"}), 404
-
-    start = max(0, idx - window)
-    end = min(len(all_ids), idx + window + 1)
-    ids = all_ids[start:end]
-
-    out = []
-    for mid in ids:
-        m = chat.messages.get(mid)
-        out.append({
-            "id": m.id,
-            "user": m.user,
-            "text": m.text,
-            "timestamp": m.timestamp.isoformat(timespec="seconds"),
-            "is_system": (m.user == "group_notification"),
-            "is_target": (mid == message_id),
-        })
-    return jsonify(out)
-
 @app.route("/api/chats/<chat_id>/search", methods=["GET"])
 def api_search_chat(chat_id: str):
     """

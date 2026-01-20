@@ -433,36 +433,6 @@
       background: linear-gradient(90deg, var(--accent), var(--accent2));
     }
 
-    /* Context modal */
-    .ctxBackdrop{
-      position:fixed; inset:0; background:rgba(0,0,0,.55);
-      display:none; align-items:center; justify-content:center; padding:16px;
-    }
-    .ctxModal{
-      width:min(820px, 100%);
-      max-height:min(82vh, 950px);
-      background: rgba(18,14,29,.96);
-      border:1px solid var(--border);
-      border-radius:18px;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      box-shadow: var(--shadow);
-    }
-    .ctxModal header{
-      padding:12px 14px;
-      border-bottom:1px solid var(--border);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-    }
-    .ctxBody{ padding:14px; overflow:auto; }
-    .ctxTarget{
-      border-color: var(--accent) !important;
-      box-shadow: 0 0 0 1px rgba(181,140,255,.22);
-    }
-
     /* Gap button in focus mode */
     .gapWrap{
       display:flex;
@@ -871,7 +841,6 @@
                 <span class="name" style="color:${esc(nameCol)}">${esc(m.user)}</span>
               </div>
               <div class="time">
-                <button class="ghost" data-mid="${esc(m.id)}" style="padding:6px 10px;">Context</button>
                 <span>${esc(time)}</span>
               </div>
             </div>
@@ -887,10 +856,6 @@
       const btn = $("loadOlderBtn");
       if(btn) btn.onclick = loadOlderHandler;
     }
-
-    $("content").querySelectorAll("button[data-mid]").forEach(btn => {
-      btn.onclick = () => openContext(btn.getAttribute("data-mid"));
-    });
   }
 
   function scrollToBottom(){
@@ -1033,7 +998,6 @@
                 <span class="name" style="color:${esc(nameCol)}">${esc(m.user)}</span>
               </div>
               <div class="time">
-                <button class="ghost" data-mid="${esc(m.id)}" style="padding:6px 10px;">Context</button>
                 <span>${esc(time)}</span>
               </div>
             </div>
@@ -1044,11 +1008,6 @@
     }
 
     $("content").innerHTML = html;
-
-    // Wire context buttons
-    $("content").querySelectorAll("button[data-mid]").forEach(btn => {
-      btn.onclick = () => openContext(btn.getAttribute("data-mid"));
-    });
 
     // Wire gap buttons
     $("content").querySelectorAll("button[data-gap-from]").forEach(btn => {
@@ -1201,44 +1160,6 @@
       alert("Send failed: " + err.message);
     } finally {
       $("sendBtn").disabled = false;
-    }
-  }
-
-  // -----------------------------
-  // Context modal
-  // -----------------------------
-  function openCtx(html){
-    $("ctxBody").innerHTML = html;
-    $("ctxBackdrop").style.display = "flex";
-  }
-  function closeCtx(){
-    $("ctxBackdrop").style.display = "none";
-    $("ctxBody").innerHTML = "";
-  }
-
-  async function openContext(messageId){
-    if(!state.activeChatId) return;
-    try{
-      const ctx = await apiGet(`/api/chats/${encodeURIComponent(state.activeChatId)}/context/${encodeURIComponent(messageId)}?window=4`);
-      const html = ctx.map(m => {
-        const cls = m.is_target ? "bubble ctxTarget" : "bubble";
-        const time = formatTime(m.timestamp);
-        if(m.is_system){
-          return `<div class="sys"><div class="sysText">${esc(m.text)}</div></div>`;
-        }
-        return `
-          <div class="${cls}" style="max-width:100%; margin:10px 0;">
-            <div class="metaLine">
-              <div><span class="name" style="color:${esc(userColor(m.user))}">${esc(m.user)}</span></div>
-              <div class="time"><span>${esc(time)}</span></div>
-            </div>
-            <div class="text">${esc(m.text)}</div>
-          </div>
-        `;
-      }).join("");
-      openCtx(html);
-    } catch(err){
-      openCtx(`<div class="empty">Failed to load context: ${esc(err.message)}</div>`);
     }
   }
 
