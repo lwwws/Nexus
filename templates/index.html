@@ -235,13 +235,13 @@
 
       border:1px solid rgba(42,33,64,.9);
       border-radius:16px;
-      padding:2px 12px;
+      padding:12px 14px;
       background: linear-gradient(180deg, rgba(23,16,39,.94), rgba(16,11,28,.90));
       box-shadow: 0 8px 18px rgba(0,0,0,.18);
 
-      white-space:pre-wrap;
+      white-space:normal;
       word-break:break-word;
-      line-height:1.25;
+      line-height:1.4;
     }
 
     .bubble.right{
@@ -637,7 +637,7 @@
     $("closeOverlay").disabled = !(status === "done" || status === "error");
   }
 
-  // Deterministic color per user name (WhatsApp-like)
+  // Deterministic color per username
   function userColor(name){
     if(!name) return "var(--text)";
     let h = 0;
@@ -829,7 +829,7 @@
         ? `<span class="pill"># ${esc(m.thread_title)}</span>`
         : "";
 
-      // For now, all messages are left-aligned like group chats; you can later align "my user" to right.
+      // all messages are left-aligned like group chats
       const side = "left";
 
       html += `
