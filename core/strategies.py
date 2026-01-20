@@ -8,10 +8,12 @@ from core.models import Message, MessageId, ThreadId, SpaceId
 from core.stores import EmbeddingStore, MembershipStore, MessageStore, ThreadStore
 from core.interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComputer, Assigner, UpdateStrategy, ThreadLabeler
 
+import os
 import re
 import datetime
 import numpy as np
 import pandas as pd
+from huggingface_hub import hf_hub_download
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -368,6 +370,15 @@ class LlamaThreadLabeler(ThreadLabeler):
             from llama_cpp import Llama
         except ImportError:
             raise ImportError("Please `pip install llama-cpp-python`")
+
+        # Download Model
+        if not os.path.exists(model_path):
+            model_path = hf_hub_download(
+                repo_id="bartowski/Llama-3.2-3B-Instruct-GGUF",
+                filename="Llama-3.2-3B-Instruct-Q4_K_M.gguf",
+                local_dir="./models"  # Downloads to a 'models' folder in your current directory
+            )
+            logger.info("Downloaded Llama model to %s", model_path)
 
         self.max_msg_chars = max_msg_chars
         self.llm = Llama(
