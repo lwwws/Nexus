@@ -52,12 +52,45 @@
     }
 
     /* Right sidebar */
+/* Right sidebar collapse */
     .right{
-      width:360px; min-width:320px;
-      background: linear-gradient(180deg, rgba(18,14,29,.92), rgba(15,11,24,.92));
-      border-left:1px solid var(--border);
-      display:flex; flex-direction:column;
+      position: relative;
+      transition: width .18s ease, min-width .18s ease;
+        border-left: 1px solid var(--border);
     }
+
+    .right.collapsed{
+      width: 36px;
+      min-width: 36px;
+      border-left: 1px solid var(--border);
+    }
+
+    /* Hide normal contents when collapsed */
+    .right.collapsed #rightHeader,
+    .right.collapsed #topicList{
+      display: none;
+    }
+
+    /* A small handle button to re-open */
+    .sidebarHandle{
+      display: none;            /* only visible when collapsed */
+      position: absolute;
+      top: 12px;
+      left: 6px;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border-radius: 10px;
+      line-height: 24px;
+      text-align: center;
+    }
+
+    .right.collapsed .sidebarHandle{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
 
     /* Center */
     .main{ flex:1; display:flex; flex-direction:column; min-width:420px; }
@@ -343,6 +376,34 @@
       white-space: pre-wrap;
     }
 
+    .topicsTitleRow{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .panelTitle{
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .iconBtn{
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+    }
+
+    .topicSearch{
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+
     /* Custom file picker */
     .filePicker{
       display:flex;
@@ -510,19 +571,35 @@
   </main>
 
   <!-- RIGHT: Topics -->
-  <aside class="right">
-    <header class="panelHeader">
-      <div class="row">
-        <input id="topicSearch" class="grow" placeholder="Filter topics…"/>
+<aside class="right" id="rightPane">
+  <!-- shows ONLY when collapsed -->
+  <button id="rightExpandBtn" class="ghost sidebarHandle" title="Show topics" aria-label="Show topics">
+    ◀
+  </button>
+
+    <header class="panelHeader" id="rightHeader">
+      <div class="topicsTitleRow">
+        <!-- collapse button (now left of title) -->
+        <button id="rightCollapseBtn" class="ghost iconBtn" title="Hide topics" aria-label="Hide topics">
+          ▶
+        </button>
+
+        <div class="panelTitle">Topics</div>
       </div>
+
+      <!-- search moved BELOW title -->
+      <input id="topicSearch" class="topicSearch" placeholder="Filter topics…"/>
+
       <div class="hint" id="rightHint">Topics appear after processing.</div>
       <div id="rightError" class="error"></div>
     </header>
 
-    <div class="list" id="topicList">
-      <div class="empty">No topics yet.</div>
-    </div>
-  </aside>
+
+  <div class="list" id="topicList">
+    <div class="empty">No topics yet.</div>
+  </div>
+</aside>
+
 
 </div>
 
@@ -575,6 +652,18 @@
   };
 
   function $(id){ return document.getElementById(id); }
+
+    function setRightCollapsed(isCollapsed){
+    const pane = $("rightPane");
+    pane.classList.toggle("collapsed", !!isCollapsed);
+    localStorage.setItem("nexus:rightCollapsed", isCollapsed ? "1" : "0");
+  }
+
+  // Restore on load
+  setRightCollapsed(localStorage.getItem("nexus:rightCollapsed") === "1");
+
+  $("rightCollapseBtn").onclick = () => setRightCollapsed(true);
+  $("rightExpandBtn").onclick = () => setRightCollapsed(false);
 
   function esc(s){
     return String(s ?? "")
@@ -744,7 +833,7 @@
     }
     const topics = await apiGet(`/api/chats/${encodeURIComponent(state.activeChatId)}/topics`);
     state.cachedTopics = topics;
-    $("rightHint").textContent = topics.length ? "Topics" : "Topics appear after processing.";
+    $("rightHint").textContent = topics.length ? "" : "Topics appear after processing.";
     filterTopics();
   }
 
