@@ -514,6 +514,137 @@
       padding:8px 12px;
       border-radius:999px;
     }
+
+/* Search Bar in Topbar */
+.searchWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10,8,16,.45);
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 12px;
+  flex: 1;
+  max-width: 600px;
+  margin: 0 20px;
+
+  transition: border-color 0.2s;
+}
+.searchWrap:focus-within {
+  border-color: var(--accent);
+}
+.searchWrap input {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  flex: 1;
+  font-size: 13px;
+  outline: none;
+  color: var(--text);
+}
+.searchWrap button.closeSearch {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-weight: 900;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 14px;
+  display: none; /* Hidden by default */
+}
+.searchWrap button.closeSearch:hover {
+  color: var(--danger);
+}
+
+/* Search Result Styles */
+.searchSection {
+  margin-bottom: 25px;
+  border: 1px solid var(--border);
+  background: rgba(18,14,29,.4);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.searchSectionHeader {
+  background: rgba(10,8,16,.6);
+  padding: 10px 14px;
+  font-weight: 800;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.searchSectionBody {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.searchScore {
+  font-size: 11px;
+  color: var(--muted2);
+  background: rgba(255,255,255,0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+@keyframes flashHighlight {
+  0% {
+    background-color: rgba(181, 140, 255, 0.2);
+    box-shadow: 0 0 20px rgba(181, 140, 255, 0.15);
+    border-color: rgba(181, 140, 255, 0.4);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+    border-color: rgba(42,33,64,.9);
+  }
+}
+
+.flash-target {
+  animation: flashHighlight 2.5s ease-out forwards;
+}
+
+/* --- Add this to fix the "text at bottom" bug --- */
+.ctxBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: none; /* <--- This hides it by default! */
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ctxModal {
+  width: 100%;
+  max-width: 600px;
+  background: #120e1d;
+  border: 1px solid #2a2140;
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+  overflow: hidden;
+}
+
+.ctxModal header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #2a2140;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(10,8,16,.4);
+}
+
+.ctxBody {
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
   </style>
 </head>
 
@@ -559,7 +690,10 @@
         <div class="big" id="centerTitle">Nexus</div>
         <div class="sub" id="centerSub">Upload a chat to begin.</div>
       </div>
-
+      <div class="searchWrap">
+        <input id="globalSearchInput" placeholder="Semantic search..." />
+        <button id="clearSearchBtn" class="closeSearch" title="Clear search">✕</button>
+      </div>
       <div class="toggle">
         <button id="modeFocus" class="active">Focus</button>
         <button id="modeTimeline">Timeline</button>
@@ -658,6 +792,8 @@
 
     cachedTopics: [],
     cachedChats: [],
+    isSearching: false,
+    lastMode: "focus",
   };
 
   function $(id){ return document.getElementById(id); }
@@ -961,6 +1097,30 @@
     c.scrollTop = c.scrollHeight;
   }
 
+  // Helper: Scroll to message and flash it
+    function scrollToMessage(mid, doFlash = true) {
+      setTimeout(() => {
+        const el = document.getElementById(`msg_${mid}`);
+        if (el) {
+          // "center" is aggressive; "nearest" is usually better for browsing flow,
+          // but if you want to force attention, "center" or "start" works.
+          el.scrollIntoView({ behavior: "auto", block: "center" });
+
+          if (doFlash) {
+            const bubble = el.querySelector('.bubble');
+            if(bubble) {
+              bubble.classList.remove("flash-target"); // reset if already there
+              void bubble.offsetWidth; // trigger reflow to restart animation
+              bubble.classList.add("flash-target");
+
+              // Cleanup class after animation ends (3s matches CSS)
+              setTimeout(() => bubble.classList.remove("flash-target"), 3000);
+            }
+          }
+        }
+      }, 50);
+    }
+
   // -----------------------------
   // Timeline mode (from bottom)
   // -----------------------------
@@ -1008,8 +1168,12 @@
   // -----------------------------
   // Focus mode with gap expansion
   // -----------------------------
-  async function loadFocus(topicId){
+  async function loadFocus(topicId, maintainPosition = false){
     if(!state.activeChatId) return;
+
+    // Capture current scroll position BEFORE we touch anything
+    const contentDiv = $("content");
+    const prevScroll = contentDiv.scrollTop;
 
     const data = await apiGet(`/api/chats/${encodeURIComponent(state.activeChatId)}/focus/${encodeURIComponent(topicId)}`);
     const topic = data.topic || {};
@@ -1017,10 +1181,7 @@
 
     setCenter(state.activeChatName || "Chat", `Focus • ${topic.title || "Topic"} • ${focus.length} messages`);
 
-    // Build rendered list: focus messages plus any expanded "between" blocks.
-    // We render in timeline order and insert gap buttons where needed.
     const items = [];
-
     let lastDate = null;
     function pushDateIfNeeded(ts){
       const day = formatDateLabel(ts);
@@ -1042,9 +1203,7 @@
         if(gap > 0){
           const key = `${a.id}|${b.id}`;
           const expanded = state.expandedBetween[key];
-
           if(expanded && expanded.length){
-            // Insert the expanded messages (with their own date separators)
             for(const x of expanded){
               pushDateIfNeeded(x.timestamp);
               items.push({type:"msg", msg:x, dim:true});
@@ -1056,7 +1215,6 @@
       }
     }
 
-    // Render items
     let html = "";
     for(const it of items){
       if(it.type === "date"){
@@ -1076,11 +1234,7 @@
 
       const m = it.msg;
       if(m.is_system){
-        html += `
-          <div class="sys">
-            <div class="sysText">${esc(m.text)}</div>
-          </div>
-        `;
+        html += `<div class="sys"><div class="sysText">${esc(m.text)}</div></div>`;
         continue;
       }
 
@@ -1089,7 +1243,7 @@
       const side = "left";
 
       html += `
-        <div class="msgRow ${side}">
+        <div class="msgRow ${side}" id="msg_${m.id}">
           <div class="bubble ${side === "right" ? "right" : ""}" style="${it.dim ? "opacity:.6;" : ""}">
             <div class="metaLine">
               <div style="display:flex; align-items:center; gap:8px; min-width:0;">
@@ -1105,22 +1259,36 @@
       `;
     }
 
-    $("content").innerHTML = html;
+    contentDiv.innerHTML = html;
 
-    // Wire gap buttons
-    $("content").querySelectorAll("button[data-gap-from]").forEach(btn => {
+    // UPDATE GAP HANDLER
+    contentDiv.querySelectorAll("button[data-gap-from]").forEach(btn => {
       btn.onclick = async () => {
         const from = btn.getAttribute("data-gap-from");
         const to = btn.getAttribute("data-gap-to");
         const key = `${from}|${to}`;
+
+        // Fetch expanded data
         const res = await apiGet(`/api/chats/${encodeURIComponent(state.activeChatId)}/between?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`);
         state.expandedBetween[key] = res.messages || [];
-        await loadFocus(state.activeTopicId);
+
+        // RELOAD with maintainPosition = TRUE
+        // We do NOT call scrollToMessage here anymore.
+        await loadFocus(state.activeTopicId, true);
       };
     });
 
-    await loadTopics(); // to refresh active highlight
-    scrollToBottom();
+    await loadTopics();
+
+    // RESTORE SCROLL
+    if(maintainPosition) {
+      // Restore exactly where we were.
+      // Since the new content expanded *below* or *at* the button,
+      // keeping the scrollTop the same means the view stays stable.
+      contentDiv.scrollTop = prevScroll;
+    } else {
+      scrollToBottom();
+    }
   }
 
   // -----------------------------
@@ -1275,6 +1443,101 @@
     }
   }
 
+    // --- Search Functions ---
+
+    async function performSearch() {
+      const query = $("globalSearchInput").value.trim();
+      if (!query) return;
+      if (!state.activeChatId) return;
+
+      // UI Updates
+      state.isSearching = true;
+      $("clearSearchBtn").style.display = "block";
+      $("content").innerHTML = `<div class="empty">Searching for "${esc(query)}"...</div>`;
+
+      // Disable mode buttons visually
+      $("modeFocus").classList.remove("active");
+      $("modeTimeline").classList.remove("active");
+
+      try {
+        // Call the backend API
+        const results = await apiGet(`/api/chats/${state.activeChatId}/search?q=${encodeURIComponent(query)}`);
+        renderSearchResults(results, query);
+      } catch (e) {
+        $("content").innerHTML = `<div class="empty" style="color:var(--danger)">Search failed: ${e.message}</div>`;
+      }
+    }
+
+    function renderSearchResults(results, query) {
+      if (!results || results.length === 0) {
+        $("content").innerHTML = `<div class="empty">No relevant topics found for "${esc(query)}".</div>`;
+        return;
+      }
+
+      let html = `<div style="padding-bottom: 20px;">
+        <div class="sys" style="margin-bottom:10px;">Found ${results.length} relevant topics</div>`;
+
+      results.forEach(group => {
+        html += `
+          <div class="searchSection">
+            <div class="searchSectionHeader">
+              <span>${esc(group.thread_title || "Untitled Topic")}</span>
+              <span class="searchScore">Rel: ${(group.thread_score * 100).toFixed(0)}%</span>
+            </div>
+            <div class="searchSectionBody">
+        `;
+
+        group.messages.forEach(m => {
+          const time = formatTime(m.timestamp);
+          const nameCol = userColor(m.user);
+
+          // Clickable Bubble containing the text ---
+          html += `
+            <div class="msgRow left" style="cursor:pointer;"
+                 onclick="goToTopic('${group.thread_id}', '${m.message_id}')"
+                 title="Jump to context">
+              <div class="bubble">
+                <div class="metaLine">
+                  <span class="name" style="color:${esc(nameCol)}">${esc(m.user)}</span>
+                  <span class="time">${esc(time)} <span style="opacity:0.5">(${(m.score*100).toFixed(0)}%)</span></span>
+                </div>
+                <div class="text">${esc(m.text)}</div>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div></div>`; // Close Body and Section
+      });
+
+      html += `</div>`;
+      $("content").innerHTML = html;
+    }
+
+    function closeSearch() {
+      state.isSearching = false;
+      $("globalSearchInput").value = "";
+      $("clearSearchBtn").style.display = "none";
+
+      // Return to previous view
+      setMode(state.lastMode || "focus");
+    }
+
+    // Helper to jump from search result to Focus mode
+    window.goToTopic = async (tid, mid) => {
+      state.activeTopicId = tid;
+      closeSearch();
+      setMode("focus");
+
+      // Default load (scrolls to bottom)
+      await loadFocus(tid, false);
+
+      // If we have a specific message ID, we then scroll to it and flash
+      if (mid) {
+        scrollToMessage(mid, true);
+      }
+    };
+
 
   // -----------------------------
   // Wire up
@@ -1305,6 +1568,47 @@
   (async function init(){
     await loadChats();
   })();
+
+  // Search Wiring
+  $("globalSearchInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") performSearch();
+  });
+
+  $("clearSearchBtn").onclick = closeSearch;
+
+  // Update setMode to store history so we know where to go back to
+  const originalSetMode = setMode;
+  // We overwrite setMode slightly to track state
+  setMode = function(mode) {
+    if(mode !== "focus" && mode !== "timeline") return; // safety
+    state.lastMode = mode;
+    state.isSearching = false;
+    $("clearSearchBtn").style.display = "none";
+    $("globalSearchInput").value = "";
+
+    // Call original logic (copy-paste your setMode logic here or refactor slightly)
+    state.mode = mode;
+    $("modeFocus").classList.toggle("active", mode === "focus");
+    $("modeTimeline").classList.toggle("active", mode === "timeline");
+
+    // ... existing setMode logic ...
+    if(!state.activeChatId){
+      $("content").innerHTML = `<div class="empty">Upload a chat export (.txt) to start.</div>`;
+      setCenter("Nexus", "Upload a chat to begin.");
+      return;
+    }
+
+    if(mode === "timeline"){
+      loadTimeline(true);
+    } else {
+      if(state.activeTopicId){
+        loadFocus(state.activeTopicId);
+      } else {
+        $("content").innerHTML = `<div class="empty">Pick a topic to enter Focus Mode.</div>`;
+        setCenter(state.activeChatName || "Chat", "Pick a topic to enter Focus Mode.");
+      }
+    }
+  }
 </script>
 </body>
 </html>
