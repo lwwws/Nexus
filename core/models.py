@@ -63,9 +63,27 @@ class Membership:
     thread_id: ThreadId # Reference to the assigned thread
 
     score: float # Confidence score of the assignment
+    centroid_similarity: float = -1.0 # Similarity to the CENTROID (might differ from confidence score, e.g. probs of HDBSCAN)
 
     origin: str = "auto" # Source of assignment (e.g. algorithm or human correction)
     status: str = "active" # Current state: 'active' (visible) or 'rejected' (soft-deleted)
     reason: str = "unknown" # The specific logic used (e.g., 'centroid_sim', 'hdbscan')
 
     created_at: dt.datetime = field(default_factory=lambda: dt.datetime.now()) # Timestamp when this assignment was created
+
+
+@dataclass
+class UpdateResult:
+    """
+    Communicates the decision made by the UpdateStrategy.
+    """
+    action: Literal["buffered", "assigned", "flushed"]
+
+    # If action == "assigned"
+    assigned_thread_id: Optional[str] = None
+    assigned_score: float = 0.0
+
+    # If action == "flushed"
+    flush_ids: List[str] = field(default_factory=list)
+    flush_labels: List[List[int]] = field(default_factory=list)
+    flush_scores: List[List[float]] = field(default_factory=list)

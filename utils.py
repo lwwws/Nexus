@@ -1,5 +1,7 @@
 import re
 import datetime
+from typing import Dict
+
 import numpy as np
 import pandas as pd
 import logging
@@ -132,3 +134,33 @@ def raw2df(file, key='auto'):
 
     print(f"Successfully parsed {len(df)} messages.")
     return df
+
+
+class UserMapper:
+    """
+    Maps raw user IDs (including 'undefined') to semantic aliases
+    like 'Speaker A', 'Speaker B'.
+    """
+
+    def __init__(self):
+        self.user_map: Dict[str, str] = {}
+        self.next_alias_idx = 0
+
+    def get_alias(self, real_user: str) -> str:
+        real_user = (real_user or "").strip()
+
+        # Trap "undefined", "null", or empty strings
+        if not real_user or real_user.lower() in ["undefined", "null", "none"]:
+            return "Unknown Speaker"
+
+        if real_user not in self.user_map:
+            # Generate "Speaker A", "Speaker B", etc.
+            if self.next_alias_idx < 26:
+                suffix = chr(65 + self.next_alias_idx)  # A-Z
+            else:
+                suffix = str(self.next_alias_idx + 1)  # 27, 28...
+
+            self.user_map[real_user] = f"Speaker {suffix}"
+            self.next_alias_idx += 1
+
+        return self.user_map[real_user]

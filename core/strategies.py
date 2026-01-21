@@ -1,21 +1,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 import numpy as np
 
-from core.models import Message, MessageId, ThreadId, SpaceId
+from core.models import Message, MessageId, ThreadId, SpaceId, UpdateResult
 from core.stores import EmbeddingStore, MembershipStore, MessageStore, ThreadStore
-from core.interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComputer, Assigner, UpdateStrategy, ThreadLabeler
+from core.interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComputer, UpdateStrategy, ThreadLabeler
 
 import os
 import re
 import datetime
-import numpy as np
 import pandas as pd
 from huggingface_hub import hf_hub_download
 
 import logging
+
+from utils import UserMapper
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -66,16 +68,29 @@ class ContextWindowFormatter(Formatter):
     It boosts the signal of the target message by placing it at the end
     and optionally repeating it (weighted focus).
     """
-    window_back: int = 3  # Look back 3 messages for context
-    window_fwd: int = 1  # Look forward 1 message (if available)
-    time_threshold_minutes: int = 10
-    repeat_center: int = 2  # How many times to repeat the target message
+
+    def __init__(self,
+                 window_back: int = 3,
+                 window_fwd: int = 1,
+                 time_threshold_minutes: int = 10,
+                 repeat_center: int = 2):
+
+        self.window_back = window_back
+        self.window_fwd = window_fwd
+        self.time_threshold_minutes = time_threshold_minutes
+        self.repeat_center = repeat_center
+
+        # Initialize the mapper here
+        self.mapper = UserMapper()
 
     def format(self, idx: int, messages: List[Message]) -> str:
         cur = messages[idx]
         cur_time = cur.timestamp
 
-        # 1. Collect Context (Backwards)
+        # Transform current user
+        user_alias = self.mapper.get_alias(cur.user)
+
+        # Collect Context (Backwards)
         back_parts: List[str] = []
         for k in range(1, self.window_back + 1):
             j = idx - k
@@ -83,15 +98,16 @@ class ContextWindowFormatter(Formatter):
                 break
             prev = messages[j]
 
-            # Stop if time gap is too large (context is stale)
+            # Stop if context is too old
             dt_min = (cur_time - prev.timestamp).total_seconds() / 60.0
             if dt_min > self.time_threshold_minutes:
                 break
 
-            # Insert at beginning to maintain chronological order
-            back_parts.insert(0, f"{prev.user}: {prev.text}")
+            # Map context user
+            prev_alias = self.mapper.get_alias(prev.user)
+            back_parts.insert(0, f"{prev_alias}: {prev.text}")
 
-        # 2. Collect Context (Forwards) - Optional but helps disambiguate
+        # Collect Context (Forwards)
         fwd_parts: List[str] = []
         for k in range(1, self.window_fwd + 1):
             j = idx + k
@@ -102,27 +118,23 @@ class ContextWindowFormatter(Formatter):
             dt_min = (nxt.timestamp - cur_time).total_seconds() / 60.0
             if dt_min > self.time_threshold_minutes:
                 break
-            fwd_parts.append(f"{nxt.user}: {nxt.text}")
 
-        # 3. Construct the String
-        # Strategy: "Context >>> Focus"
+            # Map context user
+            nxt_alias = self.mapper.get_alias(nxt.user)
+            fwd_parts.append(f"{nxt_alias}: {nxt.text}")
 
-        # Combine back and forward parts into a single context string
-        context_str = " | ".join(back_parts + fwd_parts)
-
-        # The target message
-        target_str = f"{cur.user}: {cur.text}"
+        # Construct Target String
+        target_str = f"{user_alias}: {cur.text}"
 
         # Apply weighting (repetition)
         # We repeat the target 'focus_weight' times to increase its vector influence
         weighted_target = " ; ".join([target_str] * self.repeat_center)
 
-        if context_str:
-            # We use ">>>" as a strong visual separator for the model
-            return f"Context: {context_str} >>> Focus: {weighted_target}"
-        else:
-            # If no context, just return the weighted target
-            return f"Focus: {weighted_target}"
+        context_str = " | ".join(back_parts + fwd_parts)
+
+        out = f"Context: {context_str} >>> Focus: {weighted_target}" if context_str else f"Focus: {weighted_target}"
+        logging.info(f"Formatted text: {out}")
+        return out
 
 # ---------- Embedder ----------
 
@@ -252,17 +264,208 @@ class CentroidThreadRepComputer(ThreadRepComputer):
         return V.mean(axis=0)
 
 
-# ---------- Stubs for batch mode (run_batch doesn't need streaming assignment) ----------
+# ---------- Buffer Strategy ----------
+class BufferedUpdateStrategy(UpdateStrategy):
+    """
+    Hybrid Strategy:
+    1. Fast Path: Compare new message to existing Thread Centroids.
+       If sim >= Dynamic Threshold (percentile of thread), assign immediately.
+    2. Slow Path: If no match, add to Buffer.
+    3. Flush: When buffer is full, run clustering on buffered messages.
+       - Any noise/unclustered messages are kept in a separate pending buffer for retry.
+    """
 
-class NoOpAssigner(Assigner):
-    def assign(self, message_id: MessageId):
-        return []
+    def __init__(self,
+                 embeddings: EmbeddingStore,
+                 threads: ThreadStore,
+                 memberships: MembershipStore,
+                 clusterer: Clusterer,
+                 msg_sim_space: SpaceId = "msg:full",
+                 msg_cluster_space: SpaceId = "msg:cluster",
+                 thread_centroid_space: SpaceId = "thread:centroid",
+                 global_min_threshold: float = 0.65,
+                 percentile_threshold: int = 10,
+                 buffer_size_limit: int = 15,
+                 pending_size_limit: int = 50,
+                 min_delta: float = 0.05
+                 ):
 
-class NoOpUpdateStrategy(UpdateStrategy):
-    def on_new_message(self, message_id: MessageId) -> None:
-        return
-    def flush(self) -> None:
-        return
+        self.embeddings = embeddings
+        self.threads = threads
+        self.memberships = memberships
+        self.clusterer = clusterer
+
+        self.msg_sim_space = msg_sim_space
+        self.msg_cluster_space = msg_cluster_space
+        self.thread_centroid_space = thread_centroid_space
+
+        self.global_min_threshold = global_min_threshold
+        self.percentile_threshold = percentile_threshold
+
+        self.buffer_limit = buffer_size_limit
+        self.pending_limit = pending_size_limit
+
+        self.min_delta = min_delta
+
+        self._buffer: List[MessageId] = []
+        self._pending: List[MessageId] = []
+
+    def on_new_message(self, message_id: MessageId) -> UpdateResult:
+        best_tid, best_score, second_tid, second_score = self._find_top2_threads(message_id)
+
+        if best_tid:
+            threshold = self._compute_thread_threshold(best_tid)
+            delta = best_score - second_score
+
+            if best_score >= threshold and delta >= self.min_delta:
+                logger.info(
+                    f"(---) Fast Assign: {message_id} -> {best_tid} "
+                    f"(score={best_score:.3f} thr={threshold:.3f} delta={delta:.3f})"
+                )
+                return UpdateResult(action="assigned", assigned_thread_id=best_tid, assigned_score=best_score)
+
+            logger.info(
+                f"(XXX) Fast Reject (buffered): {message_id} best={best_tid} "
+                f"(score={best_score:.3f} thr={threshold:.3f} delta={delta:.3f} "
+                f"second={second_tid}:{second_score:.3f})"
+            )
+
+        self._buffer.append(message_id)
+        logger.info(f"Buffer length: {len(self._buffer)}")
+
+        # Optional: if pending is already large, try to flush earlier
+        if len(self._buffer) >= self.buffer_limit:
+            return self.flush()
+
+        return UpdateResult(action="buffered")
+
+    def flush(self) -> UpdateResult:
+        """
+        Flush strategy:
+        - Cluster (pending + buffer) to give HDBSCAN enough points.
+        - Keep noise (unassigned) in pending for later retry.
+        - Not dropping messages missing embeddings; keep them pending.
+        """
+        if not self._buffer and not self._pending:
+            return UpdateResult(action="buffered")
+
+        # Combine to form a larger batch (helps "single-topic but small buffer" cases)
+        batch_ids = self._pending + self._buffer
+        self._buffer = []  # we'll rebuild pending below
+
+        logger.info(f"Strategy flushing batch={len(batch_ids)} (pending={len(self._pending)})")
+
+        vecs: List[np.ndarray] = []
+        valid_ids: List[MessageId] = []
+        missing_ids: List[MessageId] = []
+
+        for mid in batch_ids:
+            if self.embeddings.has(self.msg_cluster_space, mid):
+                vecs.append(self.embeddings.get(self.msg_cluster_space, mid))
+                valid_ids.append(mid)
+            else:
+                missing_ids.append(mid)
+
+        X = np.stack(vecs, axis=0)
+
+        try:
+            labels, scores = self.clusterer.cluster(X)
+        except ValueError as e:
+            logger.warning(f"Cluster failed on n={len(valid_ids)}: {e}")
+            self._pending = (missing_ids + valid_ids)[-self.pending_limit:]
+            return UpdateResult(action="buffered")
+
+        # Identify which messages are "noise" (label_list empty in your adapter)
+        noise_ids: List[MessageId] = [mid for mid, lab in zip(valid_ids, labels) if not lab]
+
+        # Keep missing + noise for retry, cap size
+        self._pending = (missing_ids + noise_ids)[-self.pending_limit:]
+
+        # Return the clustering result for processor to create threads/memberships
+        return UpdateResult(
+            action="flushed",
+            flush_ids=valid_ids,
+            flush_labels=labels,
+            flush_scores=scores
+        )
+
+    def _find_top2_threads(self, mid: MessageId) -> Tuple[Optional[str], float, Optional[str], float]:
+        if not self.embeddings.has(self.msg_sim_space, mid):
+            return None, 0.0, None, 0.0
+        msg_vec = self.embeddings.get(self.msg_sim_space, mid)
+
+        best_tid, best_score = None, -1.0
+        second_tid, second_score = None, -1.0
+
+        for t in self.threads.all():
+            if not self.embeddings.has(self.thread_centroid_space, t.id):
+                continue
+            c = self.embeddings.get(self.thread_centroid_space, t.id)
+            sim = self._cosine(msg_vec, c)
+
+            if sim > best_score:
+                second_tid, second_score = best_tid, best_score
+                best_tid, best_score = t.id, sim
+            elif sim > second_score:
+                second_tid, second_score = t.id, sim
+
+        if best_score < 0:
+            return None, 0.0, None, 0.0
+        if second_score < 0:
+            return best_tid, best_score, None, 0.0
+
+        return best_tid, best_score, second_tid, second_score
+    def _compute_thread_threshold(self, tid: str) -> float:
+        """
+        Dynamically calculates the acceptance threshold (5th percentile).
+        """
+        # Get Members
+        members = self.memberships.for_thread(tid, status="active")
+
+        if len(members) < 10:
+            return self.global_min_threshold
+
+        # Use ALL cached similarities (Fastest & Most Accurate)
+        sims = [m.centroid_similarity for m in members if m.centroid_similarity >= 0]
+
+        # Fallback to Vector Calculation (Slow)
+        # Only do this if we don't have enough cached data.
+        if len(sims) < 10:
+            logger.info(f"Not enough similarities... len(sims)={len(sims)}")
+            if not self.embeddings.has(self.thread_centroid_space, tid):
+                return self.global_min_threshold
+
+            centroid = self.embeddings.get(self.thread_centroid_space, tid)
+
+            # SAFETY LIMIT: Only fetch vectors for the last messages
+            target_members = members[-100:]
+
+            for m in target_members:
+                if self.embeddings.has(self.msg_sim_space, m.message_id):
+                    v = self.embeddings.get(self.msg_sim_space, m.message_id)
+                    sims.append(self._cosine(v, centroid))
+
+        if not sims:
+            return self.global_min_threshold
+
+        # Compute Percentile
+        perc = float(np.percentile(sims, self.percentile_threshold))
+
+        final = max(self.global_min_threshold, perc)
+
+        # Log if we are being adaptive
+        if perc > self.global_min_threshold:
+            logger.info(f"Adaptive ({tid}): Using percentile={perc:.3f} (N={len(sims)})")
+        else:
+            logger.info(f"Using global min of {self.global_min_threshold} for tid=({tid}) ")
+
+        return final
+
+    def _cosine(self, a, b):
+        na = np.linalg.norm(a)
+        nb = np.linalg.norm(b)
+        return float(np.dot(a, b) / (na * nb)) if na and nb else 0.0
+
 
 # ---------- ThreadLabeler ----------
 

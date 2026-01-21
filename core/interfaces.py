@@ -18,7 +18,8 @@ Protocols:
 """
 from typing import Protocol, List, Optional, Sequence, Tuple
 import numpy as np
-from .models import Message, ThreadId, MessageId
+from .models import Message, ThreadId, MessageId, UpdateResult
+
 
 class Formatter(Protocol):
     """
@@ -91,29 +92,17 @@ class ThreadRepComputer(Protocol):
         return np.stack([self.compute(id) for id in thread_ids], axis=0)
 
 
-class Assigner(Protocol):
-    """
-    Strategy for classifying new messages into existing threads.
-    """
-    def assign(self, message_id: MessageId) -> List[Tuple[ThreadId, float]]:
-        """
-        Determine which thread(s) a message belongs to.
-        Returns a list of (thread_id, similarity_score).
-        """
-        pass
-
-
 class UpdateStrategy(Protocol):
     """
     Policy for handling real-time updates.
     Decides whether to process a message immediately or buffer it.
     """
-    def on_new_message(self, message_id: MessageId) -> None:
-        """Hook called when a new message is ingested."""
+    def on_new_message(self, message_id: MessageId) -> UpdateResult:
+        """Process a new message and return a decision."""
         pass
 
-    def flush(self) -> None:
-        """Force processing of any buffered messages."""
+    def flush(self)-> UpdateResult:
+        """Force process pending buffer."""
         pass
 
 class ThreadLabeler(Protocol):

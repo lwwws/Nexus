@@ -20,9 +20,9 @@ import datetime as dt
 from tqdm import tqdm
 from typing import Callable
 
-from .models import Message, Thread, Membership, SpaceId, MessageId, ThreadId
+from .models import Message, Thread, Membership, SpaceId, MessageId, ThreadId, UpdateResult
 from .stores import MessageStore, ThreadStore, MembershipStore, EmbeddingStore
-from .interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComputer, Assigner, UpdateStrategy, \
+from .interfaces import Formatter, Embedder, Reducer, Clusterer, ThreadRepComputer, UpdateStrategy, \
     ThreadLabeler
 
 logger = logging.getLogger(__name__)
@@ -50,7 +50,6 @@ class ChatProcessor:
         labeler (ThreadLabeler): Optional strategy to label threads.
 
         thread_rep_computer (ThreadRepComputer): Strategy to calculate centroids.
-        assigner (Assigner): Strategy to match new messages to threads.
         update_strategy (UpdateStrategy): Policy for real-time updates (buffer vs immediate).
 
         formatter (Formatter): Strategy to prepare text for embedding.
@@ -66,7 +65,6 @@ class ChatProcessor:
     labeler: Optional[ThreadLabeler]
 
     thread_rep_computer: ThreadRepComputer
-    assigner: Assigner
     update_strategy: UpdateStrategy
 
     formatter: Formatter
@@ -160,6 +158,8 @@ class ChatProcessor:
                         getattr(R, "dtype", None))
             self.embeddings.add(self.thread_centroid_space, tids, R)
             logger.info("run_batch: stored thread reps space=%s count=%d", self.thread_centroid_space, len(tids))
+            self._backfill_similarities(tids)
+            logger.info("run_batch: thread reps backfill=%d", len(tids))
         else:
             logger.info("run_batch: no threads to compute reps for")
 
@@ -169,36 +169,78 @@ class ChatProcessor:
     def ingest_new_message(self, msg: Message) -> None:
         """
         Handles the arrival of a single real-time message.
-
-        Steps:
-        1. Persist message to store.
-        2. Embed and Reduce (immediately).
-        3. Delegate to UpdateStrategy (decides whether to assign now or buffer).
         """
-        logger.info("ingest_new_message: id=%s user=%s ts=%s", msg.id, msg.user, msg.timestamp)
-        self.messages.add([msg])
-        logger.info("ingest_new_message: messages_total=%d", len(self.messages.all()))
+        logger.info("ingest_new_message: %s", msg.id)
+        if not self.messages.has(msg.id):
+            self.messages.add([msg])
 
-        # embed immediately so it's available for the strategy
-        msgs = self.messages.all()
-        # Note: formatting entire history is O(N), consider optimizing to context window only
-        text = self.formatter.format(len(msgs) - 1, msgs)
+        # Only fetch the last few messages for formatting context
+        all_ids = self.messages.ids()
+        context_window = 50 # At most 50 msgs is alright...
+        start_idx = max(0, len(all_ids) - context_window)
+
+        # Get slice of messages
+        recent_msgs = [self.messages.get(mid) for mid in all_ids[start_idx:]]
+
+        # Format the last message in this small list
+        text = self.formatter.format(len(recent_msgs) - 1, recent_msgs)
         v = self.embedder.embed_texts([text])[0]
         self.embeddings.add(self.msg_space, [msg.id], v[None, :])
-        logger.info("ingest_new_message: stored msg embedding space=%s id=%s shape=%s",
-                    self.msg_space, msg.id, getattr(v, "shape", None))
 
         if self.reducer:
             vc = self.reducer.transform(v[None, :])[0]
             self.embeddings.add(self.msg_cluster_space, [msg.id], vc[None, :])
-            logger.info("ingest_new_message: stored reduced embedding space=%s id=%s shape=%s",
-                        self.msg_cluster_space, msg.id, getattr(vc, "shape", None))
-        else:
-            logger.info("ingest_new_message: reducer=None, skipping reduction")
 
-        logger.info("ingest_new_message: delegating to update_strategy.on_new_message(%s)", msg.id)
-        self.update_strategy.on_new_message(msg.id)
-        logger.info("ingest_new_message: done id=%s", msg.id)
+        # Consult Strategy
+        result = self.update_strategy.on_new_message(msg.id)
+
+        # Handle Decision
+        if result.action == "assigned":
+            self._handle_fast_assignment(msg.id, result.assigned_thread_id, result.assigned_score)
+
+        elif result.action == "flushed":
+            logger.info("ingest_new_message: Strategy triggered flush.")
+            self._handle_flush_result(result)
+
+        elif result.action == "buffered":
+            logger.info("ingest_new_message: Buffered.")
+
+    # --- Handlers ---
+
+    def _handle_fast_assignment(self, mid: str, tid: str, score: float):
+        """Executes the 'Fast Path' assignment."""
+        logger.info(f"Fast Assign: {mid} -> {tid}")
+
+        # Create Membership
+        self.memberships.add([
+            Membership(message_id=mid, thread_id=tid, score=score, centroid_similarity=score, reason="fast_assign")
+        ])
+
+        # Update Centroid Online
+        # This keeps the centroid fresh without re-computing everything
+        rep = self.thread_rep_computer.compute(tid)
+        if rep.size:
+            self.embeddings.add(self.thread_centroid_space, [tid], rep[None, :])
+
+    def _handle_flush_result(self, res: UpdateResult):
+        """Executes the 'Slow Path' clustering result."""
+        self._labels_to_threads(res.flush_ids, res.flush_labels, res.flush_scores, progress_callback=None)
+
+        # Update Centroids
+        touched_tids = set()
+
+        # Extract created thread IDs from the memberships we just added
+        for mid in res.flush_ids:
+            ms = self.memberships.for_message(mid)
+            for m in ms:
+                touched_tids.add(m.thread_id)
+
+        lst_touched_ids = list(touched_tids)
+        if lst_touched_ids:
+            logger.info(f"Re-computing centroids for {len(lst_touched_ids)} threads.")
+            R = self.thread_rep_computer.compute_all(lst_touched_ids)
+            self.embeddings.add(self.thread_centroid_space, lst_touched_ids, R)
+            self._backfill_similarities(lst_touched_ids)
 
     def _labels_to_threads(self, message_ids: List[str],
                            labels: List[List[int]],
@@ -299,6 +341,37 @@ class ChatProcessor:
             self.threads.add(updated_threads)
             logger.info("_labels_to_threads: labeling complete")
 
+    def _backfill_similarities(self, thread_ids: List[str]):
+        """
+        Calculates and stores cosine similarity for members of the given threads.
+        """
+        count = 0
+
+        # We don't need 'updates' list anymore
+
+        for tid in thread_ids:
+            if not self.embeddings.has(self.thread_centroid_space, tid):
+                continue
+
+            centroid = self.embeddings.get(self.thread_centroid_space, tid)
+            members = self.memberships.for_thread(tid, status="active")
+
+            for m in members:
+                # If already calculated (e.g. via Fast Assign), skip
+                if m.centroid_similarity >= 0:
+                    continue
+
+                if self.embeddings.has(self.msg_space, m.message_id):
+                    vec = self.embeddings.get(self.msg_space, m.message_id)
+                    sim = self._cosine(vec, centroid)
+
+                    # Update the object in place
+                    m.centroid_similarity = sim
+                    count += 1
+
+        if count > 0:
+            logger.info(f"Backfilled cosine similarities for {count} members.")
+
     def apply_user_fix(
             self,
             message_id: MessageId,
@@ -362,7 +435,7 @@ class ChatProcessor:
             query: str,
             top_threads: int = 5,
             top_messages_per_thread: int = 5,
-            min_thread_sim: float = 0.25,
+            min_thread_sim: float = 0.1,
             min_msg_sim: float = 0.25,
     ) -> List[Dict[str, Any]]:
         """

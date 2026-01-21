@@ -1229,6 +1229,17 @@
   // -----------------------------
   // Append message
   // -----------------------------
+  async function waitMessageProcessed(chatId, messageId, timeoutMs = 15000){
+      const start = Date.now();
+      while(Date.now() - start < timeoutMs){
+        const data = await apiGet(`/api/chats/${encodeURIComponent(chatId)}/history?limit=10&offset=0`);
+        const m = (data.messages || []).find(x => x.id === messageId);
+        if(m && m.processed) return true;
+        await new Promise(r => setTimeout(r, 300));
+      }
+      return false;
+    }
+
   async function sendMessage(){
     if(!state.activeChatId){
       alert("Pick a chat first.");
@@ -1241,9 +1252,12 @@
 
     $("sendBtn").disabled = true;
     try{
-      await apiPost(`/api/chats/${encodeURIComponent(state.activeChatId)}/message`, { user, text });
+      const res = await apiPost(`/api/chats/${encodeURIComponent(state.activeChatId)}/message`, { user, text });
+      const mid = res.message_id;
       $("msgInput").value = "";
 
+
+      await waitMessageProcessed(state.activeChatId, mid);
       await loadTopics();
 
       if(state.mode === "timeline"){
@@ -1260,6 +1274,7 @@
       $("sendBtn").disabled = false;
     }
   }
+
 
   // -----------------------------
   // Wire up

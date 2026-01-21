@@ -1,5 +1,6 @@
 import os
 import uuid
+from queue import Queue, Empty
 import threading
 import datetime as dt
 import logging
@@ -21,7 +22,7 @@ from core.strategies import (
     HDBSCANClusterer,
     CentroidThreadRepComputer,
     LlamaThreadLabeler,
-    NoOpUpdateStrategy, NoOpAssigner,
+    BufferedUpdateStrategy,
 )
 from utils import raw2df
 
@@ -77,6 +78,11 @@ class ChatSession:
     processor: Optional[ChatProcessor] = None
     is_ready: bool = False
     last_job_id: Optional[str] = None
+
+    # The Queue Infrastructure for new messages
+    ingest_queue: Queue = field(default_factory=Queue)
+    worker_running: bool = False
+    worker_lock: threading.Lock = field(default_factory=threading.Lock)  # Protects the startup check
 
 
 @dataclass
@@ -178,9 +184,23 @@ def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcesso
     reducer = UMAPReducer(n_neighbors=15, n_components=10, min_dist=0.0)
     clusterer = HDBSCANClusterer(min_cluster_size=15, min_samples=5)
 
+    # Incremental Clusterer
+    # We use this one inside the BufferedUpdateStrategy
+    incremental_clusterer = HDBSCANClusterer(min_cluster_size=7, min_samples=2)
+
     thread_rep = CentroidThreadRepComputer(memberships=chat.memberships, embeddings=chat.embeddings)
-    update_strategy = NoOpUpdateStrategy()
-    assigner = NoOpAssigner()
+    update_strategy = BufferedUpdateStrategy(
+        embeddings=chat.embeddings,
+        threads=chat.threads,
+        memberships=chat.memberships,
+        clusterer=incremental_clusterer,
+        global_min_threshold=0.65,
+        percentile_threshold=25,
+        buffer_size_limit=10,
+        pending_size_limit=50,
+        min_delta=0.08,
+    )
+
     formatter = ContextWindowFormatter(window_back=2, window_fwd=1, time_threshold_minutes=10, repeat_center=2)
 
     processor = ChatProcessor(
@@ -193,7 +213,6 @@ def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcesso
         clusterer=clusterer,
         labeler=LABELER,
         thread_rep_computer=thread_rep,
-        assigner=assigner,
         update_strategy=update_strategy,
         formatter=formatter,
     )
@@ -427,6 +446,8 @@ def api_chat_history(chat_id: str):
             if chat.threads.has(best_tid):
                 best_title = chat.threads.get(best_tid).title
 
+        processed = chat.embeddings.has("msg:full", mid)
+
         out.append({
             "id": m.id,
             "user": m.user,
@@ -435,6 +456,7 @@ def api_chat_history(chat_id: str):
             "is_system": (m.user == "group_notification"),
             "thread_id": best_tid,
             "thread_title": best_title,
+            "processed": processed,
         })
 
     has_more = start > 0
@@ -564,8 +586,8 @@ def api_search_chat(chat_id: str):
             query,
             top_threads=5,
             top_messages_per_thread=5,
-            min_thread_sim = 0.25,
-            min_msg_sim = 0.25
+            min_thread_sim=0.1,
+            min_msg_sim=0.25
         )
         return jsonify(results)
     except Exception as e:
@@ -573,13 +595,53 @@ def api_search_chat(chat_id: str):
         return jsonify({"error": str(e)}), 500
 
 
+def _ingest_worker(chat_id: str):
+    """
+    Dedicated worker thread for a specific chat.
+    Processes messages one by one from the queue.
+    """
+    logger.info(f"Worker started for chat {chat_id}")
+
+    try:
+        while True:
+            # Check if chat still exists (Graceful shutdown if chat deleted)
+            with LOCK:
+                chat = CHATS.get(chat_id)
+
+            if not chat:
+                logger.info(f"Chat {chat_id} not found, stopping worker.")
+                return
+
+            # Get next message (Blocking with timeout for liveness check)
+            try:
+                # Wait up to k seconds for a message
+                msg = chat.ingest_queue.get(timeout=1.0)
+            except Empty:
+                # No messages? Loop back to check if chat still exists
+                continue
+
+            # Process the message
+            try:
+                # No locks needed here! The Queue implicitly serializes access.
+                # Only this thread ever calls ingest_new_message for this chat.
+                if chat.processor:
+                    chat.processor.ingest_new_message(msg)
+                    chat.updated_at = dt.datetime.now()
+                    logger.info(f"Ingested message {msg.id}")
+            except Exception:
+                logger.exception(f"Worker failed to ingest {msg.id}")
+            finally:
+                chat.ingest_queue.task_done()
+    finally:
+        # allow restart if the thread ever exits
+        with LOCK:
+            chat = CHATS.get(chat_id)
+        if chat:
+            with chat.worker_lock:
+                chat.worker_running = False
+
 @app.route("/api/chats/<chat_id>/message", methods=["POST"])
 def api_post_message(chat_id: str):
-    """
-    Append message, embed+reduce immediately via processor.ingest_new_message,
-    then assign to best topic by centroid similarity or create new topic.
-    # TODO: connect properly to processor.ingest_new_message instead, which delegates it to UpdateStrategy
-    """
     try:
         chat = _require_chat(chat_id)
     except KeyError:
@@ -603,86 +665,28 @@ def api_post_message(chat_id: str):
         text=text,
     )
 
-    # ingest_new_message requires update_strategy; we set NoOpUpdateStrategy in processor build.
-    chat.processor.ingest_new_message(msg)
-
-    # Assign: cosine similarity to thread centroids
-    def cosine(a: np.ndarray, b: np.ndarray) -> float:
-        a = a.astype(np.float32)
-        b = b.astype(np.float32)
-        na = float(np.linalg.norm(a) + 1e-12)
-        nb = float(np.linalg.norm(b) + 1e-12)
-        return float(np.dot(a, b) / (na * nb))
-
-    proc = chat.processor
-    best_tid = None
-    best_score = -1.0
-
-    if chat.embeddings.has(proc.msg_space, mid):
-        v = chat.embeddings.get(proc.msg_space, mid)
-
-        for t in chat.threads.all():
-            if chat.embeddings.has(proc.thread_centroid_space, t.id):
-                c = chat.embeddings.get(proc.thread_centroid_space, t.id)
-                s = cosine(v, c)
-                if s > best_score:
-                    best_score = s
-                    best_tid = t.id
-
-    created_new = False
-    threshold = 0.35
-
-    if best_tid is None or best_score < threshold:
-        # Create new topic
-        tid = new_thread_id()
-        t = Thread(id=tid, title="New topic", summary="")
-        chat.threads.add([t])
-        created_new = True
-
-        chat.memberships.add([Membership(
-            message_id=mid,
-            thread_id=tid,
-            score=1.0,
-            reason="new_topic",
-        )])
-
-        # Update centroid
-        rep = proc.thread_rep_computer.compute(tid)
-        if rep.size:
-            chat.embeddings.add(proc.thread_centroid_space, [tid], rep[None, :])
-
-        # Fallback summary so UI has something immediately
-        t = chat.threads.get(tid)
-        if not (t.summary or "").strip():
-            t.summary = _fallback_summary_for_thread(chat, tid)
-        t.updated_at = dt.datetime.now()
-        chat.threads.add([t])
-
-        assigned = {"thread_id": tid, "score": 1.0}
-    else:
-        tid = best_tid
-        chat.memberships.add([Membership(
-            message_id=mid,
-            thread_id=tid,
-            score=float(best_score),
-            reason="centroid_sim",
-        )])
-
-        rep = proc.thread_rep_computer.compute(tid)
-        if rep.size:
-            chat.embeddings.add(proc.thread_centroid_space, [tid], rep[None, :])
-
-        assigned = {"thread_id": tid, "score": float(best_score)}
-
+    # Save to Store
+    chat.messages.add([msg])
     chat.updated_at = dt.datetime.now()
 
-    return jsonify({
-        "status": "ok",
-        "message_id": mid,
-        "assigned": assigned,
-        "created_new_topic": created_new,
-    })
+    # Enqueue
+    chat.ingest_queue.put(msg)
 
+    # Ensure Worker is Running (Thread-Safe lazy start)
+    if not chat.worker_running:
+        with chat.worker_lock:
+            # Double-check inside lock to prevent race condition
+            if not chat.worker_running:
+                t = threading.Thread(target=_ingest_worker, args=(chat_id,), daemon=True)
+                chat.worker_running = True
+                t.start()
+                logger.info(f"Spawned new worker for chat {chat_id}")
+
+    return jsonify({
+        "status": "pending",
+        "message_id": mid,
+        "info": "Queued for processing."
+    }), 202
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
