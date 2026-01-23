@@ -1,0 +1,28 @@
+<aside class="right" id="rightPane">
+  <!-- shows ONLY when collapsed -->
+  <button id="rightExpandBtn" class="ghost sidebarHandle" title="Show topics" aria-label="Show topics">
+    ◀
+  </button>
+
+    <header class="panelHeader" id="rightHeader">
+      <div class="topicsTitleRow">
+        <!-- collapse button (now left of title) -->
+        <button id="rightCollapseBtn" class="ghost iconBtn" title="Hide topics" aria-label="Hide topics">
+          ▶
+        </button>
+
+        <div class="panelTitle">Topics</div>
+      </div>
+
+      <!-- search moved BELOW title -->
+      <input id="topicSearch" class="topicSearch" placeholder="Filter topics…"/>
+
+      <div class="hint" id="rightHint">Topics appear after processing.</div>
+      <div id="rightError" class="error"></div>
+    </header>
+
+
+  <div class="list" id="topicList">
+    <div class="empty">No topics yet.</div>
+  </div>
+</aside>

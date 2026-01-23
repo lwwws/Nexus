@@ -1,0 +1,26 @@
+<!-- Upload overlay -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modalHeader">
+      <div class="title">Processing…</div>
+      <button id="closeOverlay" class="ghost" disabled>Close</button>
+    </div>
+    <div class="modalBody">
+      <div class="hint" id="jobStage">Starting…</div>
+      <div class="barWrap"><div class="bar" id="jobBar"></div></div>
+      <div class="hint" style="margin-top:10px;" id="jobDetail"></div>
+      <div class="error" id="jobError" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Context modal -->
+<div class="ctxBackdrop" id="ctxBackdrop" role="dialog" aria-modal="true">
+  <div class="ctxModal">
+    <header>
+      <div style="font-weight:1000;">Message Context</div>
+      <button id="closeCtx" class="ghost">Close</button>
+    </header>
+    <div class="ctxBody" id="ctxBody"></div>
+  </div>
+</div>

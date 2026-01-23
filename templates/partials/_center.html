@@ -1,0 +1,28 @@
+<main class="main">
+    <div class="topbar">
+      <div class="brand">
+        <div class="big" id="centerTitle">Nexus</div>
+        <div class="sub" id="centerSub">Upload a chat to begin.</div>
+      </div>
+      <div class="searchWrap">
+        <input id="globalSearchInput" placeholder="Semantic search..." />
+        <button id="clearSearchBtn" class="closeSearch" title="Clear search">✕</button>
+      </div>
+      <div class="toggle">
+        <button id="modeFocus" class="active">Focus</button>
+        <button id="modeTimeline">Timeline</button>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+      <div class="empty">Upload a chat export (.txt) to start.</div>
+    </div>
+
+    <div class="composer">
+      <select id="userSelect" style="width:180px;">
+        <option value="">Pick user…</option>
+      </select>
+      <input id="msgInput" placeholder="Type a message… (Enter to send)"/>
+      <button id="sendBtn" class="primary">Send</button>
+    </div>
+  </main>
