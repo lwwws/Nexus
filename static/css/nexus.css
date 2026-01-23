@@ -228,13 +228,13 @@ button:disabled {
 
 /* Center topbar */
 .topbar {
-    padding: 14px 16px;
+    padding: 18px 16px;
     border-bottom: 1px solid var(--border);
     background: rgba(18, 14, 29, .55);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
 }
 
@@ -668,16 +668,18 @@ details .summaryBox {
     overflow: hidden;
 }
 
-.searchSettingsSummary {
-    list-style: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 10px;
-    font-weight: 850;
-    font-size: 12pt;
-    color: var(--text);
+.searchSettingsSummary{
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  line-height: 1.1;
+  padding: 8px 14px;        /* vertical padding 0 since height is fixed */
+  font-weight: 750;
+  font-size: 10pt;
+  color: var(--text);
 }
 
 /* Hide default marker */
@@ -704,6 +706,7 @@ details .summaryBox {
 
 .tuneItem {
     flex: 1;
+    height: 60px;
     border: 1px solid var(--border);
     background: rgba(255, 255, 255, .03);
     border-radius: 12px;
@@ -736,6 +739,7 @@ details .summaryBox {
     flex: 1;
     display: flex;
     flex-direction: column;
+    height: 60px;
     gap: 6px;
     border: 1px solid var(--border);
     background: rgba(255, 255, 255, .03);
@@ -745,6 +749,7 @@ details .summaryBox {
 
 .numField input[type="number"] {
     width: 100%;
+    height:24px;
 }
 
 
@@ -778,9 +783,9 @@ details .summaryBox {
 }
 
 .tuneLabel {
-    font-size: 12px;
+    font-size: 10px;
     color: var(--muted);
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .tuneVal {
@@ -946,4 +951,41 @@ details .summaryBox {
 .list::-webkit-scrollbar-thumb:hover,
 .content::-webkit-scrollbar-thumb:hover {
     background: rgba(167, 139, 250, 0.75);
+}
+
+
+/* Slider stylization */
+.searchSettings input[type="range"]{
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  background: transparent;
+  outline: none;
+}
+
+/* WebKit track */
+.searchSettings input[type="range"]::-webkit-slider-runnable-track{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
+}
+
+/* WebKit thumb */
+.searchSettings input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  box-shadow: 0 6px 14px rgba(0,0,0,.35);
+  margin-top: -5px; /* centers thumb over 8px track */
+  cursor: pointer;
+}
+
+.searchSettings input[type="range"]::-webkit-slider-thumb:hover{
+  box-shadow: 0 8px 18px rgba(0,0,0,.45);
 }

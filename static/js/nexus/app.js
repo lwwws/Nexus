@@ -42,9 +42,9 @@ function clampInt(x, lo, hi, fallback){
 function refreshSearchSettingsHint(){
   const hint = $("searchSettingsHint");
   hint.textContent =
-    `Thread ≥ ${state.searchMinThreadSim.toFixed(2)} • ` +
-    `Msg ≥ ${state.searchMinMsgSim.toFixed(2)} • ` +
-    `${state.searchTopThreads}×${state.searchTopMsgsPerThread}`;
+    `Thread sim. ≥ ${state.searchMinThreadSim.toFixed(2)} • ` +
+    `Msg sim. ≥ ${state.searchMinMsgSim.toFixed(2)} • ` +
+    `${state.searchTopThreads} threads × ${state.searchTopMsgsPerThread} msgs`;
 }
 
 function initSearchSettings(){
