@@ -46,6 +46,8 @@
 /* Right sidebar collapse */
     .right{
       position: relative;
+        width: 320px; min-width: 280px;
+        flex-shrink: 0;
       transition: width .18s ease, min-width .18s ease;
         border-left: 1px solid var(--border);
     }
@@ -441,6 +443,7 @@
       border:1px solid rgba(181,140,255,.25);
       display:flex; align-items:center; justify-content:center;
       font-weight:1000;
+        font-size: 11pt;
       color: var(--accent);
       flex:0 0 auto;
     }

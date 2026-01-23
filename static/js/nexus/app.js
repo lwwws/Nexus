@@ -284,7 +284,7 @@ const state = {
       const nameCol = userColor(m.user);
 
       const pill = (showTopicPills && m.thread_title)
-        ? `<span class="pill"># ${esc(m.thread_title)}</span>`
+        ? `<span class="pill">${esc(m.thread_title)}</span>`
         : "";
 
       // all messages are left-aligned like group chats
