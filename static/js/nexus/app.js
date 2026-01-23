@@ -923,7 +923,14 @@ function ensureReassignMenu() {
         if (e.key === "Escape") hideReassignMenu();
     });
     window.addEventListener("resize", hideReassignMenu);
-    window.addEventListener("scroll", hideReassignMenu, true);
+    window.addEventListener("scroll", (e) => {
+        // If the scroll originated inside the menu (e.g., ctxMenuItems), don't close it
+        if (reassignMenuEl && reassignMenuEl.style.display !== "none" && reassignMenuEl.contains(e.target)) {
+            return;
+        }
+        hideReassignMenu();
+    }, true);
+
 }
 
 function hideReassignMenu() {

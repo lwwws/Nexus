@@ -928,18 +928,21 @@ details .summaryBox {
 
 /* Scrollbar stylization */
 .list::-webkit-scrollbar,
-.content::-webkit-scrollbar {
+.content::-webkit-scrollbar,
+.ctxMenuItems::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
 
 .list::-webkit-scrollbar-track,
-.content::-webkit-scrollbar-track {
+.content::-webkit-scrollbar-track,
+.ctxMenuItems::-webkit-scrollbar-track {
     background: transparent;
 }
 
 .list::-webkit-scrollbar-thumb,
-.content::-webkit-scrollbar-thumb {
+.content::-webkit-scrollbar-thumb,
+.ctxMenuItems::-webkit-scrollbar-thumb {
     background: rgba(167, 139, 250, 0.55);
     border-radius: 999px;
     border: 2px solid rgba(0, 0, 0, 0);
@@ -948,7 +951,8 @@ details .summaryBox {
 }
 
 .list::-webkit-scrollbar-thumb:hover,
-.content::-webkit-scrollbar-thumb:hover {
+.content::-webkit-scrollbar-thumb:hover,
+.ctxMenuItems::-webkit-scrollbar-thumb:hover {
     background: rgba(167, 139, 250, 0.75);
 }
 
@@ -963,7 +967,6 @@ details .summaryBox {
   outline: none;
 }
 
-/* WebKit track */
 .searchSettings input[type="range"]::-webkit-slider-runnable-track{
   height: 8px;
   border-radius: 999px;
@@ -972,7 +975,6 @@ details .summaryBox {
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.25);
 }
 
-/* WebKit thumb */
 .searchSettings input[type="range"]::-webkit-slider-thumb{
   -webkit-appearance: none;
   appearance: none;
@@ -988,6 +990,8 @@ details .summaryBox {
 .searchSettings input[type="range"]::-webkit-slider-thumb:hover{
   box-shadow: 0 8px 18px rgba(0,0,0,.45);
 }
+
+/*Thread reassignment context menu*/
 
 .ctxMenu{
   position: fixed;
