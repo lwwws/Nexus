@@ -1,5 +1,6 @@
 import os
 import uuid
+import json
 from queue import Queue, Empty
 import threading
 import datetime as dt
@@ -33,6 +34,8 @@ app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "./uploads"
 app.config["MODEL_PATH"] = "./models/Llama-3.2-3B-Instruct-Q4_K_M.gguf"
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024
+app.config["PERSIST_DIR"] = "./persisted_chats"
+os.makedirs(app.config["PERSIST_DIR"], exist_ok=True)
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 # Download Model
@@ -100,7 +103,6 @@ class JobState:
 
 CHATS: Dict[str, ChatSession] = {}
 JOBS: Dict[str, JobState] = {}
-
 
 def _now_iso() -> str:
     return dt.datetime.now().isoformat(timespec="seconds")
@@ -174,6 +176,7 @@ class ProgressEmbedder:
         return np.vstack(X_parts)
 
 
+
 def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcessor:
     if job is not None:
         # Wrap embedder to provide visual progress
@@ -218,6 +221,191 @@ def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcesso
     )
     return processor
 
+def _chat_dir(chat_id: str) -> str:
+    return os.path.join(app.config["PERSIST_DIR"], chat_id)
+
+def _save_chat(chat: ChatSession) -> None:
+    """
+    Persist the minimal state needed to restore the UI instantly:
+    - messages (ordered)
+    - threads
+    - memberships (including rejected)
+    - embeddings for spaces used at runtime (msg:full, msg:cluster, thread:centroid)
+    """
+    d = _chat_dir(chat.chat_id)
+    os.makedirs(d, exist_ok=True)
+
+    meta = {
+        "chat_id": chat.chat_id,
+        "name": chat.name,
+        "created_at": chat.created_at.isoformat(timespec="seconds"),
+        "updated_at": chat.updated_at.isoformat(timespec="seconds"),
+        "is_ready": bool(chat.is_ready),
+        "last_job_id": chat.last_job_id,
+    }
+
+    # Messages in timeline order (MessageStore.order is your ground truth) :contentReference[oaicite:2]{index=2}
+    messages = []
+    for mid in chat.messages.ids():
+        m = chat.messages.get(mid)
+        messages.append({
+            "id": m.id,
+            "timestamp": m.timestamp.isoformat(timespec="seconds"),
+            "user": m.user,
+            "text": m.text,
+            "metadata": m.metadata,
+        })
+
+    # Threads (ThreadStore is dict-based) :contentReference[oaicite:3]{index=3}
+    threads = []
+    for t in chat.threads.all():
+        threads.append({
+            "id": t.id,
+            "title": t.title,
+            "summary": t.summary,
+            "created_at": t.created_at.isoformat(timespec="seconds"),
+            "updated_at": t.updated_at.isoformat(timespec="seconds"),
+            "metadata": t.metadata,
+        })
+
+    # Memberships: include rejected too (store has _all internally) :contentReference[oaicite:4]{index=4}
+    memberships = []
+    for m in getattr(chat.memberships, "_all", []):
+        memberships.append({
+            "message_id": m.message_id,
+            "thread_id": m.thread_id,
+            "score": float(m.score),
+            "centroid_similarity": float(m.centroid_similarity),
+            "origin": m.origin,
+            "status": m.status,
+            "reason": m.reason,
+            "created_at": m.created_at.isoformat(timespec="seconds"),
+        })
+
+    with open(os.path.join(d, "meta.json"), "w", encoding="utf-8") as f:
+        json.dump(meta, f, ensure_ascii=False, indent=2)
+
+    with open(os.path.join(d, "messages.json"), "w", encoding="utf-8") as f:
+        json.dump(messages, f, ensure_ascii=False)
+
+    with open(os.path.join(d, "threads.json"), "w", encoding="utf-8") as f:
+        json.dump(threads, f, ensure_ascii=False)
+
+    with open(os.path.join(d, "memberships.json"), "w", encoding="utf-8") as f:
+        json.dump(memberships, f, ensure_ascii=False)
+
+    # Embeddings: persist per space as (ids, matrix) and restore via EmbeddingStore.add :contentReference[oaicite:5]{index=5}
+    spaces = ["msg:full", "msg:cluster", "thread:centroid"]
+    npz_path = os.path.join(d, "embeddings.npz")
+    arrays = {}
+    for space in spaces:
+        ids, X = chat.embeddings.get_matrix(space)
+        arrays[f"{space}__ids"] = np.array(ids, dtype=object)
+        arrays[f"{space}__X"] = X.astype(np.float32)
+    np.savez_compressed(npz_path, **arrays)
+
+
+def _load_all_chats_from_disk() -> None:
+    """
+    Scan PERSIST_DIR, rebuild ChatSession objects into CHATS,
+    and rebuild chat.processor so semantic_search/apply_user_fix work without re-running run_batch.
+    """
+    root = app.config["PERSIST_DIR"]
+    if not os.path.isdir(root):
+        return
+
+    for chat_id in os.listdir(root):
+        d = os.path.join(root, chat_id)
+        if not os.path.isdir(d):
+            continue
+
+        meta_path = os.path.join(d, "meta.json")
+        msgs_path = os.path.join(d, "messages.json")
+        threads_path = os.path.join(d, "threads.json")
+        mems_path = os.path.join(d, "memberships.json")
+        emb_path = os.path.join(d, "embeddings.npz")
+
+        if not (os.path.exists(meta_path) and os.path.exists(msgs_path) and os.path.exists(threads_path) and os.path.exists(mems_path)):
+            continue
+
+        with open(meta_path, "r", encoding="utf-8") as f:
+            meta = json.load(f)
+
+        chat = ChatSession(
+            chat_id=meta["chat_id"],
+            name=meta.get("name", meta["chat_id"]),
+        )
+        chat.created_at = dt.datetime.fromisoformat(meta["created_at"])
+        chat.updated_at = dt.datetime.fromisoformat(meta["updated_at"])
+        chat.is_ready = bool(meta.get("is_ready", True))
+        chat.last_job_id = meta.get("last_job_id")
+
+        # Restore messages in order
+        with open(msgs_path, "r", encoding="utf-8") as f:
+            arr = json.load(f)
+        msgs = []
+        for x in arr:
+            msgs.append(Message(
+                id=x["id"],
+                timestamp=dt.datetime.fromisoformat(x["timestamp"]),
+                user=x["user"],
+                text=x["text"],
+                metadata=x.get("metadata", {}),
+            ))
+        chat.messages.add(msgs)
+
+        # Restore threads
+        with open(threads_path, "r", encoding="utf-8") as f:
+            arr = json.load(f)
+        ths = []
+        for x in arr:
+            t = Thread(
+                id=x["id"],
+                title=x.get("title", ""),
+                summary=x.get("summary", ""),
+                metadata=x.get("metadata", {}),
+            )
+            t.created_at = dt.datetime.fromisoformat(x["created_at"])
+            t.updated_at = dt.datetime.fromisoformat(x["updated_at"])
+            ths.append(t)
+        chat.threads.add(ths)
+
+        # Restore memberships (active + rejected)
+        with open(mems_path, "r", encoding="utf-8") as f:
+            arr = json.load(f)
+        ms = []
+        for x in arr:
+            m = Membership(
+                message_id=x["message_id"],
+                thread_id=x["thread_id"],
+                score=float(x["score"]),
+                centroid_similarity=float(x.get("centroid_similarity", -1.0)),
+                origin=x.get("origin", "auto"),
+                status=x.get("status", "active"),
+                reason=x.get("reason", "unknown"),
+            )
+            # created_at exists in the dataclass, set it if present :contentReference[oaicite:6]{index=6}
+            if x.get("created_at"):
+                m.created_at = dt.datetime.fromisoformat(x["created_at"])
+            ms.append(m)
+        chat.memberships.add(ms)
+
+        # Restore embeddings if present
+        if os.path.exists(emb_path):
+            npz = np.load(emb_path, allow_pickle=True)
+            for space in ["msg:full", "msg:cluster", "thread:centroid"]:
+                ids = list(npz[f"{space}__ids"])
+                X = npz[f"{space}__X"]
+                if len(ids) and X.size:
+                    chat.embeddings.add(space, ids, X)
+
+        # Rebuild processor (no job -> no progress wrapper) :contentReference[oaicite:7]{index=7}
+        chat.processor = _build_processor(chat, job=None)
+
+        with LOCK:
+            CHATS[chat.chat_id] = chat
+
+_load_all_chats_from_disk()
 
 def _run_batch_with_progress(chat: ChatSession, job: JobState) -> None:
     """
@@ -279,6 +467,7 @@ def _run_job_process_chat(job: JobState, filepath: str) -> None:
 
         chat.is_ready = True
         chat.updated_at = dt.datetime.now()
+        _save_chat(chat)
 
         with LOCK:
             job.status = "done"
