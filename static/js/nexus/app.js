@@ -558,7 +558,7 @@ const state = {
     await loadUsers();
 
     // Default view: focus
-    setMode("focus");
+    setMode("timeline");
   }
 
   // -----------------------------
