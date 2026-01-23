@@ -2,6 +2,8 @@
 
 Nexus is a web app for **chat topic disentanglement**: you upload a WhatsApp chat export, and Nexus automatically splits the conversation into **topics** (threads). You can then browse topics, read summaries, and switch between a full timeline view and a focused topic view.
 
+![Pipeline](media/Nexus%20Pipeline.png)  
+
 ---
 
 ## What you can do in Nexus
