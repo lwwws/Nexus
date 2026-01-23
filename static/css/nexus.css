@@ -650,6 +650,156 @@ details .summaryBox {
     transition: border-color 0.2s;
 }
 
+/* Search area = search bar + sliders underneath */
+.searchArea {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    max-width: 600px;
+    margin: 0 20px;
+}
+
+/* Collapsible settings panel */
+.searchSettings {
+    border: 1px solid var(--border);
+    background: rgba(10, 8, 16, .28);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.searchSettingsSummary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    font-weight: 850;
+    font-size: 12pt;
+    color: var(--text);
+}
+
+/* Hide default marker */
+.searchSettingsSummary::-webkit-details-marker {
+    display: none;
+}
+
+.searchSettingsHint {
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 10px;
+    opacity: .95;
+}
+
+.searchSettingsBody {
+    padding: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.searchTuning {
+    display: flex;
+    gap: 10px;
+}
+
+.tuneItem {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, .03);
+    border-radius: 12px;
+    padding: 8px 10px;
+}
+
+.tuneTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 10px;
+}
+
+.searchTuning input[type="range"] {
+    width: 100%;
+    height: 18px;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.searchNums {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.numField {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, .03);
+    border-radius: 12px;
+    padding: 8px 10px;
+}
+
+.numField input[type="number"] {
+    width: 100%;
+}
+
+
+/* searchWrap no longer owns the outer sizing */
+.searchWrap {
+    margin: 0;
+    max-width: none;
+    flex: 0;
+}
+
+/* Sliders row */
+.searchTuning {
+    display: flex;
+    gap: 12px;
+}
+
+.tuneItem {
+    flex: 1;
+    border: 1px solid var(--border);
+    background: rgba(10, 8, 16, .35);
+    border-radius: 14px;
+    padding: 8px 10px;
+}
+
+.tuneTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 10px;
+}
+
+.tuneLabel {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 800;
+}
+
+.tuneVal {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 900;
+    opacity: .9;
+}
+
+/* Make the range input fit your theme */
+.searchTuning input[type="range"] {
+    width: 100%;
+    padding: 0;
+    height: 18px;
+    background: transparent;
+    border: none;
+}
+
+
 .searchWrap:focus-within {
     border-color: var(--accent);
 }

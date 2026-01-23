@@ -561,6 +561,21 @@ def api_between(chat_id: str):
         })
     return jsonify({"messages": out, "count": len(out)})
 
+def _clamp01(x: float) -> float:
+    try:
+        v = float(x)
+    except Exception:
+        return 0.0
+    return max(0.0, min(1.0, v))
+
+
+def _clampint(x, lo, hi, default) -> int:
+    try:
+        v = int(x)
+    except Exception:
+        return default
+    return max(lo, min(hi, v))
+
 
 @app.route("/api/chats/<chat_id>/search", methods=["GET"])
 def api_search_chat(chat_id: str):
@@ -582,12 +597,18 @@ def api_search_chat(chat_id: str):
 
     try:
         # Delegate to the processor's robust logic
+        min_thread_sim = _clamp01(request.args.get("min_thread_sim", 0.10))
+        min_msg_sim = _clamp01(request.args.get("min_msg_sim", 0.25))
+        top_threads = _clampint(request.args.get("top_threads", 5), 1, 50, 5)
+        top_msgs = _clampint(request.args.get("top_messages_per_thread", 5), 1, 50, 5)
+
+
         results = chat.processor.semantic_search(
             query,
-            top_threads=5,
-            top_messages_per_thread=5,
-            min_thread_sim=0.1,
-            min_msg_sim=0.25
+            top_threads=top_threads,
+            top_messages_per_thread=top_msgs,
+            min_thread_sim=min_thread_sim,
+            min_msg_sim=min_msg_sim,
         )
         return jsonify(results)
     except Exception as e:

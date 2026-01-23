@@ -1,28 +1,71 @@
 <main class="main">
     <div class="topbar">
-      <div class="brand">
-        <div class="big" id="centerTitle">Nexus</div>
-        <div class="sub" id="centerSub">Upload a chat to begin.</div>
-      </div>
-      <div class="searchWrap">
-        <input id="globalSearchInput" placeholder="Semantic search..." />
-        <button id="clearSearchBtn" class="closeSearch" title="Clear search">✕</button>
-      </div>
-      <div class="toggle">
-        <button id="modeFocus" class="active">Focus</button>
-        <button id="modeTimeline">Timeline</button>
-      </div>
+        <div class="brand">
+            <div class="big" id="centerTitle">Nexus</div>
+            <div class="sub" id="centerSub">Upload a chat to begin.</div>
+        </div>
+        <div class="searchArea">
+            <div class="searchWrap">
+                <input id="globalSearchInput" placeholder="Semantic search..."/>
+                <button id="clearSearchBtn" class="closeSearch" title="Clear search">✕</button>
+            </div>
+
+            <details class="searchSettings" id="searchSettings">
+                <summary class="searchSettingsSummary">
+                    <span>Search settings</span>
+                    <span class="searchSettingsHint" id="searchSettingsHint">Thread ≥ 0.10 • Msg ≥ 0.25 • 5×5</span>
+                </summary>
+
+                <div class="searchSettingsBody">
+                    <div class="searchTuning">
+                        <div class="tuneItem">
+                            <div class="tuneTop">
+                                <span class="tuneLabel">Min thread similarity</span>
+                                <span class="tuneVal" id="minThreadSimVal">0.10</span>
+                            </div>
+                            <input id="minThreadSim" type="range" min="0" max="100" step="1" value="10"/>
+                        </div>
+
+                        <div class="tuneItem">
+                            <div class="tuneTop">
+                                <span class="tuneLabel">Min message similarity</span>
+                                <span class="tuneVal" id="minMsgSimVal">0.25</span>
+                            </div>
+                            <input id="minMsgSim" type="range" min="0" max="100" step="1" value="25"/>
+                        </div>
+                    </div>
+
+                    <div class="searchNums">
+                        <label class="numField">
+                            <span class="tuneLabel">Top threads</span>
+                            <input id="topThreads" type="number" min="1" max="50" step="1" value="5"/>
+                        </label>
+
+                        <label class="numField">
+                            <span class="tuneLabel">Top messages / thread</span>
+                            <input id="topMsgsPerThread" type="number" min="1" max="50" step="1" value="5"/>
+                        </label>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+
+        <div class="toggle">
+            <button id="modeFocus" class="active">Focus</button>
+            <button id="modeTimeline">Timeline</button>
+        </div>
     </div>
 
     <div class="content" id="content">
-      <div class="empty">Upload a chat export (.txt) to start.</div>
+        <div class="empty">Upload a chat export (.txt) to start.</div>
     </div>
 
     <div class="composer">
-      <select id="userSelect" style="width:180px;">
-        <option value="">Pick user…</option>
-      </select>
-      <input id="msgInput" placeholder="Type a message… (Enter to send)"/>
-      <button id="sendBtn" class="primary">Send</button>
+        <select id="userSelect" style="width:180px;">
+            <option value="">Pick user…</option>
+        </select>
+        <input id="msgInput" placeholder="Type a message… (Enter to send)"/>
+        <button id="sendBtn" class="primary">Send</button>
     </div>
-  </main>
+</main>
