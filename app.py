@@ -616,6 +616,41 @@ def api_search_chat(chat_id: str):
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/chats/<chat_id>/user_fix", methods=["POST"])
+def api_user_fix(chat_id: str):
+    try:
+        chat = _require_chat(chat_id)
+    except KeyError:
+        return jsonify({"error": "Chat not found"}), 404
+
+    if not chat.is_ready or not chat.processor:
+        return jsonify({"error": "Chat not processed yet"}), 400
+
+    data = request.json or {}
+    message_id = (data.get("message_id") or "").strip()
+    add_to = data.get("add_to") or []
+    remove_from = data.get("remove_from") or []
+
+    if not message_id:
+        return jsonify({"error": "message_id required"}), 400
+    if not isinstance(add_to, list) or not isinstance(remove_from, list):
+        return jsonify({"error": "add_to/remove_from must be lists"}), 400
+
+    # Optional: validate threads exist
+    for tid in add_to + remove_from:
+        if tid and not chat.threads.has(tid):
+            return jsonify({"error": f"Unknown thread_id: {tid}"}), 400
+
+    try:
+        chat.processor.apply_user_fix(message_id=message_id, add_to=add_to, remove_from=remove_from)
+        chat.updated_at = dt.datetime.now()
+        return jsonify({"ok": True})
+    except Exception as e:
+        logger.exception("user_fix failed")
+        return jsonify({"error": str(e)}), 500
+
+
+
 def _ingest_worker(chat_id: str):
     """
     Dedicated worker thread for a specific chat.

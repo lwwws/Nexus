@@ -28,83 +28,84 @@ function $(id) {
     return document.getElementById(id);
 }
 
-function clamp01(x){
-  x = Number(x);
-  if (!Number.isFinite(x)) return 0;
-  return Math.max(0, Math.min(1, x));
-}
-function clampInt(x, lo, hi, fallback){
-  const v = parseInt(x, 10);
-  if (!Number.isFinite(v)) return fallback;
-  return Math.max(lo, Math.min(hi, v));
+function clamp01(x) {
+    x = Number(x);
+    if (!Number.isFinite(x)) return 0;
+    return Math.max(0, Math.min(1, x));
 }
 
-function refreshSearchSettingsHint(){
-  const hint = $("searchSettingsHint");
-  hint.textContent =
-    `Thread sim. ≥ ${state.searchMinThreadSim.toFixed(2)} • ` +
-    `Msg sim. ≥ ${state.searchMinMsgSim.toFixed(2)} • ` +
-    `${state.searchTopThreads} threads × ${state.searchTopMsgsPerThread} msgs`;
+function clampInt(x, lo, hi, fallback) {
+    const v = parseInt(x, 10);
+    if (!Number.isFinite(v)) return fallback;
+    return Math.max(lo, Math.min(hi, v));
 }
 
-function initSearchSettings(){
-  const t = $("minThreadSim");
-  const m = $("minMsgSim");
-  const tVal = $("minThreadSimVal");
-  const mVal = $("minMsgSimVal");
+function refreshSearchSettingsHint() {
+    const hint = $("searchSettingsHint");
+    hint.textContent =
+        `Thread sim. ≥ ${state.searchMinThreadSim.toFixed(2)} • ` +
+        `Msg sim. ≥ ${state.searchMinMsgSim.toFixed(2)} • ` +
+        `${state.searchTopThreads} threads × ${state.searchTopMsgsPerThread} msgs`;
+}
 
-  const topT = $("topThreads");
-  const topM = $("topMsgsPerThread");
+function initSearchSettings() {
+    const t = $("minThreadSim");
+    const m = $("minMsgSim");
+    const tVal = $("minThreadSimVal");
+    const mVal = $("minMsgSimVal");
 
-  // restore
-  const savedT = localStorage.getItem("nexus:minThreadSim");
-  const savedM = localStorage.getItem("nexus:minMsgSim");
-  const savedTopT = localStorage.getItem("nexus:topThreads");
-  const savedTopM = localStorage.getItem("nexus:topMsgsPerThread");
+    const topT = $("topThreads");
+    const topM = $("topMsgsPerThread");
 
-  if (savedT !== null) state.searchMinThreadSim = clamp01(savedT);
-  if (savedM !== null) state.searchMinMsgSim = clamp01(savedM);
-  if (savedTopT !== null) state.searchTopThreads = clampInt(savedTopT, 1, 50, 5);
-  if (savedTopM !== null) state.searchTopMsgsPerThread = clampInt(savedTopM, 1, 50, 5);
+    // restore
+    const savedT = localStorage.getItem("nexus:minThreadSim");
+    const savedM = localStorage.getItem("nexus:minMsgSim");
+    const savedTopT = localStorage.getItem("nexus:topThreads");
+    const savedTopM = localStorage.getItem("nexus:topMsgsPerThread");
 
-  // sync UI
-  t.value = String(Math.round(state.searchMinThreadSim * 100));
-  m.value = String(Math.round(state.searchMinMsgSim * 100));
-  topT.value = String(state.searchTopThreads);
-  topM.value = String(state.searchTopMsgsPerThread);
+    if (savedT !== null) state.searchMinThreadSim = clamp01(savedT);
+    if (savedM !== null) state.searchMinMsgSim = clamp01(savedM);
+    if (savedTopT !== null) state.searchTopThreads = clampInt(savedTopT, 1, 50, 5);
+    if (savedTopM !== null) state.searchTopMsgsPerThread = clampInt(savedTopM, 1, 50, 5);
 
-  const refreshLabels = () => {
-    tVal.textContent = state.searchMinThreadSim.toFixed(2);
-    mVal.textContent = state.searchMinMsgSim.toFixed(2);
-    refreshSearchSettingsHint();
-  };
-  refreshLabels();
-
-  t.addEventListener("input", () => {
-    state.searchMinThreadSim = clamp01(Number(t.value) / 100);
-    localStorage.setItem("nexus:minThreadSim", String(state.searchMinThreadSim));
-    refreshLabels();
-  });
-
-  m.addEventListener("input", () => {
-    state.searchMinMsgSim = clamp01(Number(m.value) / 100);
-    localStorage.setItem("nexus:minMsgSim", String(state.searchMinMsgSim));
-    refreshLabels();
-  });
-
-  topT.addEventListener("input", () => {
-    state.searchTopThreads = clampInt(topT.value, 1, 50, 5);
+    // sync UI
+    t.value = String(Math.round(state.searchMinThreadSim * 100));
+    m.value = String(Math.round(state.searchMinMsgSim * 100));
     topT.value = String(state.searchTopThreads);
-    localStorage.setItem("nexus:topThreads", String(state.searchTopThreads));
-    refreshLabels();
-  });
-
-  topM.addEventListener("input", () => {
-    state.searchTopMsgsPerThread = clampInt(topM.value, 1, 50, 5);
     topM.value = String(state.searchTopMsgsPerThread);
-    localStorage.setItem("nexus:topMsgsPerThread", String(state.searchTopMsgsPerThread));
+
+    const refreshLabels = () => {
+        tVal.textContent = state.searchMinThreadSim.toFixed(2);
+        mVal.textContent = state.searchMinMsgSim.toFixed(2);
+        refreshSearchSettingsHint();
+    };
     refreshLabels();
-  });
+
+    t.addEventListener("input", () => {
+        state.searchMinThreadSim = clamp01(Number(t.value) / 100);
+        localStorage.setItem("nexus:minThreadSim", String(state.searchMinThreadSim));
+        refreshLabels();
+    });
+
+    m.addEventListener("input", () => {
+        state.searchMinMsgSim = clamp01(Number(m.value) / 100);
+        localStorage.setItem("nexus:minMsgSim", String(state.searchMinMsgSim));
+        refreshLabels();
+    });
+
+    topT.addEventListener("input", () => {
+        state.searchTopThreads = clampInt(topT.value, 1, 50, 5);
+        topT.value = String(state.searchTopThreads);
+        localStorage.setItem("nexus:topThreads", String(state.searchTopThreads));
+        refreshLabels();
+    });
+
+    topM.addEventListener("input", () => {
+        state.searchTopMsgsPerThread = clampInt(topM.value, 1, 50, 5);
+        topM.value = String(state.searchTopMsgsPerThread);
+        localStorage.setItem("nexus:topMsgsPerThread", String(state.searchTopMsgsPerThread));
+        refreshLabels();
+    });
 }
 
 
@@ -387,9 +388,10 @@ function renderMessageList(messages, opts) {
 
         // all messages are left-aligned like group chats
         const side = "left";
+        const tid = (opts && opts.threadIdForAll) ? opts.threadIdForAll : (m.thread_id || "");
 
         html += `
-        <div class="msgRow ${side}">
+        <div class="msgRow ${side}" data-mid="${esc(m.id)}" data-tid="${esc(tid)}">
           <div class="bubble ${side === "right" ? "right" : ""}">
             <div class="metaLine">
               <div style="display:flex; align-items:center; gap:8px; min-width:0;">
@@ -793,12 +795,12 @@ async function performSearch() {
         const topMsgs = String(state.searchTopMsgsPerThread);
 
         const results = await apiGet(
-          `/api/chats/${state.activeChatId}/search` +
-          `?q=${encodeURIComponent(query)}` +
-          `&min_thread_sim=${encodeURIComponent(t)}` +
-          `&min_msg_sim=${encodeURIComponent(m)}` +
-          `&top_threads=${encodeURIComponent(topThreads)}` +
-          `&top_messages_per_thread=${encodeURIComponent(topMsgs)}`
+            `/api/chats/${state.activeChatId}/search` +
+            `?q=${encodeURIComponent(query)}` +
+            `&min_thread_sim=${encodeURIComponent(t)}` +
+            `&min_msg_sim=${encodeURIComponent(m)}` +
+            `&top_threads=${encodeURIComponent(topThreads)}` +
+            `&top_messages_per_thread=${encodeURIComponent(topMsgs)}`
         );
         renderSearchResults(results, query);
     } catch (e) {
@@ -829,7 +831,7 @@ function renderSearchResults(results, query) {
       <div class="searchSection">
         <div class="searchSectionHeader">
           <span>${esc(title)}</span>
-          <span class="searchScore">Rel: ${(tscore * 100).toFixed(0)}%</span>
+          <span class="searchScore">Similarity: ${(tscore * 100).toFixed(0)}%</span>
         </div>
         <div class="searchSectionBody">
     `;
@@ -894,6 +896,130 @@ window.goToTopic = async (tid, mid) => {
     }
 };
 
+// ---------- Reassign (Right-click) ----------
+let reassignMenuEl = null;
+let reassignCtx = null; // { mid, fromTid }
+
+function ensureReassignMenu() {
+    if (reassignMenuEl) return;
+
+    reassignMenuEl = document.createElement("div");
+    reassignMenuEl.id = "reassignMenu";
+    reassignMenuEl.className = "ctxMenu";
+    reassignMenuEl.style.display = "none";
+    reassignMenuEl.innerHTML = `
+    <div class="ctxMenuTitle">Move message to…</div>
+    <div class="ctxMenuItems" id="reassignMenuItems"></div>
+  `;
+    document.body.appendChild(reassignMenuEl);
+
+    // close on click outside / escape
+    document.addEventListener("mousedown", (e) => {
+        if (reassignMenuEl.style.display !== "none" && !reassignMenuEl.contains(e.target)) {
+            hideReassignMenu();
+        }
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") hideReassignMenu();
+    });
+    window.addEventListener("resize", hideReassignMenu);
+    window.addEventListener("scroll", hideReassignMenu, true);
+}
+
+function hideReassignMenu() {
+    if (!reassignMenuEl) return;
+    reassignMenuEl.style.display = "none";
+    reassignCtx = null;
+}
+
+function openReassignMenu({mid, fromTid, x, y}) {
+    ensureReassignMenu();
+    reassignCtx = {mid, fromTid};
+
+    const items = document.getElementById("reassignMenuItems");
+    const topics = (state.cachedTopics || []);
+
+    if (!topics.length) {
+        items.innerHTML = `<div class="ctxMenuItem disabled">No topics available</div>`;
+    } else {
+        items.innerHTML = topics.map(t => {
+            const disabled = (t.id === fromTid) ? "disabled" : "";
+            const label = `${esc(t.title || "Untitled")} <span class="muted">(${t.message_count || 0})</span>`;
+            return `<div class="ctxMenuItem ${disabled}" data-tid="${esc(t.id)}">${label}</div>`;
+        }).join("");
+    }
+
+    // click handler
+    items.onclick = async (e) => {
+        const item = e.target.closest(".ctxMenuItem");
+        if (!item || item.classList.contains("disabled")) return;
+        const toTid = item.getAttribute("data-tid");
+        await doReassign(reassignCtx.mid, reassignCtx.fromTid, toTid);
+        hideReassignMenu();
+    };
+
+    // position
+    reassignMenuEl.style.display = "block";
+    const pad = 8;
+    const rect = reassignMenuEl.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width - pad;
+    const maxY = window.innerHeight - rect.height - pad;
+    reassignMenuEl.style.left = Math.max(pad, Math.min(x, maxX)) + "px";
+    reassignMenuEl.style.top = Math.max(pad, Math.min(y, maxY)) + "px";
+}
+
+async function doReassign(messageId, fromTid, toTid) {
+    if (!state.activeChatId) return;
+
+    // remove_from:
+    // - timeline: use message's current best thread (data-tid)
+    // - focus: use the currently focused topic
+    const remove_from = [];
+    if (fromTid) remove_from.push(fromTid);
+
+    await apiPost(`/api/chats/${encodeURIComponent(state.activeChatId)}/user_fix`, {
+        message_id: messageId,
+        add_to: [toTid],
+        remove_from
+    });
+
+    // refresh UI
+    await refreshAfterReassign();
+}
+
+// Hook right-click on messages inside #content
+function installReassignRightClick() {
+    const content = document.getElementById("content");
+    if (!content) return;
+
+    content.addEventListener("contextmenu", (e) => {
+        const row = e.target.closest("[data-mid]");
+        if (!row) return;
+        e.preventDefault();
+
+        const mid = row.getAttribute("data-mid");
+        const tidFromRow = row.getAttribute("data-tid") || "";
+        const fromTid = (state.mode === "focus") ? (state.activeTopicId || "") : tidFromRow;
+
+        openReassignMenu({mid, fromTid, x: e.clientX, y: e.clientY});
+    });
+}
+
+async function refreshAfterReassign() {
+    const el = document.getElementById("content"); // your scroll container
+    const prevTop = el ? el.scrollTop : 0;
+
+    await loadTopics();
+    if (state.mode === "timeline") {
+        await loadTimeline(true);
+    } else if (state.activeTopicId) {
+        await loadFocus(state.activeTopicId);
+    }
+
+    // restore
+    if (el) el.scrollTop = prevTop;
+}
+
 
 // -----------------------------
 // Wire up
@@ -940,6 +1066,7 @@ $("globalSearchInput").addEventListener("keydown", (e) => {
 });
 
 initSearchSettings();
+installReassignRightClick();
 
 $("clearSearchBtn").onclick = closeSearch;
 

@@ -706,7 +706,6 @@ details .summaryBox {
 
 .tuneItem {
     flex: 1;
-    height: 60px;
     border: 1px solid var(--border);
     background: rgba(255, 255, 255, .03);
     border-radius: 12px;
@@ -988,4 +987,52 @@ details .summaryBox {
 
 .searchSettings input[type="range"]::-webkit-slider-thumb:hover{
   box-shadow: 0 8px 18px rgba(0,0,0,.45);
+}
+
+.ctxMenu{
+  position: fixed;
+  z-index: 9999;
+  min-width: 220px;
+  max-width: 320px;
+  border: 1px solid var(--border);
+  background: rgba(20, 18, 35, 0.98);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.45);
+  overflow: hidden;
+}
+
+.ctxMenuTitle{
+  padding: 10px 12px;
+  font-weight: 800;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.ctxMenuItems{
+  max-height: 280px;
+  overflow: auto;
+}
+
+.ctxMenuItem{
+  padding: 10px 12px;
+  cursor: pointer;
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ctxMenuItem:hover{
+  background: rgba(255,255,255,0.06);
+}
+
+.ctxMenuItem.disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ctxMenuItem .muted{
+  opacity: 0.75;
+  font-weight: 650;
 }
