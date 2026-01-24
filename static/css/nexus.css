@@ -1046,20 +1046,23 @@ details .summaryBox {
 /* Scrollbar stylization */
 .list::-webkit-scrollbar,
 .content::-webkit-scrollbar,
-.ctxMenuItems::-webkit-scrollbar {
+.ctxMenuItems::-webkit-scrollbar,
+.settingsBody::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
 
 .list::-webkit-scrollbar-track,
 .content::-webkit-scrollbar-track,
-.ctxMenuItems::-webkit-scrollbar-track {
+.ctxMenuItems::-webkit-scrollbar-track,
+.settingsBody::-webkit-scrollbar-track {
     background: transparent;
 }
 
 .list::-webkit-scrollbar-thumb,
 .content::-webkit-scrollbar-thumb,
-.ctxMenuItems::-webkit-scrollbar-thumb {
+.ctxMenuItems::-webkit-scrollbar-thumb,
+.settingsBody::-webkit-scrollbar-thumb {
     background: rgba(167, 139, 250, 0.55);
     border-radius: 999px;
     border: 2px solid rgba(0, 0, 0, 0);
@@ -1069,7 +1072,8 @@ details .summaryBox {
 
 .list::-webkit-scrollbar-thumb:hover,
 .content::-webkit-scrollbar-thumb:hover,
-.ctxMenuItems::-webkit-scrollbar-thumb:hover {
+.ctxMenuItems::-webkit-scrollbar-thumb:hover,
+.settingsBody::-webkit-scrollbar-thumb:hover {
     background: rgba(167, 139, 250, 0.75);
 }
 
