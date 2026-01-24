@@ -81,6 +81,10 @@ class ThreadStore:
         """Retrieve all thread IDs."""
         return list(self.by_id.keys())
 
+    def clear(self) -> None:
+        """Clear all threads."""
+        self.by_id.clear()
+
     def __repr__(self) -> str:
         return f"<ThreadStore with {len(self.by_id)} threads>"
 
@@ -124,6 +128,21 @@ class EmbeddingStore:
         X = np.stack([self.data[(space, _id)] for _id in ids], axis=0) if ids else np.zeros((0,0), dtype=np.float32)
         return ids, X
 
+    def keys(self, space: SpaceId) -> List[str]:
+        """
+        Get all IDs stored in a specific space, in stable insertion order.
+        """
+        return self.order.get(space, [])
+
+    def clear_space(self, space: SpaceId) -> None:
+        """Clear all vectors in a specific space."""
+        if space in self.order:
+            ids_to_remove = self.order[space]
+            for _id in ids_to_remove:
+                if (space, _id) in self.data:
+                    del self.data[(space, _id)]
+            del self.order[space]
+
     def __repr__(self) -> str:
         return f"<EmbeddingStore with {len(self.data)} vectors>"
 
@@ -158,6 +177,12 @@ class MembershipStore:
         for m in self.by_message.get(mid, []):
             if m.thread_id == tid and m.status == "active":
                 m.status = "rejected"
+
+    def clear(self) -> None:
+        """Clear all memberships."""
+        self.by_message.clear()
+        self.by_thread.clear()
+        self._all.clear()
 
     def __repr__(self) -> str:
         return f"<MembershipStore with {len(self._all)} memberships>"
