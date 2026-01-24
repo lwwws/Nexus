@@ -756,6 +756,63 @@ details .summaryBox {
     margin-left: 4px;
 }
 
+.numWrap{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.numWrap input[type="number"]{
+  padding-right: 34px; /* room for stepper buttons */
+}
+
+.numSteps{
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+.numStep{
+  width: 20px;
+  height: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba(167, 139, 250, 0.75);
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.numStep:hover{
+  color: rgba(167, 139, 250, 0.95);
+  opacity: 1;
+}
+
+.numStep:active{
+  transform: translateY(1px);
+}
+
+.numStep:focus{
+  outline: none;
+}
+
+.numField input[type="number"]::-webkit-outer-spin-button,
+.numField input[type="number"]::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .settingsActions {
     display: flex;
     flex-direction: column;

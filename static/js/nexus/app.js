@@ -1277,6 +1277,21 @@ async function refreshAfterReassign() {
     if (el) el.scrollTop = prevTop;
 }
 
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".numStep");
+  if(!btn) return;
+
+  const wrap = btn.closest(".numWrap");
+  const input = wrap?.querySelector('input[type="number"]');
+  if(!input) return;
+
+  const delta = parseInt(btn.dataset.step, 10) || 0;
+  const step = parseInt(input.step || "1", 10) || 1;
+
+  input.value = String((parseInt(input.value || "0", 10) || 0) + delta * step);
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+});
+
 
 // -----------------------------
 // Wire up
