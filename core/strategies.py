@@ -287,7 +287,8 @@ class BufferedUpdateStrategy(UpdateStrategy):
                  percentile_threshold: int = 10,
                  buffer_size_limit: int = 15,
                  pending_size_limit: int = 50,
-                 min_delta: float = 0.05
+                 min_delta: float = 0.05,
+                 anchor_size: int = 50,
                  ):
 
         self.embeddings = embeddings
@@ -306,9 +307,17 @@ class BufferedUpdateStrategy(UpdateStrategy):
         self.pending_limit = pending_size_limit
 
         self.min_delta = min_delta
+        self.anchor_size = anchor_size
 
         self._buffer: List[MessageId] = []
         self._pending: List[MessageId] = []
+
+    def update_buffer_limits(self, buffer_size_limit: Optional[int] = None, pending_size_limit: Optional[int] = None) -> None:
+        """Update buffer size limits dynamically."""
+        if buffer_size_limit is not None:
+            self.buffer_limit = buffer_size_limit
+        if pending_size_limit is not None:
+            self.pending_limit = pending_size_limit
 
     def on_new_message(self, message_id: MessageId) -> UpdateResult:
         best_tid, best_score, second_tid, second_score = self._find_top2_threads(message_id)
@@ -341,52 +350,93 @@ class BufferedUpdateStrategy(UpdateStrategy):
 
     def flush(self) -> UpdateResult:
         """
-        Flush strategy:
-        - Cluster (pending + buffer) to give HDBSCAN enough points.
-        - Keep noise (unassigned) in pending for later retry.
-        - Not dropping messages missing embeddings; keep them pending.
+        Flush strategy with Anchor Injection:
+        1. Cluster (pending + buffer) augmented with recent 'anchor' messages.
+        2. Anchors stabilize the clustering (density) but their labels are discarded.
+        3. Returns labels only for the new buffer.
         """
         if not self._buffer and not self._pending:
             return UpdateResult(action="buffered")
 
-        # Combine to form a larger batch (helps "single-topic but small buffer" cases)
-        batch_ids = self._pending + self._buffer
-        self._buffer = []  # we'll rebuild pending below
+        # Identify Targets (The new data we want to label)
+        target_ids = self._pending + self._buffer
+        self._buffer = []  # Clear buffer immediately
+        target_set = set(target_ids)
 
-        logger.info(f"Strategy flushing batch={len(batch_ids)} (pending={len(self._pending)})")
+        # Inject Anchors (Recent History)
+        # We grab the last self.anchor_size processed messages from the cluster space.
+        anchor_ids = []
+        try:
+            all_keys = self.embeddings.keys(self.msg_cluster_space)
+            candidates = [k for k in all_keys if k not in target_set]
+            anchor_ids = candidates[-self.anchor_size:]
+        except Exception:
+            # Fallback if store doesn't support listing keys
+            anchor_ids = []
+
+        # Combine
+        combined_ids = target_ids + anchor_ids
 
         vecs: List[np.ndarray] = []
-        valid_ids: List[MessageId] = []
-        missing_ids: List[MessageId] = []
+        valid_indices: List[int] = []  # Maps index in X back to combined_ids index
+        missing_targets: List[MessageId] = []
 
-        for mid in batch_ids:
+        for i, mid in enumerate(combined_ids):
             if self.embeddings.has(self.msg_cluster_space, mid):
                 vecs.append(self.embeddings.get(self.msg_cluster_space, mid))
-                valid_ids.append(mid)
+                valid_indices.append(i)
             else:
-                missing_ids.append(mid)
+                # If a target message is missing, retry later
+                if i < len(target_ids):
+                    missing_targets.append(mid)
 
         X = np.stack(vecs, axis=0)
 
+        # Cluster the Combined Batch
         try:
-            labels, scores = self.clusterer.cluster(X)
+            all_labels, all_scores = self.clusterer.cluster(X)
         except ValueError as e:
-            logger.warning(f"Cluster failed on n={len(valid_ids)}: {e}")
-            self._pending = (missing_ids + valid_ids)[-self.pending_limit:]
+            logger.warning(f"Cluster failed: {e}")
+            self._pending = target_ids[-self.pending_limit:]
             return UpdateResult(action="buffered")
 
-        # Identify which messages are "noise" (label_list empty in your adapter)
-        noise_ids: List[MessageId] = [mid for mid, lab in zip(valid_ids, labels) if not lab]
+        # Extract Results (Discard Anchors)
+        flush_ids = []
+        flush_labels = []
+        flush_scores = []
+        noise_ids = []
 
-        # Keep missing + noise for retry, cap size
-        self._pending = (missing_ids + noise_ids)[-self.pending_limit:]
+        # Map vector index (0..len(vecs)) back to results
+        result_map = {valid_idx: (lbl, scr) for valid_idx, lbl, scr in zip(valid_indices, all_labels, all_scores)}
 
-        # Return the clustering result for processor to create threads/memberships
+        # Iterate ONLY over target_ids (indices 0 to len(target_ids)-1)
+        for i, mid in enumerate(target_ids):
+            if mid in missing_targets: continue
+
+            if i in result_map:
+                lbl_list, scr_list = result_map[i]
+
+                # Check for noise (empty list = noise in your adapter)
+                if lbl_list:
+                    flush_ids.append(mid)
+                    flush_labels.append(lbl_list)
+                    flush_scores.append(scr_list)
+                else:
+                    noise_ids.append(mid)
+
+        # Update Pending (Retry missing + noise)
+        self._pending = (missing_targets + noise_ids)[-self.pending_limit:]
+
+        logger.info(
+            f"Flush: {len(target_ids)} targets + {len(anchor_ids)} anchors -> "
+            f"{len(flush_ids)} assigned, {len(noise_ids)} noise"
+        )
+
         return UpdateResult(
             action="flushed",
-            flush_ids=valid_ids,
-            flush_labels=labels,
-            flush_scores=scores
+            flush_ids=flush_ids,
+            flush_labels=flush_labels,
+            flush_scores=flush_scores
         )
 
     def _find_top2_threads(self, mid: MessageId) -> Tuple[Optional[str], float, Optional[str], float]:
