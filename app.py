@@ -94,6 +94,7 @@ class ChatSession:
 
     # The Queue Infrastructure for new messages
     ingest_queue: Queue = field(default_factory=Queue)
+    ingest_job_id: Optional[str] = None
     worker_running: bool = False
     worker_lock: threading.Lock = field(default_factory=threading.Lock)  # Protects the startup check
 
@@ -116,6 +117,19 @@ JOBS: Dict[str, JobState] = {}
 
 def _now_iso() -> str:
     return dt.datetime.now().isoformat(timespec="seconds")
+
+def _job_update(job: JobState, *, stage: str = None, pct: int = None,
+                done: int = None, total: int = None, detail: str = None):
+    """Single consistent place to update job fields."""
+    if stage is not None:
+        job.stage = stage
+    if pct is not None:
+        job.progress = max(job.progress, int(pct))
+    # Prefer structured done/total. Fallback to explicit detail string.
+    if done is not None and total is not None:
+        job.detail = f"{int(done)}/{int(total)}"
+    elif detail is not None:
+        job.detail = detail
 
 
 def _require_chat(chat_id: str) -> ChatSession:
@@ -180,8 +194,8 @@ class ProgressEmbedder:
             done += len(batch)
             pct = self.start_pct + int((self.end_pct - self.start_pct) * (done / max(1, n)))
             with LOCK:
-                self.job.progress = max(self.job.progress, pct)
-                self.job.detail = f"Embedding messages: {done}/{n}"
+                _job_update(self.job, stage="Embedding", pct=pct, done=done, total=n)
+
 
         return np.vstack(X_parts)
 
@@ -466,17 +480,13 @@ def _run_batch_with_progress(chat: ChatSession, job: JobState) -> None:
 
     def on_progress(stage: str, percent: int):
         with LOCK:
-            job.stage = stage
-            job.progress = max(job.progress, percent)
-            job.detail = f"({percent}%)"
+            _job_update(job, stage=stage, pct=percent)
 
-    # 4. Run the Processor (This handles Formatting -> Embedding -> Clustering -> Labeling)
+    # Run the Processor (This handles Formatting -> Embedding -> Clustering -> Labeling)
     processor.run_batch(progress_callback=on_progress)
-
     with LOCK:
-        job.progress = 100
-        job.stage = "Done"
-        job.detail = f"Processed {len(chat.threads.all())} topics."
+        _job_update(job, stage="Done", pct=100, detail=f"Topics: {len(chat.threads.all())}")
+
 
 
 def _run_job_process_chat_with_cleanup(job: JobState, filepath: str) -> None:
@@ -496,15 +506,12 @@ def _run_job_process_chat(job: JobState, filepath: str) -> None:
         with LOCK:
             job.status = "running"
             job.started_at = _now_iso()
-            job.stage = "Parsing WhatsApp export"
-            job.progress = 5
+            _job_update(job, stage="Parsing", pct=5, detail="")
 
         df = _try_parse_whatsapp(filepath)
 
         with LOCK:
-            job.stage = "Building chat session"
-            job.progress = 12
-            job.detail = ""
+            _job_update(job, stage="Building chat", pct=12, detail="")
 
         chat = _require_chat(job.chat_id)
         chat.processor = _build_processor(chat, job)
@@ -519,12 +526,8 @@ def _run_job_process_chat(job: JobState, filepath: str) -> None:
                 text=str(row["message"]),
             ))
         chat.messages.add(msgs)
-
         with LOCK:
-            job.progress = 20
-            job.stage = "Embedding + clustering + labeling topics"
-            job.detail = f"Loaded {len(msgs)} messages"
-
+            _job_update(job, stage="Embedding + clustering + labeling topics", pct=20, detail=f"Loaded {len(msgs)} messages")
         _run_batch_with_progress(chat, job)
 
         chat.is_ready = True
@@ -533,8 +536,7 @@ def _run_job_process_chat(job: JobState, filepath: str) -> None:
 
         with LOCK:
             job.status = "done"
-            job.stage = "Done"
-            job.progress = 100
+            _job_update(job, stage="Done", pct=100)
             job.finished_at = _now_iso()
 
     except Exception as e:
@@ -984,6 +986,7 @@ def _ingest_worker(chat_id: str):
     """
     Dedicated worker thread for a specific chat.
     Processes messages one by one from the queue.
+    Updates the *single* per-chat ingest job (chat.ingest_job_id)
     """
     logger.info(f"Worker started for chat {chat_id}")
 
@@ -999,11 +1002,26 @@ def _ingest_worker(chat_id: str):
 
             # Get next message (Blocking with timeout for liveness check)
             try:
-                # Wait up to k seconds for a message
-                msg = chat.ingest_queue.get(timeout=1.0)
+                item = chat.ingest_queue.get(timeout=1.0)
             except Empty:
-                # No messages? Loop back to check if chat still exists
                 continue
+
+            msg, job_id = item
+
+            # Mark job running
+            with LOCK:
+                job = JOBS.get(job_id)
+                if job:
+                    if job.status != "running":
+                        job.status = "running"
+                        job.started_at = job.started_at or _now_iso()
+
+                    try:
+                        detail = f"queue={chat.ingest_queue.qsize()}"
+                    except Exception:
+                        detail = ""
+
+                    _job_update(job, stage="Processing", pct=10, detail=detail)
 
             # Process the message
             try:
@@ -1013,10 +1031,52 @@ def _ingest_worker(chat_id: str):
                     chat.processor.ingest_new_message(msg)
                     chat.updated_at = dt.datetime.now()
                     logger.info(f"Ingested message {msg.id}")
-            except Exception:
+
+                    # Update job progress after each message
+                    with LOCK:
+                        job = JOBS.get(job_id)
+                        if job and job.status == "running":
+                            try:
+                                detail = f"queue={chat.ingest_queue.qsize()}"
+                            except Exception:
+                                detail = ""
+
+                            _job_update(job, stage="Processing", pct=50, detail=detail)
+
+            except Exception as e:
                 logger.exception(f"Worker failed to ingest {msg.id}")
+                with LOCK:
+                    job = JOBS.get(job_id)
+                    if job:
+                        job.status = "error"
+                        job.stage = "Error"
+                        job.error = str(e)
+                        job.finished_at = _now_iso()
+
+
             finally:
                 chat.ingest_queue.task_done()
+
+                # If we just drained the queue, mark the per-chat job done.
+                # Doing after task_done() so unfinished_tasks is accurate.
+                drained = False
+                try:
+                    drained = (chat.ingest_queue.unfinished_tasks == 0 and chat.ingest_queue.qsize() == 0)
+                except Exception:
+                    # fallback: qsize alone
+                    try:
+                        drained = (chat.ingest_queue.qsize() == 0)
+                    except Exception:
+                        drained = False
+
+                if drained:
+                    with LOCK:
+                        job = JOBS.get(job_id)
+                        if job and job.status not in ("done", "error"):
+                            job.status = "done"
+                            job.finished_at = _now_iso()
+                            _job_update(job, stage="Done", pct=100, detail="Idle")
+
     finally:
         # allow restart if the thread ever exits
         with LOCK:
@@ -1054,8 +1114,20 @@ def api_post_message(chat_id: str):
     chat.messages.add([msg])
     chat.updated_at = dt.datetime.now()
 
+    with LOCK:
+        if not chat.ingest_job_id or chat.ingest_job_id not in JOBS or JOBS[chat.ingest_job_id].status in ("done", "error"):
+            chat.ingest_job_id = f"ingest_{chat_id}"
+            JOBS[chat.ingest_job_id] = JobState(
+                job_id=chat.ingest_job_id,
+                chat_id=chat_id,
+                stage="Queued",
+                progress=0,
+                status="queued",
+            )
+        job_id = chat.ingest_job_id
+
     # Enqueue
-    chat.ingest_queue.put(msg)
+    chat.ingest_queue.put((msg, job_id))
 
     # Ensure Worker is Running (Thread-Safe lazy start)
     if not chat.worker_running:
@@ -1070,6 +1142,7 @@ def api_post_message(chat_id: str):
     return jsonify({
         "status": "pending",
         "message_id": mid,
+        "job_id": job_id,
         "info": "Queued for processing."
     }), 202
 
@@ -1093,7 +1166,7 @@ def api_flush_chat(chat_id: str):
         buffer_count = len(strategy._buffer)
         pending_count = len(strategy._pending)
         total_count = buffer_count + pending_count
-        total_needed = BUFFER_SIZE_MIN + PENDING_SIZE_MIN
+        total_needed = BUFFER_SIZE_MIN
 
         # Minimum messages needed for HDBSCAN (min_cluster_size=7, min_samples=2)
         if total_count < total_needed:

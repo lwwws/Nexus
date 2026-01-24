@@ -240,50 +240,54 @@ async function reclusterAll() {
             headers: { "Content-Type": "application/json" }
         });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!res.ok) {
-            alert(`Recluster failed: ${data.error || "Unknown error"}`);
-            return;
-        }
+    if (!res.ok) {
+        alert(`Recluster failed: ${data.error || "Unknown error"}`);
+        return;
+    }
 
-        alert(`Reclustering started! Job ID: ${data.job_id}\n\nThis will run in the background. The chat will be unavailable during processing.`);
-        closeSettings();
+    closeSettings();
 
-        // Poll for job completion
-        if (data.job_id) {
-            pollJobUntilDone(data.job_id);
-        }
+    // show progress overlay
+    showOverlay(true);
+    setJobUI({ stage: "Queued", progress: 0, detail: "", error: null, status: "queued" });
+
+    // wait for completion AND update UI while polling
+    const finalJob = await pollJobUntilDone(data.job_id, 500, (j) => setJobUI(j));
+
+    // refresh UI after recluster finishes
+    await loadTopics();
+    if (state.mode === "timeline") {
+        await loadTimeline(true);
+    } else if (state.activeTopicId) {
+        await loadFocus(state.activeTopicId, true);
+    }
+
+    // (optional) leave overlay until user closes; or auto-close:
+    // showOverlay(false);
+
     } catch (err) {
         console.error("Recluster error:", err);
         alert("Failed to start reclustering: " + err.message);
+        setJobUI({ stage: "Error", progress: 0, detail: "", error: err.message, status: "error" });
+        showOverlay(true);
     }
 }
 
-async function pollJobUntilDone(jobId) {
-    const interval = setInterval(async () => {
-        try {
-            const res = await fetch(`/api/jobs/${jobId}`);
-            const job = await res.json();
+async function pollJobUntilDone(jobId, intervalMs = 500, onUpdate = null) {
+    while (true) {
+        const job = await apiGet(`/api/jobs/${encodeURIComponent(jobId)}`);
 
-            if (job.status === "done") {
-                clearInterval(interval);
-                alert("Reclustering complete! Reloading chat...");
-                // Reload the chat data
-                if (state.activeChatId) {
-                    await loadTopics();
-                    if (state.mode === "timeline") {
-                        await loadTimeline();
-                    }
-                }
-            } else if (job.status === "error") {
-                clearInterval(interval);
-                alert(`Reclustering failed: ${job.error || "Unknown error"}`);
-            }
-        } catch (err) {
-            console.error("Error polling job:", err);
+        // Optional UI hook (no-op unless provided)
+        if (typeof onUpdate === "function") {
+          try { onUpdate(job); } catch (_) {}
         }
-    }, 2000); // Poll every 2 seconds
+
+        if (job.status === "done") return job;
+        if (job.status === "error") throw new Error(job.error || "Job failed");
+        await new Promise(r => setTimeout(r, intervalMs));
+    }
 }
 
 
@@ -359,9 +363,11 @@ function showOverlay(show) {
 }
 
 function setJobUI({stage, progress, detail, error, status}) {
-    $("jobStage").textContent = stage || "";
-    $("jobDetail").textContent = detail || "";
-    $("jobBar").style.width = `${Math.max(0, Math.min(100, progress || 0))}%`;
+    const pct = Math.max(0, Math.min(100, Number(progress || 0)));
+    $("jobStage").textContent = stage ? `(${pct}%) - ${stage}` : "";
+    $("jobDetail").textContent = detail || "";  // e.g. "12/80"
+    $("jobBar").style.width = `${pct}%`;
+
     if (error) {
         $("jobError").style.display = "block";
         $("jobError").textContent = error;
@@ -988,18 +994,24 @@ async function sendMessage() {
     try {
         const res = await apiPost(`/api/chats/${encodeURIComponent(state.activeChatId)}/message`, {user, text});
         const mid = res.message_id;
+        const jobId = res.job_id;
+
         $("msgInput").value = "";
 
+        // Optional: update timeline immediately so the message appears right away
+        if (state.mode === "timeline") {
+            await loadTimeline(true);
+        }
 
-        await waitMessageProcessed(state.activeChatId, mid);
+        // Now wait for the worker to fully finish (including clustering/labeling), then refresh topics once
+        await pollJobUntilDone(jobId);
         await loadTopics();
-
         if (state.mode === "timeline") {
             // Reload the latest window (newest at bottom)
             await loadTimeline(true);
         } else {
             if (state.activeTopicId) {
-                await loadFocus(state.activeTopicId);
+                await loadFocus(state.activeTopicId, true);
             }
         }
     } catch (err) {
