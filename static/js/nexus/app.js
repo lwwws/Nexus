@@ -104,6 +104,188 @@ function initSearchSettings() {
     });
 }
 
+async function initBufferSettings() {
+    const bufferSize = $("bufferSizeLimit");
+    const pendingSize = $("pendingSizeLimit");
+    const bufferVal = $("bufferSizeLimitVal");
+    const pendingVal = $("pendingSizeLimitVal");
+
+    // Constraints - set when chat is selected
+    let bufferMin = 5;
+    let pendingMin = 5;
+    let bufferMax = 100;
+    let pendingMax = 200;
+
+    // Function to update buffer settings in the backend
+    const updateBackend = async (updates) => {
+        if (!state.activeChatId) return;
+        try {
+            await apiPost(`/api/chats/${encodeURIComponent(state.activeChatId)}/config`, updates);
+        } catch (err) {
+            console.error("Failed to update buffer config:", err);
+        }
+    };
+
+    // Update slider when value changes
+    bufferSize.addEventListener("input", async () => {
+        const val = clampInt(bufferSize.value, bufferMin, bufferMax, 10);
+        bufferSize.value = String(val);
+        bufferVal.textContent = String(val);
+        await updateBackend({ buffer_size_limit: val });
+    });
+
+    pendingSize.addEventListener("input", async () => {
+        const val = clampInt(pendingSize.value, pendingMin, pendingMax, 50);
+        pendingSize.value = String(val);
+        pendingVal.textContent = String(val);
+        await updateBackend({ pending_size_limit: val });
+    });
+
+    // Called when a chat is selected to load its config
+    window.loadBufferConfig = async (chatId) => {
+        if (!chatId) return;
+
+        try {
+            const config = await apiGet(`/api/chats/${encodeURIComponent(chatId)}/config`);
+
+            // Update constraints from backend
+            bufferMin = config.buffer_size_min || 5;
+            pendingMin = config.pending_size_min || 5;
+            bufferMax = config.buffer_size_max || 100;
+            pendingMax = config.pending_size_max || 200;
+
+            // Update slider attributes
+            bufferSize.min = String(bufferMin);
+            bufferSize.max = String(bufferMax);
+            pendingSize.min = String(pendingMin);
+            pendingSize.max = String(pendingMax);
+
+            // Update current values from backend
+            bufferSize.value = String(config.buffer_size_limit);
+            bufferVal.textContent = String(config.buffer_size_limit);
+
+            pendingSize.value = String(config.pending_size_limit);
+            pendingVal.textContent = String(config.pending_size_limit);
+        } catch (err) {
+            console.error("Failed to load buffer config:", err);
+        }
+    };
+}
+
+async function flushCurrentChat() {
+    if (!state.activeChatId) {
+        alert("No chat is currently active.");
+        return;
+    }
+
+    if (!confirm("Flush buffered messages immediately? This will trigger clustering on buffered messages.")) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/chats/${state.activeChatId}/flush`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(`Flush failed: ${data.error || "Unknown error"}`);
+            return;
+        }
+
+        // Build detailed feedback message
+        let message = "Flush Complete!\n\n";
+
+        if (data.new_threads > 0) {
+            message += `✓ Created ${data.new_threads} new thread${data.new_threads > 1 ? 's' : ''}\n`;
+        } else {
+            message += `• No new threads created (all noise)\n`;
+        }
+
+        message += `\nMessages processed:\n`;
+        message += `  • Assigned: ${data.messages_assigned}\n`;
+        message += `  • Noise (still pending): ${data.messages_noise}\n`;
+        message += `\nBuffers:\n`;
+        message += `  • Before: ${data.buffer_count} buffer + ${data.pending_count} pending\n`;
+        message += `  • After: ${data.pending_after} pending`;
+
+        alert(message);
+        closeSettings();
+
+        // Refresh topics to show updated results
+        if (state.mode === "focus") {
+            await loadTopics();
+        }
+    } catch (err) {
+        console.error("Flush error:", err);
+        alert("Failed to flush chat: " + err.message);
+    }
+}
+
+async function reclusterAll() {
+    if (!state.activeChatId) {
+        alert("No chat is currently active.");
+        return;
+    }
+
+    if (!confirm("⚠️ Recluster everything from scratch? This will:\n\n• Clear all existing threads\n• Reprocess all messages\n• Take some time to complete\n\nContinue?")) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/chats/${state.activeChatId}/recluster`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(`Recluster failed: ${data.error || "Unknown error"}`);
+            return;
+        }
+
+        alert(`Reclustering started! Job ID: ${data.job_id}\n\nThis will run in the background. The chat will be unavailable during processing.`);
+        closeSettings();
+
+        // Poll for job completion
+        if (data.job_id) {
+            pollJobUntilDone(data.job_id);
+        }
+    } catch (err) {
+        console.error("Recluster error:", err);
+        alert("Failed to start reclustering: " + err.message);
+    }
+}
+
+async function pollJobUntilDone(jobId) {
+    const interval = setInterval(async () => {
+        try {
+            const res = await fetch(`/api/jobs/${jobId}`);
+            const job = await res.json();
+
+            if (job.status === "done") {
+                clearInterval(interval);
+                alert("Reclustering complete! Reloading chat...");
+                // Reload the chat data
+                if (state.activeChatId) {
+                    await loadTopics();
+                    if (state.mode === "timeline") {
+                        await loadTimeline();
+                    }
+                }
+            } else if (job.status === "error") {
+                clearInterval(interval);
+                alert(`Reclustering failed: ${job.error || "Unknown error"}`);
+            }
+        } catch (err) {
+            console.error("Error polling job:", err);
+        }
+    }, 2000); // Poll every 2 seconds
+}
+
 
 function setRightCollapsed(isCollapsed) {
     const pane = $("rightPane");
@@ -709,6 +891,11 @@ async function selectChat(chatId, name) {
     await loadTopics();
     await loadUsers();
 
+    // Load buffer configuration for this chat
+    if (window.loadBufferConfig) {
+        await window.loadBufferConfig(chatId);
+    }
+
     // Default view: focus
     setMode("timeline");
 }
@@ -1143,6 +1330,9 @@ $("globalSearchInput").addEventListener("keydown", (e) => {
 });
 
 initSearchSettings();
+initBufferSettings();
 installReassignRightClick();
 
 $("clearSearchBtn").onclick = closeSearch;
+$("flushCurrentBtn").onclick = flushCurrentChat;
+$("reclusterAllBtn").onclick = reclusterAll;

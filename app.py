@@ -1,6 +1,8 @@
 import os
 import uuid
 import json
+import pickle
+import tempfile
 from queue import Queue, Empty
 import threading
 import datetime as dt
@@ -31,12 +33,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("nexus")
 
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = "./uploads"
 app.config["MODEL_PATH"] = "./models/Llama-3.2-3B-Instruct-Q4_K_M.gguf"
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024
 app.config["PERSIST_DIR"] = "./persisted_chats"
 os.makedirs(app.config["PERSIST_DIR"], exist_ok=True)
-os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 # Download Model
 if not os.path.exists(app.config["MODEL_PATH"]):
@@ -66,6 +66,12 @@ LOCK = threading.Lock()
 # Defining embedder
 EMBEDDER = MiniLMEmbedder("all-MiniLM-L6-v2")
 
+# Max/Min limits for buffers
+BUFFER_SIZE_MIN = 5
+PENDING_SIZE_MIN = 5
+BUFFER_SIZE_MAX = 100
+PENDING_SIZE_MAX = 200
+
 @dataclass
 class ChatSession:
     chat_id: str
@@ -81,6 +87,10 @@ class ChatSession:
     processor: Optional[ChatProcessor] = None
     is_ready: bool = False
     last_job_id: Optional[str] = None
+
+    # Buffer settings (user-configurable)
+    buffer_size_limit: int = 10
+    pending_size_limit: int = 50
 
     # The Queue Infrastructure for new messages
     ingest_queue: Queue = field(default_factory=Queue)
@@ -188,8 +198,7 @@ def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcesso
     clusterer = HDBSCANClusterer(min_cluster_size=15, min_samples=5)
 
     # Incremental Clusterer
-    # We use this one inside the BufferedUpdateStrategy
-    incremental_clusterer = HDBSCANClusterer(min_cluster_size=7, min_samples=2)
+    incremental_clusterer = HDBSCANClusterer(min_cluster_size=10, min_samples=4)
 
     thread_rep = CentroidThreadRepComputer(memberships=chat.memberships, embeddings=chat.embeddings)
     update_strategy = BufferedUpdateStrategy(
@@ -199,9 +208,10 @@ def _build_processor(chat: ChatSession, job: Optional[JobState]) -> ChatProcesso
         clusterer=incremental_clusterer,
         global_min_threshold=0.65,
         percentile_threshold=25,
-        buffer_size_limit=10,
-        pending_size_limit=50,
+        buffer_size_limit=chat.buffer_size_limit,
+        pending_size_limit=chat.pending_size_limit,
         min_delta=0.08,
+        anchor_size=50,
     )
 
     formatter = ContextWindowFormatter(window_back=2, window_fwd=1, time_threshold_minutes=10, repeat_center=2)
@@ -304,6 +314,16 @@ def _save_chat(chat: ChatSession) -> None:
         arrays[f"{space}__X"] = X.astype(np.float32)
     np.savez_compressed(npz_path, **arrays)
 
+    # Save the fitted UMAP reducer if it exists
+    if chat.processor and chat.processor.reducer:
+        reducer_path = os.path.join(d, "reducer.pkl")
+        try:
+            with open(reducer_path, "wb") as f:
+                pickle.dump(chat.processor.reducer, f)
+            logger.info(f"Saved reducer for chat {chat.chat_id}")
+        except Exception as e:
+            logger.warning(f"Failed to save reducer for chat {chat.chat_id}: {e}")
+
 
 def _load_all_chats_from_disk() -> None:
     """
@@ -402,6 +422,36 @@ def _load_all_chats_from_disk() -> None:
         # Rebuild processor (no job -> no progress wrapper) :contentReference[oaicite:7]{index=7}
         chat.processor = _build_processor(chat, job=None)
 
+        # Restore the fitted UMAP reducer if it was saved
+        reducer_path = os.path.join(d, "reducer.pkl")
+        if os.path.exists(reducer_path) and chat.processor.reducer:
+            import pickle
+            try:
+                with open(reducer_path, "rb") as f:
+                    chat.processor.reducer = pickle.load(f)
+                logger.info(f"Loaded saved reducer for chat {chat_id}")
+            except Exception as e:
+                logger.warning(f"Failed to load reducer for chat {chat_id}, will refit: {e}")
+                # Fallback: refit if loading fails
+                try:
+                    ids, X = chat.embeddings.get_matrix("msg:full")
+                    if len(ids) > 0 and X.size > 0:
+                        logger.info(f"Refitting reducer for chat {chat_id} with {len(ids)} existing embeddings")
+                        chat.processor.reducer.fit_transform(X)
+                        logger.info(f"Reducer fitted successfully for chat {chat_id}")
+                except Exception as e2:
+                    logger.warning(f"Failed to refit reducer for chat {chat_id}: {e2}")
+        elif chat.processor.reducer:
+            # No saved reducer found, refit on existing embeddings
+            try:
+                ids, X = chat.embeddings.get_matrix("msg:full")
+                if len(ids) > 0 and X.size > 0:
+                    logger.info(f"No saved reducer found. Refitting reducer for chat {chat_id} with {len(ids)} existing embeddings")
+                    chat.processor.reducer.fit_transform(X)
+                    logger.info(f"Reducer fitted successfully for chat {chat_id}")
+            except Exception as e:
+                logger.warning(f"Failed to refit reducer for chat {chat_id}: {e}")
+
         with LOCK:
             CHATS[chat.chat_id] = chat
 
@@ -427,6 +477,18 @@ def _run_batch_with_progress(chat: ChatSession, job: JobState) -> None:
         job.progress = 100
         job.stage = "Done"
         job.detail = f"Processed {len(chat.threads.all())} topics."
+
+
+def _run_job_process_chat_with_cleanup(job: JobState, filepath: str) -> None:
+    """Wrapper that ensures temporary file cleanup after processing."""
+    try:
+        _run_job_process_chat(job, filepath)
+    finally:
+        # Clean up temporary file
+        try:
+            os.unlink(filepath)
+        except Exception:
+            pass
 
 
 def _run_job_process_chat(job: JobState, filepath: str) -> None:
@@ -543,16 +605,25 @@ def api_upload_chat():
     chat_id = f"chat_{uuid.uuid4().hex[:10]}"
     job_id = f"job_{uuid.uuid4().hex[:10]}"
 
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], f"{chat_id}__{filename}")
-    f.save(filepath)
-
     chat_name = os.path.splitext(filename)[0] or chat_id
 
     with LOCK:
         CHATS[chat_id] = ChatSession(chat_id=chat_id, name=chat_name, last_job_id=job_id)
         JOBS[job_id] = JobState(job_id=job_id, chat_id=chat_id, stage="Queued", progress=0)
 
-    t = threading.Thread(target=_run_job_process_chat, args=(JOBS[job_id], filepath), daemon=True)
+    # Create temp file; close handle so other libs can open by path on Windows too
+    suffix = os.path.splitext(filename)[1]
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    tmp_path = tmp.name
+    tmp.close()
+
+    f.save(tmp_path)
+
+    t = threading.Thread(
+        target=_run_job_process_chat_with_cleanup,
+        args=(JOBS[job_id], tmp_path),
+        daemon=True,
+    )
     t.start()
 
     return jsonify({"chat_id": chat_id, "job_id": job_id})
@@ -567,6 +638,75 @@ def api_chat_users(chat_id: str):
 
     users = sorted({m.user for m in chat.messages.all() if m.user != "group_notification"})
     return jsonify(users)
+
+
+@app.route("/api/chats/<chat_id>/config", methods=["GET"])
+def api_chat_config(chat_id: str):
+    """Get chat configuration including buffer constraints."""
+    try:
+        chat = _require_chat(chat_id)
+    except KeyError:
+        return jsonify({"error": "Chat not found"}), 404
+
+    return jsonify({
+        "buffer_size_min": BUFFER_SIZE_MIN,
+        "pending_size_min": PENDING_SIZE_MIN,
+        "buffer_size_limit": chat.buffer_size_limit,
+        "pending_size_limit": chat.pending_size_limit,
+        "buffer_size_max": BUFFER_SIZE_MAX,
+        "pending_size_max": PENDING_SIZE_MAX,
+    })
+
+
+@app.route("/api/chats/<chat_id>/config", methods=["POST"])
+def api_update_chat_config(chat_id: str):
+    """Update chat buffer configuration."""
+    try:
+        chat = _require_chat(chat_id)
+    except KeyError:
+        return jsonify({"error": "Chat not found"}), 404
+
+    data = request.json or {}
+
+    updated_buffer = None
+    updated_pending = None
+
+    # Validate and update buffer_size_limit
+    if "buffer_size_limit" in data:
+        buffer_size = int(data["buffer_size_limit"])
+        if buffer_size < BUFFER_SIZE_MIN:
+            return jsonify({"error": f"buffer_size_limit must be >= {BUFFER_SIZE_MIN}"}), 400
+        if buffer_size > BUFFER_SIZE_MAX:
+            return jsonify({"error": f"buffer_size_limit must be <= {BUFFER_SIZE_MAX}"}), 400
+        chat.buffer_size_limit = buffer_size
+        updated_buffer = buffer_size
+
+    # Validate and update pending_size_limit
+    if "pending_size_limit" in data:
+        pending_size = int(data["pending_size_limit"])
+        if pending_size < PENDING_SIZE_MIN:
+            return jsonify({"error": f"pending_size_limit must be >= {PENDING_SIZE_MIN}"}), 400
+        if pending_size > PENDING_SIZE_MAX:
+            return jsonify({"error": f"pending_size_limit must be <= {PENDING_SIZE_MAX}"}), 400
+        chat.pending_size_limit = pending_size
+        updated_pending = pending_size
+
+    # Update the strategy directly (no need to rebuild entire processor)
+    if chat.processor and chat.processor.update_strategy:
+        if isinstance(chat.processor.update_strategy, BufferedUpdateStrategy):
+            chat.processor.update_strategy.update_buffer_limits(
+                buffer_size_limit=updated_buffer,
+                pending_size_limit=updated_pending
+            )
+            logging.info(f"Chat processor updated buffer: buffer_limit={chat.processor.update_strategy.buffer_limit}, pending_limit={chat.processor.update_strategy.pending_limit}")
+
+    chat.updated_at = dt.datetime.now()
+
+    return jsonify({
+        "ok": True,
+        "buffer_size_limit": chat.buffer_size_limit,
+        "pending_size_limit": chat.pending_size_limit,
+    })
 
 
 @app.route("/api/chats/<chat_id>/topics", methods=["GET"])
@@ -931,6 +1071,165 @@ def api_post_message(chat_id: str):
         "status": "pending",
         "message_id": mid,
         "info": "Queued for processing."
+    }), 202
+
+@app.route("/api/chats/<chat_id>/flush", methods=["POST"])
+def api_flush_chat(chat_id: str):
+    """Force flush the buffered messages immediately."""
+    try:
+        chat = _require_chat(chat_id)
+    except KeyError:
+        return jsonify({"error": "Chat not found"}), 404
+
+    if not chat.is_ready or not chat.processor:
+        return jsonify({"error": "Chat not ready yet"}), 409
+
+    try:
+        # Check if buffer has enough messages for clustering
+        strategy = chat.processor.update_strategy
+        if not isinstance(strategy, BufferedUpdateStrategy):
+            return jsonify({"error": "Chat does not use buffered strategy"}), 400
+
+        buffer_count = len(strategy._buffer)
+        pending_count = len(strategy._pending)
+        total_count = buffer_count + pending_count
+        total_needed = BUFFER_SIZE_MIN + PENDING_SIZE_MIN
+
+        # Minimum messages needed for HDBSCAN (min_cluster_size=7, min_samples=2)
+        if total_count < total_needed:
+            return jsonify({
+                "error": f"Not enough messages to cluster. Need at least {total_needed}, have {total_count}.",
+                "buffer": buffer_count,
+                "pending": pending_count,
+                "total": total_count
+            }), 400
+
+        # Count threads before flush
+        threads_before = len(chat.threads.all())
+
+        # Trigger flush
+        result = strategy.flush()
+
+        # Analyze the flush result
+        if result.action == "flushed":
+            # Count new threads created
+            threads_after = len(chat.threads.all())
+            new_threads = threads_after - threads_before
+
+            # Analyze messages: count noise vs assigned
+            messages_assigned = 0
+            messages_noise = 0
+
+            for labels_list in result.flush_labels:
+                if labels_list:  # Has cluster assignment
+                    messages_assigned += 1
+                else:  # Noise (empty list)
+                    messages_noise += 1
+
+            # Get current pending count after flush
+            pending_after = len(strategy._pending)
+
+            return jsonify({
+                "status": "success",
+                "action": result.action,
+                "buffer_count": buffer_count,
+                "pending_count": pending_count,
+                "total_processed": total_count,
+                "new_threads": new_threads,
+                "messages_assigned": messages_assigned,
+                "messages_noise": messages_noise,
+                "pending_after": pending_after
+            }), 200
+        else:
+            # Flush didn't actually cluster (buffered action)
+            return jsonify({
+                "status": "success",
+                "action": result.action,
+                "buffer_count": buffer_count,
+                "pending_count": pending_count,
+                "total_processed": 0,
+                "new_threads": 0,
+                "messages_assigned": 0,
+                "messages_noise": 0,
+                "pending_after": pending_count
+            }), 200
+
+    except Exception as e:
+        logger.error(f"Error flushing chat {chat_id}: {e}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/chats/<chat_id>/recluster", methods=["POST"])
+def api_recluster_chat(chat_id: str):
+    """Rerun batch clustering from scratch (run_batch)."""
+    try:
+        chat = _require_chat(chat_id)
+    except KeyError:
+        return jsonify({"error": "Chat not found"}), 404
+
+    if not chat.processor:
+        return jsonify({"error": "Chat processor not initialized"}), 409
+
+    # Create a new job for this operation
+    job_id = f"recluster_{uuid.uuid4().hex[:8]}"
+    job = JobState(job_id=job_id, chat_id=chat_id)
+    job.status = "running"
+    job.stage = "Reclustering"
+    job.started_at = dt.datetime.now().isoformat()
+
+    with LOCK:
+        JOBS[job_id] = job
+
+    def _recluster_task():
+        try:
+            logger.info(f"Starting recluster for chat {chat_id}")
+
+            # Save the old thread_centroid_space name before clearing
+            old_space = chat.processor.thread_centroid_space if chat.processor else "thread:centroid"
+
+            # Clear existing threads and memberships
+            chat.threads.clear()
+            chat.memberships.clear()
+
+            # Clear thread embeddings
+            chat.embeddings.clear_space(old_space)
+
+            def progress_cb(stage: str, pct: int):
+                job.stage = stage
+                job.progress = pct
+                logger.info(f"Recluster progress: {stage} {pct}%")
+
+            # Rebuild processor with fresh job for progress tracking
+            chat.processor = _build_processor(chat, job)
+
+            # Clear buffer and pending from strategy after rebuild
+            if isinstance(chat.processor.update_strategy, BufferedUpdateStrategy):
+                chat.processor.update_strategy._buffer = []
+                chat.processor.update_strategy._pending = []
+
+            # Run batch clustering
+            chat.processor.run_batch(progress_callback=progress_cb)
+
+            job.status = "done"
+            job.progress = 100
+            job.stage = "Complete"
+
+            # Save the reclustered chat
+            _save_chat(chat)
+
+            logger.info(f"Recluster complete for chat {chat_id}")
+
+        except Exception as e:
+            logger.error(f"Error reclustering chat {chat_id}: {e}", exc_info=True)
+            job.status = "error"
+            job.error = str(e)
+
+    # Run in background thread
+    threading.Thread(target=_recluster_task, daemon=True).start()
+
+    return jsonify({
+        "status": "started",
+        "job_id": job_id,
+        "message": "Reclustering started in background"
     }), 202
 
 if __name__ == "__main__":

@@ -33,11 +33,17 @@
       <button id="closeSettings" class="ghost">✕</button>
     </header>
     <div class="settingsBody">
-      <h3 class="settingsSection">Search Settings</h3>
+      <h3 class="settingsSection">
+        Search Settings
+        <span class="helpHint" title="Controls for semantic search results">?</span>
+      </h3>
       <div class="searchTuning">
         <div class="tuneItem">
           <div class="tuneTop">
-            <span class="tuneLabel">Min thread sim.</span>
+            <span class="tuneLabel">
+              Min thread sim.
+              <span class="helpHint" title="Minimum similarity score for threads to appear in search results. Lower = more results.">?</span>
+            </span>
             <span class="tuneVal" id="minThreadSimVal">0.10</span>
           </div>
           <input id="minThreadSim" type="range" min="0" max="100" step="1" value="10"/>
@@ -45,7 +51,10 @@
 
         <div class="tuneItem">
           <div class="tuneTop">
-            <span class="tuneLabel">Min message sim.</span>
+            <span class="tuneLabel">
+              Min message sim.
+              <span class="helpHint" title="Minimum similarity score for messages within threads. Lower = more messages shown per thread.">?</span>
+            </span>
             <span class="tuneVal" id="minMsgSimVal">0.25</span>
           </div>
           <input id="minMsgSim" type="range" min="0" max="100" step="1" value="25"/>
@@ -54,14 +63,70 @@
 
       <div class="searchNums">
         <label class="numField">
-          <span class="tuneLabel">Top threads</span>
+          <span class="tuneLabel">
+            Top threads
+            <span class="helpHint" title="Maximum number of threads to show in search results">?</span>
+          </span>
           <input id="topThreads" type="number" min="1" max="50" step="1" value="5"/>
         </label>
 
         <label class="numField">
-          <span class="tuneLabel">Top messages / thread</span>
+          <span class="tuneLabel">
+            Top messages / thread
+            <span class="helpHint" title="Maximum number of messages to show per thread in search results">?</span>
+          </span>
           <input id="topMsgsPerThread" type="number" min="1" max="50" step="1" value="5"/>
         </label>
+      </div>
+
+      <h3 class="settingsSection" style="margin-top: 24px;">
+        Buffer Settings
+        <span class="helpHint" title="Controls for the incremental clustering buffer system">?</span>
+      </h3>
+      <div class="searchTuning">
+        <div class="tuneItem">
+          <div class="tuneTop">
+            <span class="tuneLabel">
+              Buffer size limit
+              <span class="helpHint" title="Number of messages to accumulate before triggering automatic clustering. Lower = more frequent updates, higher = better batch clustering.">?</span>
+            </span>
+            <span class="tuneVal" id="bufferSizeLimitVal">10</span>
+          </div>
+          <input id="bufferSizeLimit" type="range" step="1" value="10"/>
+        </div>
+
+        <div class="tuneItem">
+          <div class="tuneTop">
+            <span class="tuneLabel">
+              Pending size limit
+              <span class="helpHint" title="Maximum number of unassigned messages to keep in the pending queue. Messages here are retried when buffer flushes.">?</span>
+            </span>
+            <span class="tuneVal" id="pendingSizeLimitVal">50</span>
+          </div>
+          <input id="pendingSizeLimit" type="range" step="5" value="50"/>
+        </div>
+      </div>
+
+      <h3 class="settingsSection" style="margin-top: 24px;">
+        Actions
+        <span class="helpHint" title="Manual operations for managing chat clustering">?</span>
+      </h3>
+      <div class="settingsActions">
+        <button id="flushCurrentBtn" class="actionBtn">
+          <span class="actionIcon">🔄</span>
+          <div class="actionText">
+            <div class="actionTitle">Flush Current Chat</div>
+            <div class="actionDesc">Process buffered messages immediately</div>
+          </div>
+        </button>
+
+        <button id="reclusterAllBtn" class="actionBtn danger">
+          <span class="actionIcon">⚡</span>
+          <div class="actionText">
+            <div class="actionTitle">Recluster Everything</div>
+            <div class="actionDesc">Rerun batch clustering from scratch</div>
+          </div>
+        </button>
       </div>
     </div>
   </div>

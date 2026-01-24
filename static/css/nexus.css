@@ -684,8 +684,7 @@ details .summaryBox {
 .settingsBackdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.75);
     z-index: 999;
     display: none;
     align-items: center;
@@ -726,6 +725,87 @@ details .summaryBox {
     font-weight: 800;
     color: var(--accent);
     margin: 0 0 14px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.helpHint {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(181, 140, 255, .15);
+    border: 1px solid rgba(181, 140, 255, .3);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 900;
+    cursor: help;
+    flex-shrink: 0;
+    transition: background 0.08s ease, border-color 0.08s ease;
+}
+
+.helpHint:hover {
+    background: rgba(181, 140, 255, .25);
+    border-color: var(--accent);
+}
+
+.tuneLabel .helpHint {
+    margin-left: 4px;
+}
+
+.settingsActions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.actionBtn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    background: rgba(10, 8, 16, .45);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.08s ease, border-color 0.08s ease, transform 0.08s ease;
+    text-align: left;
+}
+
+.actionBtn:hover {
+    background: rgba(181, 140, 255, .08);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.actionBtn.danger:hover {
+    background: rgba(255, 77, 125, .08);
+    border-color: var(--danger);
+}
+
+.actionIcon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.actionText {
+    flex: 1;
+}
+
+.actionTitle {
+    font-weight: 900;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.actionDesc {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
 }
 
 .searchTuning {
@@ -892,21 +972,35 @@ details .summaryBox {
 }
 
 @keyframes flashHighlight {
-    0% {
-        background-color: rgba(181, 140, 255, 0.2);
-        box-shadow: 0 0 20px rgba(181, 140, 255, 0.15);
-        border-color: rgba(181, 140, 255, 0.4);
-    }
-    100% {
-        background-color: transparent;
-        box-shadow: none;
-        border-color: rgba(42, 33, 64, .9);
-    }
+  0% {
+    background-color: rgba(181, 140, 255, 0.28);
+    border-color: rgba(181, 140, 255, 0.95);
+    box-shadow:
+      0 0 0 2px rgba(181, 140, 255, 0.35),
+      0 10px 30px rgba(0, 0, 0, 0.25),
+      0 0 28px rgba(181, 140, 255, 0.35);
+    transform: translateY(-2px);
+  }
+  35% {
+    background-color: rgba(181, 140, 255, 0.18);
+    box-shadow:
+      0 0 0 2px rgba(181, 140, 255, 0.25),
+      0 0 20px rgba(181, 140, 255, 0.20);
+    transform: translateY(0);
+  }
+  100% {
+    background-color: rgba(181, 140, 255, 0.06);
+    border-color: rgba(42, 33, 64, 0.9);
+    box-shadow: none;
+    transform: none;
+  }
 }
 
 .flash-target {
-    animation: flashHighlight 2.5s ease-out forwards;
+  animation: flashHighlight 2.2s ease-out forwards;
+  will-change: background-color, box-shadow, border-color, transform;
 }
+
 
 /* --- Add this to fix the "text at bottom" bug --- */
 .ctxBackdrop {
