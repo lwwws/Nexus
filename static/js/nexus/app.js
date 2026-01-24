@@ -41,11 +41,7 @@ function clampInt(x, lo, hi, fallback) {
 }
 
 function refreshSearchSettingsHint() {
-    const hint = $("searchSettingsHint");
-    hint.textContent =
-        `Thread sim. ≥ ${state.searchMinThreadSim.toFixed(2)} • ` +
-        `Msg sim. ≥ ${state.searchMinMsgSim.toFixed(2)} • ` +
-        `${state.searchTopThreads} threads × ${state.searchTopMsgsPerThread} msgs`;
+    // Settings are now in the overlay, no hint to update
 }
 
 function initSearchSettings() {
@@ -391,7 +387,7 @@ function renderMessageList(messages, opts) {
         const tid = (opts && opts.threadIdForAll) ? opts.threadIdForAll : (m.thread_id || "");
 
         html += `
-        <div class="msgRow ${side}" data-mid="${esc(m.id)}" data-tid="${esc(tid)}">
+        <div class="msgRow ${side}" id="msg_${esc(m.id)}" data-mid="${esc(m.id)}" data-tid="${esc(tid)}">
           <div class="bubble ${side === "right" ? "right" : ""}">
             <div class="metaLine">
               <div style="display:flex; align-items:center; gap:8px; min-width:0;">
@@ -445,10 +441,48 @@ function scrollToMessage(mid, doFlash = true) {
     }, 50);
 }
 
+function captureScrollAnchor() {
+    const c = $("content");
+    if (!c) return null;
+
+    // Find first visible message row
+    // We use Array.from to be safe
+    const rows = Array.from(c.querySelectorAll('.msgRow'));
+    if (!rows.length) return null;
+
+    const top = c.scrollTop;
+
+    // Find first row whose bottom is below the viewport top (it's visible)
+    const row = rows.find(r => (r.offsetTop + r.offsetHeight) > top);
+
+    if (!row) return null; // Should not happen if rows exist
+
+    // Get ID from id attribute or data attribute
+    let mid = row.id ? row.id.replace("msg_", "") : row.getAttribute("data-mid");
+
+    return {
+        mid,
+        // Calculate exactly how far down the element is from the top of the viewport
+        offsetPx: row.offsetTop - top
+    };
+}
+
+function restoreScrollAnchor(anchor) {
+    if (!anchor) return;
+    const c = $("content");
+    const el = document.getElementById(`msg_${anchor.mid}`);
+
+    // If the message exists in the new view, scroll to exact pixel offset
+    if (c && el) {
+    const targetTop = el.offsetTop - anchor.offsetPx;
+    c.scrollTop = Math.max(0, targetTop);
+    }
+}
+
 // -----------------------------
 // Timeline mode (from bottom)
 // -----------------------------
-async function loadTimeline(reset) {
+async function loadTimeline(reset, anchor = null) {
     if (!state.activeChatId) return;
 
     if (reset) {
@@ -486,7 +520,11 @@ async function loadTimeline(reset) {
     });
 
     setCenter(state.activeChatName || "Chat", `Timeline • newest at bottom`);
-    if (reset) scrollToBottom();
+    if (anchor) {
+        restoreScrollAnchor(anchor);
+    } else if (reset) {
+        scrollToBottom();
+    }
 }
 
 // -----------------------------
@@ -568,7 +606,7 @@ async function loadFocus(topicId, maintainPosition = false) {
         const side = "left";
 
         html += `
-        <div class="msgRow ${side}" id="msg_${m.id}">
+        <div class="msgRow ${side}" id="msg_${m.id}" data-mid="${m.id}">
           <div class="bubble ${side === "right" ? "right" : ""}" style="${it.dim ? "opacity:.6;" : ""}">
             <div class="metaLine">
               <div style="display:flex; align-items:center; gap:8px; min-width:0;">
@@ -619,7 +657,17 @@ async function loadFocus(topicId, maintainPosition = false) {
 // -----------------------------
 // Mode switching
 // -----------------------------
-function setMode(mode) {
+setMode = async function (mode) {
+    if (mode !== "focus" && mode !== "timeline") return;
+
+    // CAPTURE ANCHOR
+    const anchor = captureScrollAnchor();
+
+    state.lastMode = mode;
+    state.isSearching = false;
+    $("clearSearchBtn").style.display = "none";
+    $("globalSearchInput").value = "";
+
     state.mode = mode;
     $("modeFocus").classList.toggle("active", mode === "focus");
     $("modeTimeline").classList.toggle("active", mode === "timeline");
@@ -631,13 +679,16 @@ function setMode(mode) {
     }
 
     if (mode === "timeline") {
-        loadTimeline(true);
+        // Pass anchor to timeline loader
+        await loadTimeline(true, anchor);
     } else {
         if (state.activeTopicId) {
-            loadFocus(state.activeTopicId);
+            // Load focus (normal), then manually restore anchor
+            await loadFocus(state.activeTopicId, false);
+            if (anchor) restoreScrollAnchor(anchor);
         } else {
-            $("content").innerHTML = `<div class="empty">Pick a topic on the right to enter Focus Mode.</div>`;
-            setCenter(state.activeChatName || "Chat", "Pick a topic → only its messages will be shown.");
+            $("content").innerHTML = `<div class="empty">Pick a topic to enter Focus Mode.</div>`;
+            setCenter(state.activeChatName || "Chat", "Pick a topic to enter Focus Mode.");
         }
     }
 }
@@ -1031,8 +1082,8 @@ async function refreshAfterReassign() {
 // -----------------------------
 // Wire up
 // -----------------------------
-$("modeFocus").onclick = () => setMode("focus");
-$("modeTimeline").onclick = () => setMode("timeline");
+$("modeFocus").onclick = async () => await setMode("focus");
+$("modeTimeline").onclick = async () => await setMode("timeline");
 $("topicSearch").addEventListener("input", filterTopics);
 
 $("sendBtn").onclick = sendMessage;
@@ -1047,8 +1098,27 @@ $("closeCtx").onclick = closeCtx;
 $("ctxBackdrop").addEventListener("click", (e) => {
     if (e.target === $("ctxBackdrop")) closeCtx();
 });
+
+// Settings overlay
+function openSettings() {
+    $("settingsBackdrop").style.display = "flex";
+}
+
+function closeSettings() {
+    $("settingsBackdrop").style.display = "none";
+}
+
+$("openSettingsBtn").onclick = openSettings;
+$("closeSettings").onclick = closeSettings;
+$("settingsBackdrop").addEventListener("click", (e) => {
+    if (e.target === $("settingsBackdrop")) closeSettings();
+});
+
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeCtx();
+    if (e.key === "Escape") {
+        closeCtx();
+        closeSettings();
+    }
 });
 
 $("closeOverlay").onclick = () => showOverlay(false);
@@ -1076,37 +1146,3 @@ initSearchSettings();
 installReassignRightClick();
 
 $("clearSearchBtn").onclick = closeSearch;
-
-// Update setMode to store history so we know where to go back to
-const originalSetMode = setMode;
-// We overwrite setMode slightly to track state
-setMode = function (mode) {
-    if (mode !== "focus" && mode !== "timeline") return; // safety
-    state.lastMode = mode;
-    state.isSearching = false;
-    $("clearSearchBtn").style.display = "none";
-    $("globalSearchInput").value = "";
-
-    // Call original logic (copy-paste your setMode logic here or refactor slightly)
-    state.mode = mode;
-    $("modeFocus").classList.toggle("active", mode === "focus");
-    $("modeTimeline").classList.toggle("active", mode === "timeline");
-
-    // ... existing setMode logic ...
-    if (!state.activeChatId) {
-        $("content").innerHTML = `<div class="empty">Upload a chat export (.txt) to start.</div>`;
-        setCenter("Nexus", "Upload a chat to begin.");
-        return;
-    }
-
-    if (mode === "timeline") {
-        loadTimeline(true);
-    } else {
-        if (state.activeTopicId) {
-            loadFocus(state.activeTopicId);
-        } else {
-            $("content").innerHTML = `<div class="empty">Pick a topic to enter Focus Mode.</div>`;
-            setCenter(state.activeChatName || "Chat", "Pick a topic to enter Focus Mode.");
-        }
-    }
-}

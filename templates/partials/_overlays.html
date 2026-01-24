@@ -24,3 +24,45 @@
     <div class="ctxBody" id="ctxBody"></div>
   </div>
 </div>
+
+<!-- Settings overlay -->
+<div class="settingsBackdrop" id="settingsBackdrop" role="dialog" aria-modal="true">
+  <div class="settingsModal">
+    <header>
+      <div style="font-weight:1000;">Settings</div>
+      <button id="closeSettings" class="ghost">✕</button>
+    </header>
+    <div class="settingsBody">
+      <h3 class="settingsSection">Search Settings</h3>
+      <div class="searchTuning">
+        <div class="tuneItem">
+          <div class="tuneTop">
+            <span class="tuneLabel">Min thread sim.</span>
+            <span class="tuneVal" id="minThreadSimVal">0.10</span>
+          </div>
+          <input id="minThreadSim" type="range" min="0" max="100" step="1" value="10"/>
+        </div>
+
+        <div class="tuneItem">
+          <div class="tuneTop">
+            <span class="tuneLabel">Min message sim.</span>
+            <span class="tuneVal" id="minMsgSimVal">0.25</span>
+          </div>
+          <input id="minMsgSim" type="range" min="0" max="100" step="1" value="25"/>
+        </div>
+      </div>
+
+      <div class="searchNums">
+        <label class="numField">
+          <span class="tuneLabel">Top threads</span>
+          <input id="topThreads" type="number" min="1" max="50" step="1" value="5"/>
+        </label>
+
+        <label class="numField">
+          <span class="tuneLabel">Top messages / thread</span>
+          <input id="topMsgsPerThread" type="number" min="1" max="50" step="1" value="5"/>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

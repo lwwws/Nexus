@@ -4,56 +4,19 @@
             <div class="big" id="centerTitle">Nexus</div>
             <div class="sub" id="centerSub">Upload a chat to begin.</div>
         </div>
-        <div class="searchArea">
-            <div class="searchWrap">
-                <input id="globalSearchInput" placeholder="Semantic search..."/>
-                <button id="clearSearchBtn" class="closeSearch" title="Clear search">✕</button>
-            </div>
-
-            <details class="searchSettings" id="searchSettings">
-                <summary class="searchSettingsSummary">
-                    <span>Search settings</span>
-                    <span class="searchSettingsHint" id="searchSettingsHint">Thread sim. ≥ 0.10 • Msg sim. ≥ 0.25 • 5 threads × 5 msgs</span>
-                </summary>
-
-                <div class="searchSettingsBody">
-                    <div class="searchTuning">
-                        <div class="tuneItem">
-                            <div class="tuneTop">
-                                <span class="tuneLabel">Min thread sim.</span>
-                                <span class="tuneVal" id="minThreadSimVal">0.10</span>
-                            </div>
-                            <input id="minThreadSim" type="range" min="0" max="100" step="1" value="10"/>
-                        </div>
-
-                        <div class="tuneItem">
-                            <div class="tuneTop">
-                                <span class="tuneLabel">Min message sim.</span>
-                                <span class="tuneVal" id="minMsgSimVal">0.25</span>
-                            </div>
-                            <input id="minMsgSim" type="range" min="0" max="100" step="1" value="25"/>
-                        </div>
-                    </div>
-
-                    <div class="searchNums">
-                        <label class="numField">
-                            <span class="tuneLabel">Top threads</span>
-                            <input id="topThreads" type="number" min="1" max="50" step="1" value="5"/>
-                        </label>
-
-                        <label class="numField">
-                            <span class="tuneLabel">Top messages / thread</span>
-                            <input id="topMsgsPerThread" type="number" min="1" max="50" step="1" value="5"/>
-                        </label>
-                    </div>
-                </div>
-            </details>
+        <div class="searchWrap">
+            <input id="globalSearchInput" placeholder="Semantic search..."/>
+            <button id="clearSearchBtn" class="closeSearch" title="Clear search">✕</button>
         </div>
 
-
-        <div class="toggle">
-            <button id="modeFocus" class="active">Focus</button>
-            <button id="modeTimeline">Timeline</button>
+        <div class="topbarActions">
+            <button id="openSettingsBtn" class="iconBtn" title="Settings">
+              <span class="gear">⚙</span>
+            </button>
+            <div class="toggle">
+                <button id="modeFocus" class="active">Focus</button>
+                <button id="modeTimeline">Timeline</button>
+            </div>
         </div>
     </div>
 
