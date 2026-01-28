@@ -16,8 +16,14 @@ scikit-learn>=1.3
 umap-learn>=0.5.4
 hdbscan>=0.8.33
 
+# --- Visualization ---
+plotly>=5.0
+
 # --- Model download (GGUF from HuggingFace Hub) ---
 huggingface-hub>=0.20
 
 # --- local LLM labeling via llama.cpp ---
 llama-cpp-python>=0.2.90
+
+# --- Interactive development ---
+jupyter>=1.0

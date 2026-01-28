@@ -1,3 +1,18 @@
+"""
+Implementation of Nexus indexing protocols
+
+Concrete implementations of the pipeline interfaces:
+- Formatter: builds a context window and weighted "focus" text
+- Embedder: encodes text into semantic vectors (MiniLM)
+- Reducer: dimensionality reduction for clustering (UMAP)
+- Clusterer: density-based clustering (HDBSCAN)
+- ThreadRepComputer: computes thread centroids from member embeddings
+- UpdateStrategy: hybrid fast assign + buffered clustering (with anchors/flush controls)
+- ThreadLabeler: generates thread titles/summaries via a local Llama model
+
+Implements ingestion, indexing, assignment, correction, and labeling of messages into threads.
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -25,6 +40,10 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ContextWindowFormatterOld(Formatter):
+    """
+    Legacy Formatter: Formats messages one by one chronologically in a window of time.
+    It boosts the signal of the target message by repeating it.
+    """
     window_back: int = 2
     window_fwd: int = 1
     time_threshold_minutes: int = 10
@@ -133,17 +152,26 @@ class ContextWindowFormatter(Formatter):
         context_str = " | ".join(back_parts + fwd_parts)
 
         out = f"Context: {context_str} >>> Focus: {weighted_target}" if context_str else f"Focus: {weighted_target}"
-        logging.info(f"Formatted text: {out}")
+        # logging.info(f"Formatted text: {out}") # Removed logging for now
         return out
 
 # ---------- Embedder ----------
 
 class MiniLMEmbedder(Embedder):
+    """
+    Sentence-Transformers embedder used for semantic indexing (MiniLM by default).
+    """
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+        """
+        Loads a SentenceTransformer model by name.
+        """
         from sentence_transformers import SentenceTransformer
         self.model = SentenceTransformer(model_name)
 
     def embed_texts(self, texts: List[str]) -> np.ndarray:
+        """
+        Embeds a batch of texts into a matrix of shape (n_texts, dim).
+        """
         X = self.model.encode(texts, show_progress_bar=True)
         return np.asarray(X, dtype=np.float32)
 
@@ -151,6 +179,9 @@ class MiniLMEmbedder(Embedder):
 # ---------- Reducer ----------
 
 class UMAPReducer(Reducer):
+    """
+    UMAP-based reducer for clustering space (fit once, then transform).
+    """
     def __init__(
         self,
         n_neighbors: int = 30,
@@ -170,11 +201,17 @@ class UMAPReducer(Reducer):
         self._is_fit = False
 
     def fit_transform(self, X: np.ndarray) -> np.ndarray:
+        """
+        Fits UMAP on X and returns reduced vectors.
+        """
         Y = self._umap.fit_transform(X)
         self._is_fit = True
         return np.asarray(Y, dtype=np.float32)
 
     def transform(self, X: np.ndarray) -> np.ndarray:
+        """
+        Projects X into the fitted UMAP space (requires fit_transform first).
+        """
         if not self._is_fit:
             raise RuntimeError("UMAPReducer.transform() called before fit_transform().")
         Y = self._umap.transform(X)
@@ -184,6 +221,12 @@ class UMAPReducer(Reducer):
 # ---------- Clusterer ----------
 
 class HDBSCANClusterer(Clusterer):
+    """
+    Density-based clustering adapter around HDBSCAN.
+
+    Returns per-message labels/scores as list-of-lists.
+    Noise is encoded as empty lists ([], []).
+    """
     def __init__(
         self,
         min_cluster_size: int = 30,
@@ -234,6 +277,9 @@ class HDBSCANClusterer(Clusterer):
 
 @dataclass
 class CentroidThreadRepComputer(ThreadRepComputer):
+    """
+    Computes thread representations as the mean of member message embeddings.
+    """
     memberships: MembershipStore
     embeddings: EmbeddingStore
     msg_space: SpaceId = "msg:full"
@@ -246,6 +292,9 @@ class CentroidThreadRepComputer(ThreadRepComputer):
         return 0
 
     def compute(self, thread_id: ThreadId) -> np.ndarray:
+        """
+        Returns centroid vector for thread_id; falls back to zeros if empty/missing.
+        """
         ms = self.memberships.for_thread(thread_id, status="active")
         mids = [m.message_id for m in ms]
         if not mids:
@@ -313,13 +362,18 @@ class BufferedUpdateStrategy(UpdateStrategy):
         self._pending: List[MessageId] = []
 
     def update_buffer_limits(self, buffer_size_limit: Optional[int] = None, pending_size_limit: Optional[int] = None) -> None:
-        """Update buffer size limits dynamically."""
+        """
+        Update buffer size limits dynamically.
+        """
         if buffer_size_limit is not None:
             self.buffer_limit = buffer_size_limit
         if pending_size_limit is not None:
             self.pending_limit = pending_size_limit
 
     def on_new_message(self, message_id: MessageId) -> UpdateResult:
+        """
+        Attempts fast assignment; otherwise buffers and may trigger a flush.
+        """
         best_tid, best_score, second_tid, second_score = self._find_top2_threads(message_id)
 
         if best_tid:
@@ -440,6 +494,9 @@ class BufferedUpdateStrategy(UpdateStrategy):
         )
 
     def _find_top2_threads(self, mid: MessageId) -> Tuple[Optional[str], float, Optional[str], float]:
+        """
+        Returns best and runner-up thread IDs with cosine similarity scores.
+        """
         if not self.embeddings.has(self.msg_sim_space, mid):
             return None, 0.0, None, 0.0
         msg_vec = self.embeddings.get(self.msg_sim_space, mid)
@@ -467,7 +524,7 @@ class BufferedUpdateStrategy(UpdateStrategy):
         return best_tid, best_score, second_tid, second_score
     def _compute_thread_threshold(self, tid: str) -> float:
         """
-        Dynamically calculates the acceptance threshold (5th percentile).
+        Dynamically calculates the acceptance threshold (kth percentile).
         """
         # Get Members
         members = self.memberships.for_thread(tid, status="active")
@@ -520,6 +577,9 @@ class BufferedUpdateStrategy(UpdateStrategy):
 # ---------- ThreadLabeler ----------
 
 class LlamaThreadLabelerOld(ThreadLabeler):
+    """
+    Legacy labeler: generates a short thread title + summary from message snippets.
+    """
     def __init__(self,
                  model_path: str,
                  n_ctx: int = 2048,
@@ -541,6 +601,9 @@ class LlamaThreadLabelerOld(ThreadLabeler):
         )
 
     def label(self, messages: List[Message]) -> Tuple[str, str]:
+        """
+        Returns (title, summary) with simple parsing of the model response.
+        """
         # Build Context
         lines = []
         for m in messages:
@@ -614,6 +677,9 @@ Response:
 
 
 class LlamaThreadLabeler(ThreadLabeler):
+    """
+    Thread labeler using a local Llama GGUF model (auto-download if missing).
+    """
     def __init__(self,
                  model_path: str,
                  n_ctx: int = 2048,
@@ -642,6 +708,9 @@ class LlamaThreadLabeler(ThreadLabeler):
         )
 
     def label(self, messages: List[Message]) -> Tuple[str, str]:
+        """
+        Returns (title, summary) with better robust parsing of the model response.
+        """
         # BUILD CONTEXT (Same as before)
         lines = []
         prev_time = None
