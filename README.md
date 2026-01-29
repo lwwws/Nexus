@@ -101,6 +101,8 @@ Then open `http://127.0.0.1:5000`.
 
 ## 📖 Usage
 
+Either export a chat of your own or use example exports available in `data/chats/`.
+
 ### Exporting a WhatsApp chat
 
 On WhatsApp (mobile):
