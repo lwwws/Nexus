@@ -1,3 +1,18 @@
+"""
+Nexus Utilities Module
+
+This module handles the data ingestion and normalization layer of Nexus.
+Its primary responsibility is converting raw, unstructured text exports (specifically from WhatsApp)
+into structured Pandas DataFrames that the application can process.
+
+Key Features:
+1. Format Auto-Detection: Uses heuristic regex matching to identify which timestamp format
+   a specific export is using (iOS vs Android, 12hr vs 24hr, etc.).
+2. Multi-line Handling: Reconstructs messages that span multiple lines in the text file.
+3. System Message Parsing: Distinguishes between human messages and system notifications
+   (e.g., "Messages are end-to-end encrypted").
+"""
+
 import re
 import datetime
 from typing import Dict

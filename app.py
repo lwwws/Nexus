@@ -1,3 +1,22 @@
+"""
+Nexus Backend Application (Flask)
+
+This module serves as the entry point and state manager for the Nexus application.
+It orchestrates the interaction between the HTTP API, the in-memory chat state,
+and the persistent storage system.
+
+Key Responsibilities:
+1. State Management: Maintains in-memory objects (ChatSession) for active chats.
+2. Job Orchestration: Manages async background jobs for heavy lifting (parsing, embedding, clustering).
+3. Real-time Ingestion: Handles individual message ingestion via a queued worker system.
+4. Persistence: Serializes chat state to disk (JSON/NPZ) to survive restarts.
+
+Architecture:
+- The app is thread-safe using a global `LOCK` for state transitions.
+- Heavy processing (ingest, recluster) is offloaded to daemon threads.
+- Front-end polls `/api/jobs/<id>` to track progress of long-running tasks.
+"""
+
 import os
 import uuid
 import json
@@ -74,6 +93,15 @@ PENDING_SIZE_MAX = 200
 
 @dataclass
 class ChatSession:
+    """
+    Represents the runtime state of a single chat analysis session.
+
+    Attributes:
+        processor: The heavy-lifting logic engine (interfaces with Embedder/Clusterer).
+        ingest_queue: A thread-safe queue for incoming single messages (real-time simulation).
+        worker_lock: Ensures only one background worker is active per chat.
+        buffer_size_limit: Threshold for the 'BufferedUpdateStrategy' before triggering mini-clustering.
+    """
     chat_id: str
     name: str
     created_at: dt.datetime = field(default_factory=lambda: dt.datetime.now())
@@ -101,6 +129,12 @@ class ChatSession:
 
 @dataclass
 class JobState:
+    """
+    Tracks the status of asynchronous background tasks (Uploads, Reclustering).
+
+    Used by the frontend to display progress bars.
+    Status Lifecycle: queued -> running -> [done | error]
+    """
     job_id: str
     chat_id: str
     status: str = "queued"     # queued|running|done|error
@@ -250,11 +284,15 @@ def _chat_dir(chat_id: str) -> str:
 
 def _save_chat(chat: ChatSession) -> None:
     """
-    Persist the minimal state needed to restore the UI instantly:
-    - messages (ordered)
-    - threads
-    - memberships (including rejected)
-    - embeddings for spaces used at runtime (msg:full, msg:cluster, thread:centroid)
+    Serializes the chat state to the filesystem to allow application restarts.
+
+    Directory Structure (~/persisted_chats/<chat_id>/):
+    - meta.json: High-level metadata (name, dates, ready status).
+    - messages.json: Ordered list of all raw messages.
+    - threads.json: Calculated topics and summaries.
+    - memberships.json: Mapping of Message -> Thread (including outliers).
+    - embeddings.npz: Compressed numpy arrays for vector spaces (msg:full, msg:cluster, etc).
+    - reducer.pkl: The fitted UMAP model (to allow projecting new points into the same space).
     """
     d = _chat_dir(chat.chat_id)
     os.makedirs(d, exist_ok=True)
@@ -341,8 +379,12 @@ def _save_chat(chat: ChatSession) -> None:
 
 def _load_all_chats_from_disk() -> None:
     """
-    Scan PERSIST_DIR, rebuild ChatSession objects into CHATS,
-    and rebuild chat.processor so semantic_search/apply_user_fix work without re-running run_batch.
+    Bootstrapping routine. Scans the PERSIST_DIR and hydrates ChatSession objects.
+
+    Note:
+    - If a 'reducer.pkl' is missing but embeddings exist, it attempts to refit UMAP
+      on the fly to restore the semantic space.
+    - Rebuilds the `ChatProcessor` so features like Search and User Fixes work immediately.
     """
     root = app.config["PERSIST_DIR"]
     if not os.path.isdir(root):
@@ -597,6 +639,13 @@ def api_chats():
 
 @app.route("/api/chats/upload", methods=["POST"])
 def api_upload_chat():
+    """
+    Initiates the full analysis pipeline for a new chat file.
+
+    1. Creates a ChatSession and a tracking Job.
+    2. Spawns `_run_job_process_chat_with_cleanup` in a background thread.
+    3. Returns immediately with the `job_id` for polling.
+    """
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
     f = request.files["file"]
@@ -802,9 +851,16 @@ def api_chat_history(chat_id: str):
 @app.route("/api/chats/<chat_id>/focus/<topic_id>", methods=["GET"])
 def api_focus_view(chat_id: str, topic_id: str):
     """
-    Focus mode:
-      - returns focus messages in TIMELINE order
-      - includes each message's timeline index to allow gap detection client-side
+    Retrieves a filtered view of the chat specific to one topic.
+
+    Returns:
+        focus: List of messages belonging to the topic.
+        has_gaps: Boolean indicating if there are hidden messages between the focused ones.
+
+    Logic:
+    - Messages are returned in chronological order.
+    - Each message includes its original 'timeline index' (idx) so the frontend
+      can calculate where gaps exist.
     """
     try:
         chat = _require_chat(chat_id)
@@ -911,8 +967,16 @@ def _clampint(x, lo, hi, default) -> int:
 @app.route("/api/chats/<chat_id>/search", methods=["GET"])
 def api_search_chat(chat_id: str):
     """
-    Performs semantic search using the Processor.
-    Query param: ?q=search_term
+    Performs vector-based semantic search over the chat history.
+
+    Query Params:
+    - q: The search text.
+    - min_thread_sim (0.0-1.0): Threshold for matching a whole topic.
+    - min_msg_sim (0.0-1.0): Threshold for matching individual messages.
+
+    Returns:
+    - matching_threads: Topics whose centroid is close to the query.
+    - matching_messages: Individual messages close to the query (grouped by thread).
     """
     try:
         chat = _require_chat(chat_id)
@@ -949,6 +1013,14 @@ def api_search_chat(chat_id: str):
 
 @app.route("/api/chats/<chat_id>/user_fix", methods=["POST"])
 def api_user_fix(chat_id: str):
+    """
+    Applies manual corrections to topic assignments.
+
+    Side Effects:
+    - Updates the Membership store.
+    - Recalculates the Thread Centroid (the mathematical representation of the topic).
+    - This ensures future messages or searches respect the user's manual correction.
+    """
     try:
         chat = _require_chat(chat_id)
     except KeyError:
@@ -984,9 +1056,17 @@ def api_user_fix(chat_id: str):
 
 def _ingest_worker(chat_id: str):
     """
-    Dedicated worker thread for a specific chat.
-    Processes messages one by one from the queue.
-    Updates the *single* per-chat ingest job (chat.ingest_job_id)
+    Dedicated background daemon for processing real-time message streams.
+
+    Mechanism:
+    1. Reads from `chat.ingest_queue` (Thread-safe).
+    2. Passes message to `processor.ingest_new_message` (Updates embeddings & buffer).
+    3. Updates the shared `JOBS` state so the UI sees "Processing...".
+    4. Auto-terminates when the queue is empty to save resources.
+
+    Concurrency:
+    - Protected by `chat.worker_lock` during startup.
+    - Updates to global `CHATS` or `JOBS` dictionaries are guarded by global `LOCK`.
     """
     logger.info(f"Worker started for chat {chat_id}")
 
