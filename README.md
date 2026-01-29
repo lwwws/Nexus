@@ -155,9 +155,38 @@ Default pipeline parameters (like UMAP or HDBSCAN's hyperparameters) are defined
 
 ---
 
-## 📸 Screenshots / Media
+## 📸 Screenshots
 
-ADD HERE
+### Timeline Mode
+View the complete chat history in chronological order.
+
+![Timeline Mode](media/timeline_mode.png)
+
+### Focus Mode
+Follow a single topic thread (while collapsing unrelated messages).
+
+**Collapsed view:**
+
+![Focus Mode - Collapsed](media/focus_collapsed.png)
+
+**Expanded gaps:**
+
+![Focus Mode - Expanded](media/focus_expanded.png)
+
+### Human-in-the-Loop Refinement
+Manually reassign messages to different topics with a right-click.
+
+![Message Reassignment](media/reassignment.png)
+
+### Semantic Search
+Search by meaning, not just keywords.
+
+![Semantic Search](media/semantic_search.png)
+
+### Runtime Settings
+Adjust buffering, search thresholds, and trigger recluster or flush operations.
+
+![Settings](media/settings.png)
 
 ---
 
