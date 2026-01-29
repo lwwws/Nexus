@@ -1,0 +1,1275 @@
+[00:00, 01/01/2024] Anjola (Data Lead): Happy New Year my data family❤️❤️🥳🥳🥳
+[00:00, 01/01/2024] Edidiong: same to youu
+[00:00, 01/01/2024] exotic olive oil taster: happy new year anj❤️
+[00:00, 01/01/2024] Chucks: Happy new year to you too😊
+[00:00, 01/01/2024] Crown Ltd: Happy New Year 🎇
+[00:00, 01/01/2024] Abolo (Former Data Lead): Happy new year guys 🚀
+[00:00, 01/01/2024] Riley (GDG Lead): Happy New year people
+[00:00, 01/01/2024] Riley (GDG Lead): <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): Yo yo yo
+[00:00, 02/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): ML titans
+[00:00, 02/01/2024] exotic olive oil taster: 😭oga don land
+[00:00, 02/01/2024] Shepherd: Big Kala
+[00:00, 02/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): Got some exciting news 🙌🏾    This month of Jan is the month we finally enter the promised land
+[00:00, 02/01/2024] Riley (GDG Lead): Let's talk about the gdsc wrapped🌚
+[00:00, 02/01/2024] luxury.dev: 😏
+[00:00, 02/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 02/01/2024] Shepherd: <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): This month of January will be the month we start Machine Learning
+[00:00, 02/01/2024] exotic olive oil taster: <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): In the past few months  we talked about AI in general  Python Programming  Maths  and Statistics
+[00:00, 02/01/2024] Abolo (Former Data Lead): But this month  we stop beating around the bush and drop our pickup lines 🌚
+[00:00, 02/01/2024] Abolo (Former Data Lead): Somebody say yeah yeah
+[00:00, 02/01/2024] Riley (GDG Lead): Yeah yeah
+[00:00, 02/01/2024] Riley (GDG Lead): <Media omitted>
+[00:00, 02/01/2024] Edidiong: <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 02/01/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 02/01/2024] Abolo (Former Data Lead): This month (Machine Learning I)  We will talk about the basics of machine learning. An overview of machine learning "metadata" (The stuff you should know about ML)  Other things we'll talk about:  Supervised Learning: Regression with Linear Regression Supervised Learning: Classification with Decision Trees  support vector machines  and K-Nearest Neighbors Unsupervised Learning: Clustering with KMeans
+[00:00, 02/01/2024] Abolo (Former Data Lead): We will be making use of python and datasets from Kaggle to demonstrate.
+[00:00, 02/01/2024] Abolo (Former Data Lead): Everything we've learned so far (AI general knowledge  python programming  maths for ML  basics of statistics) will count as Machine Learning is a combination of all these things.
+[00:00, 02/01/2024] Honour (E.H.H): Please am new here and I don't understand anything
+[00:00, 02/01/2024] Abolo (Former Data Lead): Don't worry fam  we've got you covered  I'll be sharing resources that cover to a great deal what we've talked about so far.
+[00:00, 02/01/2024] Abolo (Former Data Lead): If you've got any questions while going through them  you can post a question here on this GC
+[00:00, 02/01/2024] Honour (E.H.H): Okay thanks ✨
+[00:00, 02/01/2024] Abolo (Former Data Lead): First off  I'd like everyone to watch this video  https://www.youtube.com/watch?v=QghjaS0WQQU
+[00:00, 02/01/2024] Abolo (Former Data Lead): This is also a great watch. (Not directly related to machine learning but is a great watch)  https://www.youtube.com/watch?v=fkIvmfqX-t0
+[00:00, 02/01/2024] Abolo (Former Data Lead): If you're not in for the thrill  you can skip to the grad student's part
+[00:00, 02/01/2024] Abolo (Former Data Lead): https://www.youtube.com/shorts/RF53NPPhBmE  Another great watch about 2 mins
+[00:00, 02/01/2024] Abolo (Former Data Lead): @2349059844630  https://www.youtube.com/watch?v=4RixMPF4xis  This is a video about what we talked about in the first month
+[00:00, 02/01/2024] Honour (E.H.H): Okay thanks
+[00:00, 02/01/2024] Abolo (Former Data Lead): For everyone  Difference between supervised and unsupervised learning. (7mins watch)  https://www.youtube.com/watch?v=W01tIRP_Rqs
+[00:00, 02/01/2024] Abolo (Former Data Lead): @2349059844630   as said earlier  I'm not a fan of using videos to learn a programming language so I'll just refer you to programiz  hackerrank  and the python documentation
+[00:00, 02/01/2024] Abolo (Former Data Lead): at python.org
+[00:00, 02/01/2024] Abolo (Former Data Lead): But if you're the video type  you can heck out "Tech with Tim"  or "Programming with Mosh"  they both have great videos
+[00:00, 02/01/2024] Abolo (Former Data Lead): Freecodecamp's python tutorial is nice too
+[00:00, 02/01/2024] Honour (E.H.H): Okay thanks I will check these out tomorrow I prefer videos
+[00:00, 02/01/2024] Abolo (Former Data Lead): @2349059844630  For the Math month  Linear Algebra  https://www.youtube.com/watch?v=4csuTO7UTMo  Calculus  derivatives: https://www.youtube.com/watch?v=QqF3i1pnyzU Chain rule:  https://www.youtube.com/watch?v=H-ybCx8gt-8  You can also check out other videos from the babe if you're interested  Probability  For this I'd recommend a paper or text book as youtube videos could be limiting
+[00:00, 02/01/2024] Abolo (Former Data Lead): @2349059844630  for the statistics month   https://www.youtube.com/watch?v=kyjlxsLW1Is
+[00:00, 02/01/2024] Abolo (Former Data Lead): No need to watch all these at the same time
+[00:00, 02/01/2024] Abolo (Former Data Lead): I'd recommend you watch it when you see something related to it you don't understand as we progress.  For everything we're going to learn  I'm going to mention it's prerequisite (what you should know before learning it). You can choose to watch the videos then
+[00:00, 02/01/2024] Abolo (Former Data Lead): This applies to everyone who didn't start with us
+[00:00, 02/01/2024] Abolo (Former Data Lead): But I'd like everybody to watch this
+[00:00, 02/01/2024] Abolo (Former Data Lead): and this
+[00:00, 02/01/2024] Honour (E.H.H): Okay I get your point
+[00:00, 02/01/2024] Abolo (Former Data Lead): as we will discuss them later
+[00:00, 03/01/2024] Bingo: 🤯 Mind-Blowing Opportunity for *Babcock University Ilishan Remo* students: Earn easy Pocket-Money from the comfort of your home while gaining professional experience by applying to over *40 000 * paid internship opportunities through *Internshala* in various domains of your choice such as _marketing  sales  design  engineering_ etc.  🥳 *The best part?* All internships come with guaranteed stipend and a prestigious internship certificate.  👉 *What's more?* No prior experience is needed to apply to these internships. To know more  *Head to* - https://internshala.com/i/FRCRP39-ISP39VICT7025 and register now for *FREE*
+[00:00, 05/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 05/01/2024] Abolo (Former Data Lead): It's a great read for those interested
+[00:00, 05/01/2024] Abolo (Former Data Lead): Also  if you've checked out the 7 mins video on the difference between supervised and unsupervised learning react to this message.
+[00:00, 10/01/2024] Anjola (Data Lead): Helloooo guys🤗
+[00:00, 10/01/2024] Caleb: Hi
+[00:00, 10/01/2024] Caleb: <Media omitted>
+[00:00, 10/01/2024] Riley (GDG Lead): Hi
+[00:00, 10/01/2024] Riley (GDG Lead): <Media omitted>
+[00:00, 10/01/2024] Graphics Showdown: Hello
+[00:00, 10/01/2024] Anjola (Data Lead): I have bad news (more like bad-ish) and good news😅
+[00:00, 10/01/2024] Anjola (Data Lead): Wonder which one to start with
+[00:00, 10/01/2024] Oba: Bad news
+[00:00, 10/01/2024] izzy: Break the heart first
+[00:00, 10/01/2024] Anjola (Data Lead): Ah
+[00:00, 10/01/2024] Anjola (Data Lead): Okay then😅
+[00:00, 10/01/2024] Anjola (Data Lead): So the bad news (bad-ish news)
+[00:00, 10/01/2024] Anjola (Data Lead): If you've activated your free DataCamp Donates license but you've been missing the assignments... even if you aren't doing the assignments  if you haven't even started learning at all...  Then I'm sorry but   We'll be taking back our free license from you if you don't start learning before Friday🥹🙏
+[00:00, 10/01/2024] Anjola (Data Lead): Hope nobody's heart was broken🙏😂 just start learning please
+[00:00, 10/01/2024] Anjola (Data Lead): Are you guys ready for the good news???
+[00:00, 10/01/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 10/01/2024] Oba: <Media omitted>
+[00:00, 10/01/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 10/01/2024] Anjola (Data Lead): The good (more like awesome) news...  Let's make some noise for the incredible individual who emerged as our member of the month of December🥳🥳🚀🤩✨🤗❤️  https://twitter.com/gdscbabcockdata/status/1745063759544992120?t=a9lGYgUs9_F0VlYMVX82lQ&s=19
+[00:00, 10/01/2024] Emmerick: Hi 👋🏾👋🏾
+[00:00, 10/01/2024] Oba: Congratulations to him🥳🥳
+[00:00, 10/01/2024] Anjola (Data Lead): @2348136757509 🚀🥳🥳🤩  Let's celebrate him!
+[00:00, 10/01/2024] O2: Congratulations @2348136757509 🫡
+[00:00, 10/01/2024] Chucks: Thank youuu😊
+[00:00, 10/01/2024] Abolo (Former Data Lead): Congrats @2348136757509 🚀
+[00:00, 10/01/2024] Ola: @2348136757509  congratulations
+[00:00, 10/01/2024] Edidiong: please can you tag the link😅
+[00:00, 10/01/2024] Chucks: <Media omitted>
+[00:00, 10/01/2024] Chucks: <Media omitted>
+[00:00, 10/01/2024] Abolo (Former Data Lead): My manchees
+[00:00, 10/01/2024] Abolo (Former Data Lead): How una dey
+[00:00, 10/01/2024] Abolo (Former Data Lead): It's safe to assume that we've all done this
+[00:00, 10/01/2024] Abolo (Former Data Lead): So I'd like to drop a few polls 🌚
+[00:00, 10/01/2024] M.I: Scorpion we greet
+[00:00, 10/01/2024] Abolo (Former Data Lead): Egbon. Your shoe shine boss. 🙌🏾
+[00:00, 10/01/2024] Abolo (Former Data Lead): So I'm going to be posting a few Machine Learning problems and you'll vote on what type of machine learning task it is. whether it's supervise learning  unsupervised learning  or (bonus reinforcement learning)
+[00:00, 10/01/2024] Abolo (Former Data Lead): Let's start with something easy
+[00:00, 10/01/2024] Abolo (Former Data Lead): POLL: An app that predicts the future price of Ethereum OPTION: Supervised Learning (14 votes) OPTION: Unsupervised Learning (0 votes) OPTION: Reinforcement Learning (0 votes) 
+[00:00, 10/01/2024] Abolo (Former Data Lead): Ok  looks like that one was a breeze
+[00:00, 10/01/2024] Abolo (Former Data Lead): POLL: Machine Learning model to match guys in BUCC with girls in Nursing for valentines day #thisSeasonIsOurSeason OPTION: Supervised Learning (5 votes) OPTION: Unsupervised Learning (7 votes) OPTION: Reinforcement Learning (0 votes) 
+[00:00, 10/01/2024] Abolo (Former Data Lead): Una no wan vote? 😂
+[00:00, 10/01/2024] Abolo (Former Data Lead): Can anyone explain why it's unsupervised learning?
+[00:00, 10/01/2024] Abolo (Former Data Lead): Also @2349044195816 and @2348148935061 can you explain why it's supervised
+[00:00, 10/01/2024] M.I: It’s supervised because the data is going to be labeled and it’s feeling more like a regression problem than a classification problem.
+[00:00, 10/01/2024] M.I: If I’m correct I go need cash price sha
+[00:00, 10/01/2024] Abolo (Former Data Lead): We gats pay for your time normally
+[00:00, 10/01/2024] M.I: Actually I just cross checked and I’m like 99.9999% sure it’s supervised
+[00:00, 10/01/2024] Abolo (Former Data Lead): interesting 🤔
+[00:00, 10/01/2024] Abolo (Former Data Lead): If you were to implement this kind of model  what approach will you take?
+[00:00, 10/01/2024] Abolo (Former Data Lead): The answer depends greatly on how you choose to implement it actually
+[00:00, 10/01/2024] M.I: A decision tree is the one I can try to explain  You train a random forest or Ensemble for the entire data  then the concept would be that given a guy example using his preference from the table  you can filter out the ladies that match or are close. .
+[00:00, 10/01/2024] Abolo (Former Data Lead): Interesting. 🤔
+[00:00, 10/01/2024] Edidiong: The data should be labelled I guess.. We’ll take features from both groups in order to make matches
+[00:00, 10/01/2024] Edidiong: Just like how dating apps work
+[00:00, 10/01/2024] Abolo (Former Data Lead): Interesting
+[00:00, 10/01/2024] Abolo (Former Data Lead): So more like labelling different subgroups in the nursing and bucc distribution and joining people that fall into the same class
+[00:00, 10/01/2024] Abolo (Former Data Lead): Can anyone from team unsupervised talk about any ideas of how they could implement this unsupervised?
+[00:00, 10/01/2024] Edidiong: Well.. feature selection from like their inputs.. Characteristics like similar interests.. the model will learn to predict from those input data
+[00:00, 10/01/2024] Kev: The most possible way would be to use a clustering algorithm But then it doesn’t end there because you have to be matched to someone (I guess)   so once people are clustered based on the many variables. Then  a recommendation system can be used
+[00:00, 10/01/2024] Abolo (Former Data Lead): Another interesting approach
+[00:00, 10/01/2024] Abolo (Former Data Lead): I see
+[00:00, 10/01/2024] Abolo (Former Data Lead): Alright.
+[00:00, 10/01/2024] Abolo (Former Data Lead): So it's a model that matches people to other people right?  and it's supposed to match BUCC boys to Nursing girls (and vice versa)
+[00:00, 10/01/2024] Abolo (Former Data Lead): So now what are the constraints we have to look out for? Why do we need machine learning? Why not just match a random BUCC boy to a random Nursing girl?
+[00:00, 10/01/2024] Abolo (Former Data Lead): That's going to be a big problem. We want people to use our model (or use the dating app that's powered by our model)   We want people to be matched with others that have similar interests with them
+[00:00, 10/01/2024] Abolo (Former Data Lead): E.g  we don't want to match an introverted workaholic guy with an extroverted girl that likes to party
+[00:00, 10/01/2024] Abolo (Former Data Lead): We don't want a Portable and Billie Eilish match up either 😂
+[00:00, 10/01/2024] Abolo (Former Data Lead): or a Mercy Chinwo and Rahman Jaggo match up
+[00:00, 10/01/2024] Abolo (Former Data Lead): We don't want to match a Muslim with someone who's favourite food is pork chop (you get the point)
+[00:00, 10/01/2024] M.I: That’s a little racist 🤣 .
+[00:00, 10/01/2024] Abolo (Former Data Lead): So our constraint is that two people must have similar interest
+[00:00, 10/01/2024] luxury.dev: Justice for portable
+[00:00, 10/01/2024] M.I: I swear
+[00:00, 10/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 10/01/2024] Abolo (Former Data Lead): Na portable go first complain. No be Billie Eilish 😂😭
+[00:00, 10/01/2024] Abolo (Former Data Lead): Now  in our data set  we have people with their different features we captured in a survey or through our app.
+[00:00, 10/01/2024] Abolo (Former Data Lead): Now we can't really label the data. Unless we want to define a fixed set of labels (say jovial  introverted  fun  career-minded  etc)
+[00:00, 10/01/2024] Abolo (Former Data Lead): Then classify people into these fixed labels.
+[00:00, 10/01/2024] Abolo (Former Data Lead): Even at that  we would still need to label our training dataset with these labels (which could be a lot of work considering that BUCC is over 2000 and like 75% of them are guys)
+[00:00, 10/01/2024] Abolo (Former Data Lead): Now we can find some way to turn these different data points (BUCC boys and Nursing girls) to numbers.  Have some kind of function (remember our linear transformation and calculus study jam 🌚) that maps these different samples into points  such that:  1. The numbers depend on the features of the students we're interested in. e.g interests  level  likes and dislikes  cgpa  hobbies  etc. 2. The distance between two points; A and B  in this function (our new universe) is a good reflection of the distance between A and B in the real world based on the features.
+[00:00, 10/01/2024] Abolo (Former Data Lead): What I just described is something called Embedding.  Embedding is a Deep Learning Unsupervised technique. (You don't need to worry about how this works now until our Deep Learning month)
+[00:00, 10/01/2024] Abolo (Former Data Lead): We can achieve Embedding in classical Machine Learning through something called Clustering
+[00:00, 10/01/2024] Abolo (Former Data Lead): We can also achieve it with something called "Dimensionality Reduction" We will discuss all these things this month and next.
+[00:00, 10/01/2024] Abolo (Former Data Lead): All we just need to do after training our Embedding would be to convert all our data into data points in this embedding function.  We can then calculate the distance between an embedding point A and all other embeddings and sort based on which is closest to my own embedding. A simple sorting algorithm will do (no need for ML at this part)
+[00:00, 10/01/2024] Abolo (Former Data Lead): So think of it this way. Let's use me as an example.  I like basketball  and football. I like writing code. my top music genres include afro beats  alte  hip hop  and a bit of rock n roll. My favorite artists are Kanye  Drake  and AC/DC.  A girl who likes basketball but not football  with top music genres: afro beats  rap  and UK drill  with favorite artists Rema and Dave   Will have a closer distance to my point on the Embedding than a girl that  likes skiing and ice hockey  with top music genres: gospel  rock n roll  EDM  white noise  with favorite artists  Mercy Chinwo  the beatles  Elvis Presley  and Nathaniel Bassey.   Say my point on the embedding turns out to be 0.33452  The first girl will be something like 0.3399  and the third girl will be something like -3.2459
+[00:00, 10/01/2024] Abolo (Former Data Lead): Another approach will be to use a clustering algorithm like KMeans (Unsupervised learning).   What this will do is it will generate random labels for you  group similar students together based on the distance between the features themselves  and assign random labels to these different group.s
+[00:00, 10/01/2024] Abolo (Former Data Lead): So it's just going to return all the Nursing girls that fall into the same randomly generated label as you. (Tough luck if no one falls into your label 😭)
+[00:00, 10/01/2024] Abolo (Former Data Lead): Any questions or insights before I drop the next poll?  (Hint it's going to be one that may cause you to think deeply and discuss your ideas on this gc)
+[00:00, 10/01/2024] Abolo (Former Data Lead): Alright
+[00:00, 10/01/2024] Meshai: Sorry I don't understand the difference The first will show you a recommendation based on the distance between the embedding points which is like a combination of the person's features and the clustering algorithm will show you a recommendation of someone based on the distance between your features Maybe I don't understand very well but it doesn't seem there's that much of a difference
+[00:00, 10/01/2024] Abolo (Former Data Lead): Good question
+[00:00, 10/01/2024] Abolo (Former Data Lead): Now the major difference between clustering and embedding is that   normal clustering works with the features and uses this comparison to group the samples.  Embedding is parsing these features of our samples through a mathematical function to represent them with a number or array of numbers. We can now compare these numbers with each other.
+[00:00, 10/01/2024] Abolo (Former Data Lead): Another simple example of clustering.  You'd like to cluster people based on their finances using account balance as a feature. It's just going to compare the account balance of the samples with each other and group them.
+[00:00, 10/01/2024] Abolo (Former Data Lead): A slightly more complex example would be clustering the people but this time adding more features. Adding the number cars they have  the value of their stock portfolio  the value of their real estate  etc
+[00:00, 10/01/2024] Abolo (Former Data Lead): So it just groups them. you only need to specify how many groups you want.
+[00:00, 10/01/2024] Oba: Based on the embedding technique aspa it's use of functions and numbers does that mean it's more precise?
+[00:00, 10/01/2024] Abolo (Former Data Lead): Well  in this case  yes. An Embedding technique  if trained with lots of data will be more precise as all it's doing is its converting the data to a comparable array of numbers.   It's accuracy depends on how well it represents the real world data
+[00:00, 10/01/2024] Abolo (Former Data Lead): Now Embedding on the other hand  is not doing any grouping. It's just mapping each sample to a vector or array of numbers
+[00:00, 10/01/2024] Meshai: So sorry Maybe i don't get understand much but in this example their account balance  value of real estate and such Isn't it labeled data?
+[00:00, 10/01/2024] Abolo (Former Data Lead): Ok  so it's not labeled. When we say a dataset is labeled  what we mean is that the samples are labeled (not the features).  E.g  This dataset will be labeled if each sample is given one of the tags: poor  middle-class  rich  elite
+[00:00, 10/01/2024] Abolo (Former Data Lead): We are the ones as humans that will have to find a way to label the data
+[00:00, 10/01/2024] Abolo (Former Data Lead): That's where it got the name "supervised" from.
+[00:00, 10/01/2024] Abolo (Former Data Lead): We can have data with labeled samples but unlabeled features.  Like images and videos.  Say you'd like to classify images of animals. You have a dataset of the images mapped to a finite set of labels (dog  cat  fish  rabbit) but the images themselves are just a bunch of numbers.  It's still supervised learning
+[00:00, 10/01/2024] Abolo (Former Data Lead): Back to this  now that we have numbers  we can mathematically find the distance between two points in our embedding.  Think of it with this illustration. Imagine you have your house address  and you put it into Google Maps. Google Maps has to convert that address to points on the globe (latitude and longitude) before it can find the distance between wherever you are and that place.
+[00:00, 10/01/2024] Abolo (Former Data Lead): It's not an example of Embedding  but embedding is used to solve these kinds of tasks
+[00:00, 10/01/2024] Abolo (Former Data Lead): The most common use case of embeddings is in NLP (Natural Language Processing).  we can embed words so we can respond to similar words in similar ways.  An embedding of the word "man" will be closer to the word "woman" than the word "mouse". Likewise the word "mister" will be closer to the word "man" than the word "woman". (Check out GloVe and Word2Vec. two popular text embedding models)  We've converted the words to numbers strictly to compare them to other words.
+[00:00, 10/01/2024] Abolo (Former Data Lead): @2348059393725 Does that answer your question?
+[00:00, 10/01/2024] Meshai: Yes it does Thank you
+[00:00, 10/01/2024] Abolo (Former Data Lead): Awesome
+[00:00, 10/01/2024] Abolo (Former Data Lead): Now  the third and final question
+[00:00, 10/01/2024] Abolo (Former Data Lead): I'd give us 24 hours to discuss and vote
+[00:00, 10/01/2024] Abolo (Former Data Lead): POLL: Is ChatGPT supervised learning  unsupervised learning  or reinforcement learning? or is it a combination of 2 or all? OPTION: It is supervised. (Explain) (10 votes) OPTION: It is unsupervised (Explain) (8 votes) OPTION: It is reinforcement learning (Explain) (10 votes) 
+[00:00, 10/01/2024] Abolo (Former Data Lead): If it's a combination  select more than one answers
+[00:00, 10/01/2024] Abolo (Former Data Lead): Be sure to discuss this here in this group chat. I'd like to observe the though process of every one of you
+[00:00, 10/01/2024] Abolo (Former Data Lead): Cheers  if you need me  I'd be listening to some Asake
+[00:00, 10/01/2024] Abolo (Former Data Lead): Check this guy out as well  https://zapier.com/blog/how-does-chatgpt-work/
+[00:00, 11/01/2024] Abolo (Former Data Lead): Yo guys
+[00:00, 11/01/2024] Abolo (Former Data Lead): How's it going
+[00:00, 11/01/2024] Onofiok: Gooooood 🌚
+[00:00, 12/01/2024] Abolo (Former Data Lead): Whats up guys
+[00:00, 12/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 15/01/2024] chibuzor: Isn't it past 24hrs already?
+[00:00, 15/01/2024] Abolo (Former Data Lead): Yhh  well  i was chilling to see if there would be dialog or discussion about the question
+[00:00, 15/01/2024] Abolo (Former Data Lead): I'm seeing a lot of votes in here. Does anyone have anything to say about their choice?
+[00:00, 15/01/2024] Abolo (Former Data Lead): @2349014307553 @2348084276257 @2349131869375 @2348118572658 ?
+[00:00, 15/01/2024] Abolo (Former Data Lead): @2348059393725 👀🔥
+[00:00, 15/01/2024] Edidiong: Supervised Learning The training data are labelled.. for it to have like an initial understanding of what things are/mean.. So when it’s needed  it knows the right output to give.. It’s just fed a lot of those data  And for the reinforcement learning part of it.. asper reward system now so they use this one for improving chatgpt’s output decisions  actions  behavior.. through users feedback (like  dislike  regenerate buttons them them) So when the alg receives a penalty.. o ti fuck up.. otherwise  a reward helps it know it made the right decision and keep in that pattern.. something like that  I’m not really sure about the unsupervised part of it.. there’s probably that aspect for interpreting users requests that the machine itself hasn’t come across.. idk
+[00:00, 15/01/2024] Abolo (Former Data Lead): Interesting take @2349044195816 🤔🔥
+[00:00, 15/01/2024] Abolo (Former Data Lead): Nailed it  especially on the reinforcement learning part.  ChatGPT uses reinforcement learning techniques to readjust itself when it receives feedback from the user that it's either doing something right or wrong.
+[00:00, 15/01/2024] Edidiong: Right
+[00:00, 15/01/2024] Abolo (Former Data Lead): Have you come across the term "Human Guided Machine Learning" before .
+[00:00, 15/01/2024] Abolo (Former Data Lead): There's another term for it that's more popular  just can't remember it rn.
+[00:00, 15/01/2024] exotic olive oil taster: rlhf?
+[00:00, 15/01/2024] Abolo (Former Data Lead): Yess. This. Reinforcement Learning from human feedback
+[00:00, 15/01/2024] Edidiong: Nahh
+[00:00, 15/01/2024] Edidiong: Oh
+[00:00, 15/01/2024] Abolo (Former Data Lead): It's basically what you described.  Instead of programming a reward system like in most reinforcement learning applications  you rely on human feedback.
+[00:00, 15/01/2024] Riley (GDG Lead): Chatgpt is said to have been trained on like 500gb+ of data btw
+[00:00, 15/01/2024] Abolo (Former Data Lead): This helps GPT improve the quality of its responses. its mostly used to make sure GPT doesn't give out offensive responses.
+[00:00, 15/01/2024] Abolo (Former Data Lead): That's very interesting.
+[00:00, 15/01/2024] Edidiong: Yeahh I feel Majority of the deep learning powered systems use the raw programming rewards but this one is user centred Hmm
+[00:00, 15/01/2024] Abolo (Former Data Lead): Yup. In contrast to RLHF or reinforcement learning in general  deep learning is based on linear algebra and optimization.  We're optimizing a loss function or cost function based on a set of functions in deep learning.  In reinforcement learning  we create something called an agent and provide it with an environment. We then give the agent a goal and a bunch of actions it can take. We provide a reward system for the agent to check if its previous actions brought it closer or further from the goal.  In RLHF  the reward system is based on a perception of how the human feels. Is the human happy with this action I just took?
+[00:00, 15/01/2024] Abolo (Former Data Lead): Now does anyone have an idea of how ChatGPT comes up with their responses?  How does the model answer your pressing questions? or rather  how does it come up with the sentences or a unique sentence each time you ask?
+[00:00, 16/01/2024] Riley (GDG Lead): I thought chatgpt's one was unsupervised then fine tuned
+[00:00, 16/01/2024] Abolo (Former Data Lead): Well I would say chatgpt is a combination of all three.
+[00:00, 16/01/2024] Abolo (Former Data Lead): Supervised  Unsupervised  and Reinforcement learning
+[00:00, 16/01/2024] chibuzor: Unsupervised? Explain
+[00:00, 16/01/2024] Abolo (Former Data Lead): It's supervised from the perspective of it's ability to detect certain types of requests and deny them.
+[00:00, 16/01/2024] Abolo (Former Data Lead): For example  if you ask ChatGPT how to make crystal meth  it wouldn't give you an answer (don't ask me how I know this)
+[00:00, 16/01/2024] chibuzor: Yes and also moderating what to learn from people's feedback input
+[00:00, 16/01/2024] Abolo (Former Data Lead): yes
+[00:00, 16/01/2024] Abolo (Former Data Lead): There's also an element of it that's unsupervised.
+[00:00, 16/01/2024] Abolo (Former Data Lead): Some might say the major gismo
+[00:00, 16/01/2024] Riley (GDG Lead): So basically fine tuning is a form of supervised learning
+[00:00, 16/01/2024] chibuzor: Which is?
+[00:00, 16/01/2024] Abolo (Former Data Lead): Well  fine-tuning itself  is more of a way to make the model better.
+[00:00, 16/01/2024] chibuzor: Basically Human Classification the good  the bad and the ugly
+[00:00, 16/01/2024] Abolo (Former Data Lead): Like saying  I've got this generalized model  and I'd like to fine-tune it for my specific use case.  Let's say you're developing a facial recognition system. You then fine-tune it to make it work for blurry images
+[00:00, 16/01/2024] chibuzor: Hmmm 🤔 Isn't it just like making your own clusters?
+[00:00, 16/01/2024] Abolo (Former Data Lead): so it's not really a machine learning algorithm per say.
+[00:00, 16/01/2024] Abolo (Former Data Lead): Think of fine-tuning as refactoring your code to make it better
+[00:00, 16/01/2024] Abolo (Former Data Lead): Like saying  ok  i'm going to replace this array with a lookup table so my code can be faster.
+[00:00, 16/01/2024] chibuzor: Owh like giving it extra data to learn etc
+[00:00, 16/01/2024] Abolo (Former Data Lead): yup
+[00:00, 16/01/2024] Abolo (Former Data Lead): as for this
+[00:00, 16/01/2024] chibuzor: Was about asking
+[00:00, 16/01/2024] Abolo (Former Data Lead): The answer is embedded in this
+[00:00, 16/01/2024] Abolo (Former Data Lead): The core technology behind ChatGPT is something called text generation.
+[00:00, 16/01/2024] Abolo (Former Data Lead): Legacy chatbots before deep learning relied on "prompt-to-intent" mapping (I made that up) or rather Intent classification  This basically means I have a set of predefined questions or prompts with the intents.
+[00:00, 16/01/2024] Abolo (Former Data Lead): as my training data
+[00:00, 16/01/2024] Abolo (Former Data Lead): so let's say I'm building a customer service chatbot.  I have questions like "Hi how are you" mapped to "greeting" and "I cant find the so called 'any' key on my keyboard" to "techSupport"
+[00:00, 16/01/2024] Abolo (Former Data Lead): I just train my model to predict (classify) different sentences to intents.  Then I program callbacks or handlers to handle these intents using traditional programming.  Say if I see greeting  I program the app to return "Hi  How can I help you today"  If i see an intent that suggests the prompt has some information I'd like to know about  I use pattern matching to extract that info.  For example "Set an alarm for 7pm Friday". The intent could be "setAlarm". I then use pattern matching algorithms to extract the time "7pm" and "Friday". (I worked on a pattern matching project about 2 years ago  I'll try to find the repo and share)
+[00:00, 16/01/2024] Abolo (Former Data Lead): The problem with this though  is that our chatbot can only handle a finite number of intents. (less robust  does not scale)  Another problem is that we need to program handlers or callbacks for each intent. We either do it ourselves or hire a software engineer to do it for us (costly).  The third problem is that we would need to put in considerable effort in making it's responses dynamic
+[00:00, 16/01/2024] chibuzor: So what your saying is that unsupervised learning causes this wide range of human text understanding
+[00:00, 16/01/2024] Abolo (Former Data Lead): Alright  so unsupervised learning in this concept comes to play in the sense that  we want to make our model as robust as possible. So we train it on lots of data (In GPT's case  the corpus of the entire internet)  That's too much data to label. We have an infinite number of intents   We need an unsupervised learning algorithm that can make this work
+[00:00, 16/01/2024] Abolo (Former Data Lead): That's where text generation comes in
+[00:00, 16/01/2024] Abolo (Former Data Lead): Unlike intent classification  text generation is a "next word" algorithm
+[00:00, 16/01/2024] Abolo (Former Data Lead): To keep things simple  all it does  is that it takes note of the words that come after each word.  For example.  "I love chicken".  In this sample  The X -> Y mapping would be "I" to "love"  "I love" to "Chicken" and "I love chicken" to a token that represents the end of the sentence. say full stop.
+[00:00, 16/01/2024] Abolo (Former Data Lead): Then what it tries to do is it tries to predict the next word that should come after a given set of words. That given set of words will serve as a form of context
+[00:00, 16/01/2024] Abolo (Former Data Lead): for example.  If I have two strings in my training set  "Ade went to the farm"  "Ade was sick and went to the hospital"   And I have an input to my model that says  "Ade felt a bit ill  so he decided to go to the..."  The model will predict the next word to be "hospital"
+[00:00, 16/01/2024] Abolo (Former Data Lead): It does this prediction by calculating the probability of each word in it's dictionary to make sense in the sentence.  In this case  "hospital" has a higher probability of making sense than "farm".
+[00:00, 16/01/2024] Abolo (Former Data Lead): Now also note that for this to be effective  the embeddings that we talked about will also come into play.
+[00:00, 16/01/2024] Abolo (Former Data Lead): So it's possible for the model to predict the next word to be "clinic" instead of "hospital"/
+[00:00, 16/01/2024] chibuzor: Good explanation  thanks
+[00:00, 16/01/2024] Abolo (Former Data Lead): We will try our hands on text generation before the summer holidays
+[00:00, 16/01/2024] Anjola (Data Lead): Please check the description of this gc🤗
+[00:00, 16/01/2024] Anjola (Data Lead): I’ve missed a lot 🙆‍♀️
+[00:00, 16/01/2024] Abolo (Former Data Lead): 😅  The next couple of days will be a lot more fun
+[00:00, 16/01/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/01/2024] Abolo (Former Data Lead): Yo guys
+[00:00, 17/01/2024] Abolo (Former Data Lead): What's up
+[00:00, 17/01/2024] Caleb: <Media omitted>
+[00:00, 17/01/2024] exotic olive oil taster: my oga
+[00:00, 17/01/2024] Emmerick: <Media omitted>
+[00:00, 17/01/2024] Anjola (Data Lead): Hellooo
+[00:00, 17/01/2024] Abolo (Former Data Lead): How are you guys doing
+[00:00, 17/01/2024] Abolo (Former Data Lead): I'm going to be sharing some resources here
+[00:00, 17/01/2024] Abolo (Former Data Lead): https://www.youtube.com/watch?v=KHoEbRH46Zk
+[00:00, 17/01/2024] Abolo (Former Data Lead): This is a 5 mins introduction numpy and pandas
+[00:00, 17/01/2024] Abolo (Former Data Lead): https://www.youtube.com/watch?v=uRsE5WGiKWo  This one is a 15 minutes crash course on NumPy
+[00:00, 17/01/2024] Abolo (Former Data Lead): Also  I'd like every one of us to have a software called Anaconda installed on our computers
+[00:00, 17/01/2024] Abolo (Former Data Lead): POLL: ? OPTION: I know how to download and install Anaconda (10 votes) OPTION: I do not know how to download and install Anaconda (4 votes) OPTION: Well  I don't know unless I try (1 vote) 
+[00:00, 17/01/2024] Abolo (Former Data Lead): The main platform we will actually be using here is something called Google Colab.  But I acknowledge that our great university has a serious network problem and I don't want that to be a barrier as Google Colab runs on the cloud.   So I'd like us to have the tools we will be working with locally set up and installed on our machines. The easiest way to get that done is to use Anaconda.  It will install the basic data science libraries as well as something called Jupyter Notebook
+[00:00, 17/01/2024] chibuzor: Is Pycharm allowed?
+[00:00, 17/01/2024] Anjola (Data Lead): Absolutely  I personally prefer it to VS Code👀
+[00:00, 17/01/2024] Abolo (Former Data Lead): You can use anything you're comfortable with really.   But something that has a notebook-like interface would be nicer.
+[00:00, 17/01/2024] chibuzor: Or anaconda
+[00:00, 17/01/2024] Abolo (Former Data Lead): I think PyCharm and VS Code have extensions for notebooks
+[00:00, 17/01/2024] exotic olive oil taster: blasphemy 😭
+[00:00, 17/01/2024] Anjola (Data Lead): You kind of have to use both together  I mean I do
+[00:00, 17/01/2024] chibuzor: Why? The do the same thing rii
+[00:00, 17/01/2024] Abolo (Former Data Lead): Yh  sure. Anaconda comes with Jupyter Notebook.
+[00:00, 17/01/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/01/2024] Anjola (Data Lead): Not really  anaconda serves as the virtual environment
+[00:00, 17/01/2024] Abolo (Former Data Lead): Lowkey PyCharm is better. Only problem with it is you're stuck with that ugly jetbrain theme
+[00:00, 17/01/2024] chibuzor: So for this notebook part what do I download? .
+[00:00, 17/01/2024] Anjola (Data Lead): How dare you😭😭
+[00:00, 17/01/2024] chibuzor: Kinda looks fine for me .
+[00:00, 17/01/2024] Abolo (Former Data Lead): It dulls my vibe abeg 😂
+[00:00, 17/01/2024] Abolo (Former Data Lead): Anaconda is basically a suit
+[00:00, 17/01/2024] Abolo (Former Data Lead): *suite
+[00:00, 17/01/2024] Abolo (Former Data Lead): it comes with a lot of stuff to help you
+[00:00, 17/01/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/01/2024] Abolo (Former Data Lead): 😂  Maybe it's because I use it on Linux. VS code on linux is also quite dull
+[00:00, 17/01/2024] chibuzor: Linux?! Agba dev 🙌
+[00:00, 17/01/2024] Anjola (Data Lead): Well maybe but It's actually relatively dull but still you didn't have to call it out like that😭😭
+[00:00, 17/01/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/01/2024] Abolo (Former Data Lead): Omo  na Ubuntu boss 😂. I plan to move to Arch sha
+[00:00, 17/01/2024] chibuzor: So there's no other option for notebook except Anaconda
+[00:00, 17/01/2024] Abolo (Former Data Lead): .
+[00:00, 17/01/2024] chibuzor: Sure.
+[00:00, 17/01/2024] Anjola (Data Lead): You can use kaggle notebook too...  But Google colab is the best fr
+[00:00, 17/01/2024] chibuzor: It's local
+[00:00, 17/01/2024] Anjola (Data Lead): When it comes to ease of use sha😅
+[00:00, 17/01/2024] Anjola (Data Lead): Nah  on your Web browser.  You looking for local options?
+[00:00, 17/01/2024] chibuzor: Isn't anaconda's notebook local?
+[00:00, 17/01/2024] Anjola (Data Lead): It is
+[00:00, 17/01/2024] Anjola (Data Lead): I think Jupyter notebook is part of the anaconda package
+[00:00, 17/01/2024] Anjola (Data Lead): And it's local
+[00:00, 17/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 17/01/2024] chibuzor: So what's the UI like in anaconda compared to Pycharm on like a scale of 1-10m
+[00:00, 17/01/2024] chibuzor: Coz I can't use eclipse IDE o
+[00:00, 17/01/2024] Abolo (Former Data Lead): Well  technically anaconda has no interface.  It just installs the tools and creates something called a "virtual environment" where it installs all the modules for you
+[00:00, 17/01/2024] Shepherd: Use Vim
+[00:00, 17/01/2024] chibuzor: Abeg don't punish me 😂 I can't die before my time
+[00:00, 17/01/2024] Abolo (Former Data Lead): That one sef dey
+[00:00, 17/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 17/01/2024] chibuzor: Well for the sake of this whole thing I think I'll just download Anaconda
+[00:00, 17/01/2024] chibuzor: Just did my research and if Jetbrains Dataspell wasn't premium would've definitely gone for it
+[00:00, 17/01/2024] zee: Did you say cable? What's that?
+[00:00, 17/01/2024] Abolo (Former Data Lead): Kaggle
+[00:00, 17/01/2024] zee: I think I'll just install anaconda even I have pycharm
+[00:00, 17/01/2024] Abolo (Former Data Lead): Yup. to keep it simple
+[00:00, 17/01/2024] zee: I don't know how the notebook works there
+[00:00, 17/01/2024] Edidiong: Colab
+[00:00, 17/01/2024] Abolo (Former Data Lead): from what @2349014307553 says  I think their notebooks comes in another product called Dataspell
+[00:00, 17/01/2024] Edidiong: You won’t worry about locally installing libraries
+[00:00, 19/01/2024] Unknown: https://arstechnica.com/information-technology/2024/01/ai-poisoning-could-turn-open-models-into-destructive-sleeper-agents-says-anthropic/
+[00:00, 19/01/2024] chibuzor: Just hoping everyone is done downloading anaconda and every necessary setup so we can actually begin 🙃
+[00:00, 20/01/2024] Abolo (Former Data Lead): Hi guys
+[00:00, 20/01/2024] Abolo (Former Data Lead): If you haven't been able to set up anaconda  vote I don't know here
+[00:00, 20/01/2024] Abolo (Former Data Lead): *🚀 Exciting News: Elite Coders (BU Devs) Joins Forces with Pallax! 🌐*  Dear Elite Coders   We're thrilled to announce a major milestone for our community! Elite Coders (BU Devs) is joining hands with Pallax to create an even more dynamic and impactful tech ecosystem.  *🌍 About Pallax:* Pallax fosters a dynamic tech ecosystem from Nigerian universities to the nation at large  cultivating a culture of growth and innovation. We aim to build a diverse pipeline of individuals in various tech fields to drive large-scale solutions  products  and companies.  *🔗 What This Means for BU Devs:* By joining Pallax  we're opening up new opportunities for collaboration  mentorship  and networking. This partnership will connect Babcock students with professionals in Silicon Valley and Fortune 500 companies  providing invaluable insights and fostering a culture of growth within our community.  *🎉 What's Coming:* Get ready for exciting events  workshops  and mentorship programs that will elevate our collective journey in the tech world. Together  we'll contribute to building a strong  innovative tech community in Nigeria.  *📅 Save the Date:* Stay tuned for upcoming events and announcements as we embark on this collaborative adventure. Mark your calendars  and let's make a positive impact together!  *🌐 Call to Action:* Head over to https://pallax.org and register in the Babcock University Chapter. Be sure to select your niche in tech as well as a short intro about yourself.
+[00:00, 21/01/2024] Abolo (Former Data Lead): Hello people 👋🏾
+[00:00, 21/01/2024] Abolo (Former Data Lead): All 3 people that selected the 2nd option should send me a DM
+[00:00, 21/01/2024] Abolo (Former Data Lead): POLL: .so first off. I'd like to know the people here interested in Data Engineering OPTION: I am interested in a career in Data Engineering (7 votes) OPTION: I like something else (5 votes) OPTION: I don't know unless I try (13 votes) 
+[00:00, 21/01/2024] Abolo (Former Data Lead): Also  react to this message if you've watched the 15 mins video on numpy
+[00:00, 22/01/2024] Anjola (Data Lead): Let’s have it!!!  https://x.com/gdscbabcockdata/status/1749385118534222064?s=46
+[00:00, 25/01/2024] Abolo (Former Data Lead): Hi  I believe precision and accuracy are not the same thing 😂
+[00:00, 25/01/2024] Abolo (Former Data Lead): What's up guys
+[00:00, 25/01/2024] Abolo (Former Data Lead): So I'll be creating a group chat for everyone who selected the first and third options on this poll.  I cooked up a data engineering roadmap which we will be following.
+[00:00, 25/01/2024] Abolo (Former Data Lead): In other news  I believe by now everyone should've watched the 15 mins video on Numpy
+[00:00, 25/01/2024] Abolo (Former Data Lead): before we proceed  I'd like to post a few questions here for you to vote
+[00:00, 25/01/2024] Abolo (Former Data Lead): POLL: What is Numpy OPTION: It's a machine learning framework (0 votes) OPTION: It's a library for scientific computing (0 votes) OPTION: It's a library for manipulating numbers (0 votes) OPTION: It's a library for super fast operations on arrays and matrices (12 votes) 
+[00:00, 25/01/2024] Abolo (Former Data Lead): POLL: What makes Numpy so fast? What's so special about Numpy OPTION: It was written in C++. Duhh (0 votes) OPTION: It's based on concurreny. It's multithreaded. that's definitly it (0 votes) OPTION: It's based on parallel processing. It distributes the tasks across multiple CPUs. (0 votes) OPTION: It uses something called "vectorization" which lets us run computations on arrays without loops. (13 votes) 
+[00:00, 25/01/2024] Abolo (Former Data Lead): POLL: Why would a Data Scientist ever want to know NumPy? (Select all that apply) OPTION: Data Scientists work with numbers. Libraries like numpy make it a lot easier (9 votes) OPTION: Numpy allows us to perform linear transformations on arrays and vectors easily. (good for ML) (12 votes) OPTION: Numpy has machine learning models implemented for us so we don't need to write them ourselves (0 votes) OPTION: Numpy has a lot of mathematical helper functions that we can use. (11 votes) OPTION: We don't need Numpy in Data Science (0 votes) 
+[00:00, 25/01/2024] Abolo (Former Data Lead): This coming Sunday  we would have a study jam on implementing Linear Regression with Numpy
+[00:00, 25/01/2024] Abolo (Former Data Lead): In the meantime  you can read about linear regression here  https://www.statisticshowto.com/probability-and-statistics/regression-analysis/find-a-linear-regression-equation/#:~:text=Remember%20from%20algebra%2C%20that%20the y'%20%3D%20b%20%2B%20ax.
+[00:00, 25/01/2024] Abolo (Former Data Lead): Try to come up with a linear regression model *by hand* for this dataset  X = [01  02  03  04  05  06  07  08  09  10] Y = [02  04  06  08  11  12  14  15  19  20]
+[00:00, 25/01/2024] Abolo (Former Data Lead): Hint  the model in this case is an equation in the form of  Y = MX + c  Some textbooks will say it's  Y = aX + b
+[00:00, 25/01/2024] Abolo (Former Data Lead): X is something called the independent variable.  Y is something called the dependent variable.   Y depends on X. (e.g how well you pass Dr Ernest course is dependent on how often you attend his classes)
+[00:00, 25/01/2024] Abolo (Former Data Lead): a dependent variable depend on more than one independent variables.
+[00:00, 25/01/2024] Abolo (Former Data Lead): For example   How well you pass Dr Ernest course (Y) depends on how often you attend his classes (X1) and how well you study (X2)
+[00:00, 25/01/2024] Abolo (Former Data Lead): in this case   Y = M1X1 + M2X2 + c
+[00:00, 25/01/2024] Abolo (Former Data Lead): M represents something called a slope (or gradient).
+[00:00, 25/01/2024] Abolo (Former Data Lead): it's kind of like saying  how much does X relate to Y.  How dependent is Y on X? that's the slope.  slopes can be positive and negative. A negative slope means  Y is negatively dependent on X.  E.g (Your fitness level is negatively dependent on how often you eat junk food)  The more you eat junk food  the lower your fitness level becomes.
+[00:00, 25/01/2024] Abolo (Former Data Lead): So let's say you're building something to predict fitness levels.  You can say something like   Junk food intake reduces your fitness level and hours spent exercising increases your fitness level.  If X1 is junk food intake or calories from junk food  and X2 is hours spent exercising    Assuming M1 is -1 and M2 is 1 the equation will be something like  Fitness = -X1 + X2 + c
+[00:00, 25/01/2024] Abolo (Former Data Lead): the variable c is something called a bias.
+[00:00, 25/01/2024] Abolo (Former Data Lead): think of the bias c as a number representing all the things our model didn't capture that affects Y
+[00:00, 25/01/2024] Abolo (Former Data Lead): For example  In our fitness case  it's possible that some people aren't getting enough sleep. That can also affect your fitness level.  But that data wasn't captured in our model.
+[00:00, 25/01/2024] Abolo (Former Data Lead): In the Dr Ernest example  There are other factors such as:  1. Participation in the lab classes 2. Watching the recommended movies 3. Reading other resources apart from the ones he provided  All these will influence Y (how well you pass)  but our model only captures attendance and study hours.
+[00:00, 25/01/2024] Abolo (Former Data Lead): So do we all understand the general idea behind Linear regression?
+[00:00, 25/01/2024] Abolo (Former Data Lead): Also  we will be resuming our anonymous this Sartuday.  We will also be changing the tool as @2348082020006 pointed out to us that some of the questions are AI-generated.  I indeed confirmed this by creating another account and not sending the link.
+[00:00, 25/01/2024] Abolo (Former Data Lead): Also  Those that indicated interest or said they're open to trying it out should join Also  Those that indicated interest or said their open to trying it out should join this group chat.  https://chat.whatsapp.com/CgxI2JM2r9gAra41R7xMjc
+[00:00, 25/01/2024] Abolo (Former Data Lead): let's not forget this abeg.  It'll really help you
+[00:00, 25/01/2024] Anjola (Data Lead): 1000%🤩
+[00:00, 25/01/2024] Anjola (Data Lead): If you’re part of the DataCamp Scholrship or if you’re interested in it  please read this🙏  It covers how to fully utilize the scholarship and more.  We were meant to host an info session but we couldn’t so take this as some written info session for the DataCamp scholarship 😊  https://medium.com/gdsc-babcock-dataverse/data-camp-x-gdsc-babcock-scholarship-a64d6691d603 .
+[00:00, 25/01/2024] Mide: Thank you Anjola for this!💗
+[00:00, 26/01/2024] chibuzor: *By hand  explain please
+[00:00, 26/01/2024] Abolo (Former Data Lead): On paper
+[00:00, 26/01/2024] chibuzor: ^ |* | * |  * |   * |    * |     * |      * |       * |        * |         * +----------------->  Is this an example of a negative slope?
+[00:00, 26/01/2024] chibuzor: Yeah great explanation 💯
+[00:00, 26/01/2024] Abolo (Former Data Lead): Yup. The higher x gets the lower y becomes
+[00:00, 26/01/2024] chibuzor: Yeah thanks
+[00:00, 26/01/2024] Onofiok: Good morning everyone.  We're trying to stay on top of our records and also for certificate purposes as well. So please if you're a primary team member  use the link below to sign and send the e-signature with your name and matric number to my DM. Also indicate which primary team you're in abeg so I'll know who's who. Thank you.  https://createmysignature.com/ _-click the link_ _-sign_ _-download the image and send to me_
+[00:00, 27/01/2024] Abolo (Former Data Lead): My people
+[00:00, 27/01/2024] Abolo (Former Data Lead): what's up
+[00:00, 27/01/2024] exotic olive oil taster: <Media omitted>
+[00:00, 27/01/2024] Abolo (Former Data Lead): A new addition to my Layi Wasabi sticker collection
+[00:00, 27/01/2024] Abolo (Former Data Lead): https://kubool.com/kopal  Post any questions you have about data science  machine learning  AI. Or anything at all.  Will start answering by 12 midnight sharp
+[00:00, 27/01/2024] Abolo (Former Data Lead): Also  our study jam on machine learning will be online tomorrow 9pm.
+[00:00, 28/01/2024] Treyo: who’s good at ml here??
+[00:00, 28/01/2024] Abolo (Former Data Lead): Yo guys what's up.
+[00:00, 28/01/2024] Abolo (Former Data Lead): My apologies for not keeping to this. An emergency came up yesterday that I needed to urgently attend to.  I hope this gave us opportunity to ask even more questions
+[00:00, 28/01/2024] Abolo (Former Data Lead): A couple of us
+[00:00, 28/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 28/01/2024] Treyo: can you tag anyone that has done any project
+[00:00, 28/01/2024] Abolo (Former Data Lead): I  @2348084276257   @2347026155404 and others  @2348136518781  is our oga
+[00:00, 28/01/2024] Abolo (Former Data Lead): he's graduated though
+[00:00, 28/01/2024] Treyo: mad o
+[00:00, 28/01/2024] Abolo (Former Data Lead): As someone who isn't studying a computer course  my advice on how you start depends on the kind of course you're studying.  If you're doing something scientific (Maths  Basic sciences  engineering  medicine  economics  stats  etc)  I'll say go straight into learning how to code in either Python or R. Why I say this is you probably have the basic mathematics and statistical background necessary for data science and analytics.
+[00:00, 28/01/2024] Abolo (Former Data Lead): If you're doing a humanities course (Mass Communication  Law  Languages  political science  etc)  First  take some time to get familiar with the basic maths and statistics required.  Learn about the basics of probability  data sampling  and distributions. Learn about logic and boolean algebra.  Understand concepts like sampling and distributions (mean  median  mode  standard deviation  variance)  and probability (experimental and theoretical probability  Bayes theorem).  For core maths understand things like sets  mapping and functions  matrices  logical reasoning  and normal algebra.  You can learn this from any high school maths textbook
+[00:00, 28/01/2024] Abolo (Former Data Lead): If you're feeling bougie  you can take a stab at more complex concepts like calculus and linear algebra.  But you can take those later if you're trying to find your feet.
+[00:00, 28/01/2024] Abolo (Former Data Lead): I'll recommend this website to you to learning computer science and maths fundamentals   https://brilliant.org/
+[00:00, 28/01/2024] Abolo (Former Data Lead): It takes a fun and gamified approach. It helped me a lot when I was in high school
+[00:00, 28/01/2024] Abolo (Former Data Lead): You can take the foundational maths course
+[00:00, 28/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 28/01/2024] Abolo (Former Data Lead): We have things cooking for you. The second we feel you guys have grasped the fundamentals  we kick off
+[00:00, 28/01/2024] Abolo (Former Data Lead): As for the second question  well  google ironically is arguably the one leading the artificial intelligence space
+[00:00, 28/01/2024] Abolo (Former Data Lead): Where google doesn't seem to be excelling at that much is in the LLM as a product space (large language model)
+[00:00, 28/01/2024] Abolo (Former Data Lead): underline the word (As a product). Google's LLM as a service/product is nowhere close to GPT-4 in terms of its robustness and performance.  Although  the new bard seems to be better at computer vision tasks than GPT
+[00:00, 28/01/2024] Abolo (Former Data Lead): Asides from that  google has been a leader in that space  long before other giants like Microsoft  Apple  and OpenAI
+[00:00, 28/01/2024] Abolo (Former Data Lead): The first product I'd like to point out is Google's virtual assistant (Google Assistant). Currently  that is the most advanced virtual assistant compared to Siri and Bixby.
+[00:00, 28/01/2024] Abolo (Former Data Lead): Although people argue that Google assistant is only that awesome when running on a google pixel
+[00:00, 28/01/2024] Abolo (Former Data Lead): But then  Siri only runs on iOS  Bixby only runs on Samsung
+[00:00, 28/01/2024] Abolo (Former Data Lead): Speaking of the devil  the Google Pixel also has some amazing image editing features that can only be possible through AI.   You can literally move objects in the image around or remove them completely and no one will notice.  You can check out more on the editor here  https://blog.google/products/photos/google-photos-magic-editor-pixel-io-2023/
+[00:00, 28/01/2024] Abolo (Former Data Lead): Then there's Google's subsidiary (Google DeepMind) and their discoveries.  Deep mind focuses more on reinforcement learning and robotics though.  So far  their most popular invention is the Alpha Go AI that's currently the world champion in the Go board game
+[00:00, 28/01/2024] Abolo (Former Data Lead): Then there's Google Lamda. An LLM Google refused to make open as a product. It's an internal tool that existed before GPT-3.5 used by Google engineers.  Apparently  it was so advanced  an employee accused it of being sentient (having emotions).  https://blog.google/technology/ai/lamda/
+[00:00, 28/01/2024] Tobi: Yeah  but Google has a bad habit of releasing trailers of models they'll never release to the public
+[00:00, 28/01/2024] Abolo (Former Data Lead): Let's also not forget that the research on the main technology that powers most of these LLMs (Transformer networks)  was co-conducted by 8 google researchers.
+[00:00, 28/01/2024] Abolo (Former Data Lead): So technically  the breakthrough we're seeing in LLMs today are as a result of Google's research
+[00:00, 28/01/2024] Abolo (Former Data Lead): True  I think this one has something to do with them not seeing how they could make direct profit from the models
+[00:00, 28/01/2024] Tobi: Well  you can't compare googles text to image mode imagen to DALL-E 3. DALL-E 3 is on a different level. I'm saying this cause you can only access imagen true vertex ai and that's a lot of money OpenAI releases some of the best text to image models for free .
+[00:00, 28/01/2024] Tobi: I agree Google has been dominating  but that's the past. How long has Google Assistant and Google Translate existed
+[00:00, 28/01/2024] Abolo (Former Data Lead): Well  it still kind of boils down to them not seeing how they could make profit.  We can't really compare Google to OpenAI in terms of the decisions they can  make
+[00:00, 28/01/2024] Abolo (Former Data Lead): I don't think that's the past though.
+[00:00, 28/01/2024] Abolo (Former Data Lead): Because  Generative AI is just one part of Artificial Intelligence in general.  In terms of Artificial Intelligence as a whole  I don't think anyone comes close to google
+[00:00, 28/01/2024] Abolo (Former Data Lead): or rather  I don't think anyone has as many AI products as Google.
+[00:00, 28/01/2024] Abolo (Former Data Lead): or AI driven
+[00:00, 28/01/2024] Abolo (Former Data Lead): There's Machine Learning in things we don't even expect machine learning to be in
+[00:00, 28/01/2024] Abolo (Former Data Lead): Like the google search engine  YouTube  even the Android OS has some services that are ML based.
+[00:00, 28/01/2024] Tobi: Okay  I agree when it comes to generative ai Google needs to reevaluate their cooking recipe
+[00:00, 28/01/2024] Abolo (Former Data Lead): Yes  I think google has some figuring out to do
+[00:00, 28/01/2024] Abolo (Former Data Lead): Although  its a huge question whether they want to go down that road.  I was listen to someone the other day  his take on the whole thing is that Google just doesn't see the value in investing in LLMs as a product.   But then I'm conflicted on the issue. If that was the case  they would have never released Bard
+[00:00, 28/01/2024] Abolo (Former Data Lead): But then again  Google has the funding  the data   and the talent to crush OpenAI's GPT-4
+[00:00, 28/01/2024] Abolo (Former Data Lead): Google's research also has other priorities asides from AI too. Another point to consider.  Google is heavily invested in Quantum Computing research
+[00:00, 28/01/2024] Tobi: I'm not going to lie Google AI feature like search this song which uses audio fingerprinting is nice but openai launched point e  DALL-E 3  Shap·E you can check them out intact I just saw Luma ai on web and discord text to 3d and its seamless I still believe DALL-E 3 is the best text to image model there is because of his coherence
+[00:00, 28/01/2024] Tobi: In response to this  Google releases videos and research papers for products they'll never release as I said before to use imagen it's only through vertex ai and it's expensive
+[00:00, 28/01/2024] Tobi: Microsoft offers DALL-E 3 for free through Copilot  Bing AI  and designer
+[00:00, 28/01/2024] Abolo (Former Data Lead): I see. I haven't really checked out DALL-E so I can't give an opinion on this. But I'll look into it
+[00:00, 28/01/2024] Tobi: Yeah  most people even hardly use Google Assistant
+[00:00, 28/01/2024] Abolo (Former Data Lead): I can kind of understand Microsoft's decision here.  Microsoft is trying to gain traction on Bing
+[00:00, 28/01/2024] Tobi: Yeah  and it's working. Have you seen Edge? It can summarize videos you watch on YouTube now
+[00:00, 28/01/2024] Abolo (Former Data Lead): 👀🔥
+[00:00, 28/01/2024] Abolo (Former Data Lead): As a Google fanboy  I haven't really check out Edge lately. But I'll try my hands on it
+[00:00, 28/01/2024] Guy: Actually google has made some very mad moves very recently and is now somewhat a competitor with gpt-4. Not as good as the gpt-4 turbo though.  https://chat.lmsys.org
+[00:00, 28/01/2024] Abolo (Former Data Lead): Chatbot Arena. 👀
+[00:00, 28/01/2024] Guy: A thing to note that not all improvements to these closed models are announced. Gpt-4 has gotten significantly better on African languages in the past months and a lot of people in the African research communities are just realizing it.
+[00:00, 28/01/2024] Tobi: Oh  I'm guessing through Gemini Pro and Ultra
+[00:00, 28/01/2024] Guy: OpenAI > Google DeepMind though.
+[00:00, 28/01/2024] Guy: I don’t think ultra has been released yet. That’s the crazy part 😭
+[00:00, 28/01/2024] Abolo (Former Data Lead): I'm conflicted on this 😂
+[00:00, 28/01/2024] Abolo (Former Data Lead): Personally  I'd prefer working at Deep Mind.
+[00:00, 28/01/2024] Tobi: I'm sorry but I don't think that's right I've used Bard before on a flower on the right it told me the left but when I use Bing AI(Now Microsoft Copilot) it told me right the correct answer.
+[00:00, 28/01/2024] Michael.: I got one question  why do we (mostly African devs) talk about AI more than we actually build them  we have communities  groups  teams that talk about AI and are enthusiastic about it  but not major results  i might see things wrongly  correct me if i am .
+[00:00, 28/01/2024] Abolo (Former Data Lead): I feel OpenAI is too focused on Generative Models  Although it's very fruitful. Generative AI may be the key to unlocking AGI as it's the most promising route
+[00:00, 28/01/2024] Guy: Yeah I agree with this.
+[00:00, 28/01/2024] Abolo (Former Data Lead): Well  I'm talking about Bard powered by Gemini. It has crazy features.  I watched a video of a youtuber drawing on paper  Bard was able to predict what he was drawing before he even finished in real time
+[00:00, 28/01/2024] Guy: Well this is true in most groups. But there are groups that people are actually doing stuffs.  One other reason I would say people aren’t building stuff like they should is probably because we don’t have much access to the shiny equipments that power research
+[00:00, 28/01/2024] Tobi: Yeah  but Google mentioned the Bard they made available to the public is power by Gemini Pro
+[00:00, 28/01/2024] Tobi: Exactly most of the time  we need to run it on their servers when training models
+[00:00, 28/01/2024] Guy: You mean the announcement video. That video was edited oh. It wasn’t as real-time and they also added some prompting to that thing .
+[00:00, 28/01/2024] Tobi: Thank you. That video was different from what I experienced
+[00:00, 28/01/2024] Abolo (Former Data Lead): Not the announcement video  it was a youtuber who was testing.  @2348148935061 knows what I'm talking about
+[00:00, 28/01/2024] Guy: One thing that makes me confident with this is that. As big as google is you can see that they are always benchmarking against OpenAI. Which is weird because if you are ahead of someone why are moving like you are trying to catch up.
+[00:00, 28/01/2024] Guy: Oh if you can get the video please send
+[00:00, 28/01/2024] Abolo (Former Data Lead): Currently searching for it
+[00:00, 28/01/2024] Abolo (Former Data Lead): Thiss
+[00:00, 28/01/2024] Abolo (Former Data Lead): It all boils down to technological infrastructure.
+[00:00, 28/01/2024] Abolo (Former Data Lead): Ok I believe this is the video  https://www.youtube.com/watch?v=UIZAiXYceBI  Looks like it was from Google
+[00:00, 28/01/2024] Abolo (Former Data Lead): Though it's not the announcement video
+[00:00, 28/01/2024] Abolo (Former Data Lead): Although now that you said this  I'm a bit conflicted on whether this one is edited too 😂  Well  even if it's not exactly real-time  it's still impressive
+[00:00, 28/01/2024] Guy: That’s the announcement video.
+[00:00, 28/01/2024] Tobi: Check this one out and read the comments Google Text to Video model Lumiere AI https://youtu.be/f9ThAzZs32M?si=b_uxtCcLyueMbNy_
+[00:00, 28/01/2024] Guy: I was actually heartbroken too. Cause I was rooting for google
+[00:00, 28/01/2024] Abolo (Former Data Lead): I see
+[00:00, 28/01/2024] Tobi: The models looks very good  but even from the comments people are not even expecting it to be released anytime soon
+[00:00, 28/01/2024] Guy: This is very very recent. Nice
+[00:00, 28/01/2024] Tobi: They're not even sure if it will ever be released
+[00:00, 28/01/2024] Abolo (Former Data Lead): This looks impressive.  The comments though 😭
+[00:00, 28/01/2024] Abolo (Former Data Lead): I don't want it to look like I'm making excuses for google  but google is a much larger company.   It's possible that some management decisions may prevent them from releasing some of the products they work on (including AI products)
+[00:00, 28/01/2024] Guy: True. OpenAI moves like a startup.
+[00:00, 28/01/2024] Abolo (Former Data Lead): exactly. there are fewer approvals and bureaucracy involved
+[00:00, 28/01/2024] Tobi: I'm guessing they are playing it safe
+[00:00, 28/01/2024] Abolo (Former Data Lead): Yhh.  For a company the size of Google  profits are way more important than anything else.  Definitely more important than democratizing AI
+[00:00, 28/01/2024] Guy: @2348156713736 brilliant is paid right?
+[00:00, 28/01/2024] Abolo (Former Data Lead): Yhh. They operate a freemium model though.  Some of the stuffs are free
+[00:00, 28/01/2024] M.I: mark rober mentioned it wasn’t particularly real time he said he still had to prompt multiple times to get the correct output.  But his own was less edited
+[00:00, 28/01/2024] Tobi: Yeah  I agree  but that also leads them to discontinue a lot of products. We know of Google graveyard and also translatotron a model meant to translate someone's voice to another language while still keeping their voice the research paper was released 2017 so when Google releases a model or a breakthrough in AI people just look away I also believe the reason we got Bard was to compete with GPT-4
+[00:00, 28/01/2024] Guy: Oh ok. You might find this interesting too.  https://afaik.io
+[00:00, 28/01/2024] Abolo (Former Data Lead): checking it out now
+[00:00, 28/01/2024] Abolo (Former Data Lead): Very true.  Google has a track record of shutting down products or not even releasing them in the first place.  Maybe that's why their researchers focus more on journals and research papers.
+[00:00, 28/01/2024] Abolo (Former Data Lead): But that means only people who follow up on research papers and journals would know about google's breakthroughs.
+[00:00, 28/01/2024] Tobi: Exactly
+[00:00, 28/01/2024] Abolo (Former Data Lead): Hopefully Google gets to release the good stuff to the public
+[00:00, 28/01/2024] Abolo (Former Data Lead): their polar opposite is Meta
+[00:00, 28/01/2024] Abolo (Former Data Lead): Meta seems to be the Fortune 500 that's most invested in open source.
+[00:00, 28/01/2024] Tobi: Yes but their models still seems to be in the early stages
+[00:00, 28/01/2024] Abolo (Former Data Lead): yhh
+[00:00, 28/01/2024] Tobi: I also don't know why they took away their generative ai stickers
+[00:00, 28/01/2024] Tobi: But Imagine by Meta AI still needs some work
+[00:00, 28/01/2024] Tobi: Llama 2 is fast and pretty descent too and I hear they are training Llama 3 .
+[00:00, 28/01/2024] Abolo (Former Data Lead): Time is all Meta needs.  They have the money  a promising team  a good leader in their AI space (Yan LeCunn) and a technical CEO (Not a business guy)
+[00:00, 28/01/2024] Abolo (Former Data Lead): This is really nice
+[00:00, 28/01/2024] Abolo (Former Data Lead): Alright let's move on to the next question
+[00:00, 28/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 28/01/2024] Abolo (Former Data Lead): Classification and Regression are under supervised
+[00:00, 28/01/2024] harunafaruk: Hello  I'm Haruna Faruk and I am new Here.
+[00:00, 28/01/2024] Abolo (Former Data Lead): Hi Haruna 👋  Welcome to the club
+[00:00, 28/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 28/01/2024] Abolo (Former Data Lead): Pick Analytics if:  1. You are more interested in getting insights from data 2. You don't want to write so much code (You can use tools like Power BI  and Tableau). If at all you're going to write code  it'll probably be in SQL 3. You enjoy story telling (You engage in activities like writing) 4. You like visualisaitons
+[00:00, 28/01/2024] Abolo (Former Data Lead): Pick ML/AI if:  1. You enjoy writing code. 2. You have a strong mathematics or computer science background. 3. You're coming from a different field in the tech space (from mobile  web  backend  etc). 4. You want to build products
+[00:00, 28/01/2024] Abolo (Former Data Lead): I guess that's all the questions for now.  If you've got any more questions  fell free to click the link  https://gdpd.xyz/kopal
+[00:00, 28/01/2024] Imokut: I'm good
+[00:00, 28/01/2024] Abolo (Former Data Lead): And please  let's not forget.  Today at 9pm.  Study jam on Linear Regression (and more).
+[00:00, 28/01/2024] Abolo (Former Data Lead): Online
+[00:00, 28/01/2024] Ulenyo: Starting a career in Data Engineering Space has begun  https://twitter.com/tech_queen/status/1751665986908917800?t=rlXMDzpFCJ8p3vi_ZAOg8g&s=19
+[00:00, 28/01/2024] Edidiong: i almost forgot😭
+[00:00, 28/01/2024] Abolo (Former Data Lead): What's up guys
+[00:00, 28/01/2024] Emmerick: Yooo
+[00:00, 28/01/2024] Abolo (Former Data Lead): https://meet.google.com/xjh-ebao-mcc  You can start joining
+[00:00, 28/01/2024] Abolo (Former Data Lead): Let's get our hands dirty
+[00:00, 28/01/2024] Abolo (Former Data Lead): https://meet.google.com/mjg-ognx-tpt  Yo guys
+[00:00, 28/01/2024] Abolo (Former Data Lead): The other link got busted. Lets hop on this one to round up
+[00:00, 28/01/2024] Abolo (Former Data Lead): within 30 mins
+[00:00, 28/01/2024] Abolo (Former Data Lead): or 15
+[00:00, 28/01/2024] Abolo (Former Data Lead): Big shoutout to everyone who turned up.  Special shoutout to our Pioneer lead @2348136518781 for showing up.
+[00:00, 28/01/2024] Abolo (Former Data Lead): The notebook will be refined and uploaded before next Saturday.
+[00:00, 28/01/2024] Abolo (Former Data Lead): In today's study jam  we looked at Linear Regression with just NumPy. we also touched other Machine Learning and Statistics essentials such as:  1. Measuring model's performance with Mean Squared error and Mean absolute error 2. Brief explanation of overfitting and train-test splitting.  In the next study jam  we will have another workshop / study jam on Classification with Decision Trees.  Like today  we will be trying our hands on using just numpy.  But we will also introduce ourselves to a machine learning framework called `scikit-learn`  scikit-learn provides a lot of models for you already implemented.  We will also look at underfitting and overfitting more indepth
+[00:00, 28/01/2024] Abolo (Former Data Lead): I would like all of us to try our hands on linear regression using this dataset
+[00:00, 28/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 28/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 28/01/2024] Abolo (Former Data Lead): One is the one we looked at today. predicting a student's performance based on how many hours he studied
+[00:00, 28/01/2024] Abolo (Former Data Lead): The other is predicting your insurance premium based on your age.
+[00:00, 28/01/2024] Abolo (Former Data Lead): Try using numpy to come up with a linear model for these two datasets
+[00:00, 28/01/2024] chibuzor: Can you send the one you did today like that
+[00:00, 28/01/2024] Abolo (Former Data Lead): sure
+[00:00, 28/01/2024] Abolo (Former Data Lead): Will push it to Colab
+[00:00, 28/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 28/01/2024] Abolo (Former Data Lead): https://colab.research.google.com/drive/1WBUY-6e48uSZqLBHO3LK_RzdI9wK30K5?usp=sharing  @2349014307553
+[00:00, 28/01/2024] chibuzor: Thanks
+[00:00, 29/01/2024] chibuzor: I have one question tho  it's on this Linear Regression method  can it be used in every aspect of prediction or generation
+[00:00, 29/01/2024] chibuzor: And also Mean Absolute Error Function is missing
+[00:00, 30/01/2024] Abolo (Former Data Lead): Well  it pretty much works on problems that are linear
+[00:00, 30/01/2024] Abolo (Former Data Lead): That is  the trend of x and y is a straight line.
+[00:00, 30/01/2024] chibuzor: Things like figure like predictions?
+[00:00, 30/01/2024] Abolo (Former Data Lead): Lemme send some images
+[00:00, 30/01/2024] chibuzor: Eg Prices  Or Numbers in General that depends on some variables
+[00:00, 30/01/2024] Abolo (Former Data Lead): Yup
+[00:00, 30/01/2024] Abolo (Former Data Lead): Though notall of them
+[00:00, 30/01/2024] chibuzor: Can you give me like an example?
+[00:00, 30/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 30/01/2024] Abolo (Former Data Lead): If you look at the bottom right graph  you will notice that its not a straight line
+[00:00, 30/01/2024] Abolo (Former Data Lead): There are many systems like this
+[00:00, 30/01/2024] chibuzor: So it all depends on how well it correlates or something else?
+[00:00, 30/01/2024] Abolo (Former Data Lead): Think of the problem of how many employees do we need to maximize throughput
+[00:00, 30/01/2024] Abolo (Former Data Lead): It depends on whether you can notice a straight line trend
+[00:00, 30/01/2024] chibuzor: Alright so for something like an arc  something else is used
+[00:00, 30/01/2024] Abolo (Former Data Lead): One way to do this mathematically is something called Spearman ranking
+[00:00, 30/01/2024] Abolo (Former Data Lead): Yup
+[00:00, 30/01/2024] chibuzor: It's a correlation method rii
+[00:00, 30/01/2024] Abolo (Former Data Lead): That r value you see there is the Spearman rank coefficient
+[00:00, 30/01/2024] Abolo (Former Data Lead): Yhh  its a way of seeing if two variables correlate linearly
+[00:00, 30/01/2024] chibuzor: So if its closer to one we decide to go with a Linear Regression method
+[00:00, 30/01/2024] Abolo (Former Data Lead): If its close to 1 or -1
+[00:00, 30/01/2024] Abolo (Former Data Lead): Close to 1 is positively correlated  Close to -1 is negatively correlated.
+[00:00, 30/01/2024] Abolo (Former Data Lead): Close to 0 is no correlation
+[00:00, 30/01/2024] chibuzor: Owh alright buh not close to 0 rii
+[00:00, 30/01/2024] Abolo (Former Data Lead): Yup
+[00:00, 30/01/2024] chibuzor: Alright thanks sha
+[00:00, 30/01/2024] Abolo (Former Data Lead): You can try experimenting with different datasets from kaggle.com
+[00:00, 30/01/2024] Abolo (Former Data Lead): If you come across any roadblocks feel free to message here
+[00:00, 30/01/2024] chibuzor: Yeah I just finished the Titanic Survival stuff and I use Linear Regression for that one
+[00:00, 30/01/2024] chibuzor: Just tried it on a Population Prediction Dataset and I'm getting an r2_score of -0.5
+[00:00, 30/01/2024] Abolo (Former Data Lead): Ok thats calm 🔥   One thing you can look into is Logistics regression
+[00:00, 30/01/2024] chibuzor: Sorry that's actually what I used
+[00:00, 30/01/2024] Abolo (Former Data Lead): If i remember correctly  the dataset is a classification problems.   Log regression is slapping something called an activation function on top your linear model
+[00:00, 30/01/2024] Abolo (Former Data Lead): Nice 🔥🔥
+[00:00, 30/01/2024] chibuzor: They are kinda like the same actually except one is This or that while the other is just extra figures
+[00:00, 30/01/2024] Abolo (Former Data Lead): Yhh  one basically converts those figures to be between two numbers
+[00:00, 30/01/2024] Abolo (Former Data Lead): Usually 0 and
+[00:00, 30/01/2024] Abolo (Former Data Lead): 1
+[00:00, 30/01/2024] Abolo (Former Data Lead): Lookup something called sigmoid.
+[00:00, 30/01/2024] Abolo (Former Data Lead): Its a mathematical function that does just that
+[00:00, 30/01/2024] chibuzor: Really coz all I did was remove the ones that wasn't really correlated to the survival then trained it with the rest  tweaked some things to be numbers sha stuff like the sex and embarked location
+[00:00, 30/01/2024] chibuzor: Okay sure
+[00:00, 30/01/2024] Abolo (Former Data Lead): Thats calm.  We will also explore feature selection and feature engineer in one of our study jams.   To know how to handle things like non numerical features
+[00:00, 30/01/2024] chibuzor: Yeah buh what if  hypothetically speaking we have like different values entirely can we do like an encoding done by the computer itself to matching values instead of just mapping it to figures
+[00:00, 30/01/2024] Abolo (Former Data Lead): Ok so there are two main ways to handle non numerical values
+[00:00, 30/01/2024] Abolo (Former Data Lead): You either one hot encode them or ordinally encode then
+[00:00, 30/01/2024] Abolo (Former Data Lead): *them
+[00:00, 30/01/2024] Abolo (Former Data Lead): One hot encoding is for features with no rank.   For example  you'd like to encode people's state of origin to fit in your model.  You one hot encode cus it doesn't make sense to say something like   Abia > Kano
+[00:00, 30/01/2024] Abolo (Former Data Lead): But for things like grade  that have a rank (i.e A>B>C>D)  we ordinally encode.   That is  replace each category with a number that represents its rank
+[00:00, 30/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 30/01/2024] Abolo (Former Data Lead): @2349014307553
+[00:00, 30/01/2024] chibuzor: Wait sorry you were saying something like other columns will be zero buh the state is already a column in the dataset
+[00:00, 30/01/2024] Abolo (Former Data Lead): The original state column will be dropped
+[00:00, 30/01/2024] chibuzor: So extra columns for each state will be created
+[00:00, 30/01/2024] Abolo (Former Data Lead): Yup
+[00:00, 30/01/2024] chibuzor: What?! It's alright sha we'll get there 🥲
+[00:00, 30/01/2024] Abolo (Former Data Lead): You're thinking of the size yh? 😅
+[00:00, 30/01/2024] chibuzor: Like bro
+[00:00, 30/01/2024] chibuzor: I can't imagine using df. info() or df.count() and I'm seeing length 45 or smth else .
+[00:00, 30/01/2024] Abolo (Former Data Lead): Yhh  at that point you probably wouldn't have to
+[00:00, 30/01/2024] chibuzor: True true
+[00:00, 30/01/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 30/01/2024] chibuzor: Yeah thanks
+[00:00, 31/01/2024] Desmond: Is the exam free or do I hav E to pay ?
+[00:00, 31/01/2024] Riley (GDG Lead): Without the voucher it's 39$ for nigerians  the voucher let's you write it for free
+[00:00, 31/01/2024] Desmond: How do I get the voucher
+[00:00, 31/01/2024] chibuzor: Funny how I once took this course but couldn't take the exam coz its premium 🥲
+[00:00, 31/01/2024] Onofiok: The vouchers will be given to @2348101694302  and he'll be the one to send them out. The metric for getting a voucher is completion of a challenge on the microsoft learn platform though so he can tell you guys more about that.
+[00:00, 31/01/2024] Riley (GDG Lead): Sorry guys  messed up the link for the study group  the other one was for a previous cohort 🙇🏾‍♂️
+[00:00, 31/01/2024] Riley (GDG Lead): 🚀 *Join my AI-900 Study Group - Prepare & Certify for FREE!* 🚀  Hey everyone!  As a Microsoft Learn Student Ambassador  I'm leading an AI-900 Study Group to help us ace the Azure AI Fundamentals certification exam by the end of March! 🌟  📚 What's in it for you?  - Free preparation resources and study sessions - Opportunity to earn a FREE exam voucher by staying active - Collaborative learning environment with peers - Boost your resume with a sought-after certification  🗓️ *Goal*: Complete the exam by Mar 31st  Don't miss out on this chance to upskill in AI and get certified with Microsoft! Click the link below to join the group and start your AI-900 journey with us. 🚀  Study Group Link:https://chat.whatsapp.com/IEC8OPfqBOv5SR6gEc91af   Let's dive into AI together! Feel free to invite friends who might be interested. See you in the group! 🎓✨
+[00:00, 04/02/2024] Abolo (Former Data Lead): Yo guys
+[00:00, 04/02/2024] Abolo (Former Data Lead): what;s up
+[00:00, 04/02/2024] Abolo (Former Data Lead): So unexpectedly  today was packed for me. so we will be moving our Classification study jam.
+[00:00, 04/02/2024] Abolo (Former Data Lead): In the meantime  I'd like all of us to consume the content on this link  https://developers.google.com/machine-learning/crash-course/classification/video-lecture
+[00:00, 04/02/2024] Abolo (Former Data Lead): It's a video on classification
+[00:00, 04/02/2024] Abolo (Former Data Lead): The new date for the study jam will be communicated later this week.
+[00:00, 04/02/2024] Abolo (Former Data Lead): In the study jam  we will look at.  1. Classification algorithm: Decision Trees 2. Decision tree hyperparameters. 3. Metrics for classification: Accuracy. 4. Metrics for classification: Precision and Recall
+[00:00, 04/02/2024] Abolo (Former Data Lead): Here's a great read on how the algorithm works.  https://www.kdnuggets.com/2020/01/decision-tree-algorithm-explained.html
+[00:00, 04/02/2024] Abolo (Former Data Lead): So as a form of compensation for postponing the study jam. I'm going to give us a hint on what we're going to be doing for the next couple of weeks/study jams  After this coming study jam  we will have another on clustering with KMeans. That study jam will be the last study jam we will have on classical machine learning.  We will then jump into deep learning and Neural Networks
+[00:00, 04/02/2024] Abolo (Former Data Lead): Also  we will use Tensorflow for our study jams from now on instead of NumPy. (Don't worry  they have very similar APIs) .
+[00:00, 04/02/2024] Abolo (Former Data Lead): That being said  I'll advice we use Google Colab as opposed to TensorFlow as installing TensorFlow can be a hassle sometimes.
+[00:00, 04/02/2024] Abolo (Former Data Lead): If you're reading this  react to this message with your favourite emoji.  If you've read this and you don't understand  feel free to shoot me a question
+[00:00, 08/02/2024] Guy: https://blog.google/products/gemini/bard-gemini-advanced-app/
+[00:00, 08/02/2024] Riley (GDG Lead): <Media omitted>
+[00:00, 08/02/2024] Desmond: How can I access this ?
+[00:00, 08/02/2024] Riley (GDG Lead): https://one.google.com/explore-plan/gemini-advanced?utm_source=gemini&utm_medium=web&utm_campaign=gemini_advanced_announce
+[00:00, 08/02/2024] Desmond: <Media omitted>
+[00:00, 08/02/2024] Riley (GDG Lead): Do that then
+[00:00, 08/02/2024] Desmond: How do I do it ?
+[00:00, 08/02/2024] Riley (GDG Lead): Try adding a payment method on your app
+[00:00, 08/02/2024] Desmond: view once media
+[00:00, 08/02/2024] Riley (GDG Lead): Hmmm  try paying through the app then
+[00:00, 08/02/2024] Guy: If anyone has gemini advanced and chatgpt plus  run comparisons let’s see.
+[00:00, 08/02/2024] Mileke: <Media omitted>
+[00:00, 08/02/2024] Mileke: Why person go get the two😹
+[00:00, 08/02/2024] M.I: Dem don help me run am for youtube
+[00:00, 08/02/2024] M.I: Gemini is faster on average 2 or 3x
+[00:00, 08/02/2024] M.I: Has better or stricter guard rails
+[00:00, 08/02/2024] M.I: But the answers are usually the same for most regular uses
+[00:00, 08/02/2024] M.I: But in theory due to a larger context window gpt-4 should be able to keep up better with longer prompts and have more context
+[00:00, 08/02/2024] M.I: Source: trust me nigga
+[00:00, 08/02/2024] M.I: Lol - https://youtu.be/ucd63nIZZ60?si=i49PyetMZMTC5X-x
+[00:00, 08/02/2024] Abolo (Former Data Lead): Na the steeze be that
+[00:00, 08/02/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 08/02/2024] Guy: Money bags now. I dey wait for ultra api.
+[00:00, 08/02/2024] Guy: I watched this already. But I actually want to test something closer to our local context.
+[00:00, 08/02/2024] Abolo (Former Data Lead): What's up people
+[00:00, 08/02/2024] Abolo (Former Data Lead): If you're up at this time  I salute ya
+[00:00, 08/02/2024] Abolo (Former Data Lead): There's been a change of plans
+[00:00, 08/02/2024] Abolo (Former Data Lead): Our study jam on classification will be this Sunday
+[00:00, 08/02/2024] Emmerick: No gree for sleep😤
+[00:00, 08/02/2024] Abolo (Former Data Lead): But this time  we will combine it with clustering.  This Sunday  we will look at both Decision Trees and KMeans clustering alongside some other industry practices and techniques.
+[00:00, 08/02/2024] Abolo (Former Data Lead): thaseet
+[00:00, 10/02/2024] Abolo (Former Data Lead): Yo guys
+[00:00, 10/02/2024] Riley (GDG Lead): 👀
+[00:00, 10/02/2024] Abolo (Former Data Lead): Check out these videos in preparation for our study jam
+[00:00, 10/02/2024] Abolo (Former Data Lead): https://youtu.be/ZVR2Way4nwQ?feature=shared
+[00:00, 10/02/2024] Abolo (Former Data Lead): https://youtu.be/sgQAhG5Q7iY?feature=shared   Our decision trees implementation would be based on this
+[00:00, 10/02/2024] Abolo (Former Data Lead): https://youtu.be/4b5d3muPQmA?feature=shared    Here's a video explaining K-Means clustering very well
+[00:00, 10/02/2024] Abolo (Former Data Lead): yo guys
+[00:00, 10/02/2024] Abolo (Former Data Lead): what's up
+[00:00, 10/02/2024] Abolo (Former Data Lead): So there are complications.  Turns out the week of prayer might be a problem.  An event that starts at 5:30pm and ends around 8:15pm may pose an issue as we may not b settled by 9pm to have our study jam
+[00:00, 10/02/2024] Abolo (Former Data Lead): 10pm would be too late.
+[00:00, 10/02/2024] Abolo (Former Data Lead): We may be busy at earlier points of the day.   So let's vote on a decision
+[00:00, 10/02/2024] Abolo (Former Data Lead): POLL: How do we play our Classical ML Grand Finale workshop? OPTION: Have it by 10pm (0 votes) OPTION: Samuel shares the notebook for you to study and play with. If you have questions  you ask on the gc. (5 votes) OPTION: Samuel gives a quiz on classification and clustering (1 vote) OPTION: Samuel Opens a discussion on classification and clustering on the GC (0 votes) OPTION: Samuel shares the notebook and challenges us to apply it to a dataset from Kaggle. (2 votes) 
+[00:00, 10/02/2024] Abolo (Former Data Lead): Keep in mind that we're jumping into deep learning next sunday
+[00:00, 12/02/2024] Anjola (Data Lead): Helloooooo everyone  it’s that time of the month again🥳🤭
+[00:00, 12/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 12/02/2024] Abolo (Former Data Lead): Congrats Ezekiel🥳
+[00:00, 12/02/2024] exotic olive oil taster: congratulations ezekiel 🥂
+[00:00, 12/02/2024] Zeke: <Media omitted>
+[00:00, 12/02/2024] Zeke: Thank you 😊
+[00:00, 13/02/2024] Abolo (Former Data Lead): Yo yo
+[00:00, 13/02/2024] Abolo (Former Data Lead): What's up guys
+[00:00, 13/02/2024] Abolo (Former Data Lead): So I'll be going with both the second and the last option as they have the two highest votes
+[00:00, 13/02/2024] exotic olive oil taster: 🤲my boss
+[00:00, 13/02/2024] Abolo (Former Data Lead): Expect a notebook from me before the end of tomorrow
+[00:00, 13/02/2024] Abolo (Former Data Lead): Chief Chief
+[00:00, 13/02/2024] Abolo (Former Data Lead): speaking of which
+[00:00, 13/02/2024] Abolo (Former Data Lead): It's not everytime we'll be talking about data science on this g
+[00:00, 13/02/2024] Abolo (Former Data Lead): *gc
+[00:00, 13/02/2024] Abolo (Former Data Lead): Tomorrow is a crucial day for some of us. (Can't relate).
+[00:00, 13/02/2024] exotic olive oil taster: should i cast you 👀
+[00:00, 13/02/2024] Riley (GDG Lead): Yes
+[00:00, 13/02/2024] Abolo (Former Data Lead): There's nothing to cast boss 🤲🏾
+[00:00, 13/02/2024] exotic olive oil taster: dw i'll keep it between us. sha anywhere you see @2348156713736 .. you know the rest
+[00:00, 13/02/2024] Abolo (Former Data Lead): Ahhh
+[00:00, 13/02/2024] Abolo (Former Data Lead): Don't talk the one that will mislead my potential val oh 😂😂
+[00:00, 14/02/2024] Riley (GDG Lead): Potential val ke😂
+[00:00, 14/02/2024] Riley (GDG Lead): Is it not late already
+[00:00, 14/02/2024] exotic olive oil taster: <Media omitted>
+[00:00, 14/02/2024] exotic olive oil taster: it's only late when it's early
+[00:00, 14/02/2024] exotic olive oil taster: <Media omitted>
+[00:00, 14/02/2024] Anjola (Data Lead): No better valentines gift than this innit🌚 .
+[00:00, 14/02/2024] exotic olive oil taster: M3 no go bad too
+[00:00, 14/02/2024] Anjola (Data Lead): Happy Valentine guyssss  I have an announcement to make concerning DataCamp but before you say my own is too much 😂 I’ll let Valentine’s Day pass first
+[00:00, 14/02/2024] chibuzor: Good or Bad?
+[00:00, 14/02/2024] Anjola (Data Lead): Hm  it depends  but it’s more of a call to action kind of thing so I’ll say good (hypothetically)
+[00:00, 14/02/2024] chibuzor: Wait  hypothetically? 👀
+[00:00, 14/02/2024] Anjola (Data Lead): 😂 you just want me to make the announcement now?
+[00:00, 14/02/2024] chibuzor: Do you? 🙂
+[00:00, 14/02/2024] Chucks: yes please 💀
+[00:00, 14/02/2024] Chibu: Make it now na😭
+[00:00, 14/02/2024] chibuzor: How about now?
+[00:00, 15/02/2024] Chibu: We don Wait o. Oya speak 🤲🏽
+[00:00, 15/02/2024] Chibu: <Media omitted>
+[00:00, 15/02/2024] chibuzor: We've been waiting since  please na 🙃
+[00:00, 15/02/2024] chibuzor: <Media omitted>
+[00:00, 15/02/2024] chibuzor: @2347057657787
+[00:00, 15/02/2024] Anjola (Data Lead): Oya oya 😭 sorry for taking so long
+[00:00, 15/02/2024] Anjola (Data Lead): *DATACAMP ANNOUNCEMENT*  If you haven’t taken a lesson or built a project or used DataCamp in any way in the last 90 days  I’ll be withdrawing your scholarship this Friday to free up more slots for new scholarship applicants🤲  The good news is you can retain your scholarship by just taking a lesson on DataCamp today and if you’ve been consistent  well done  you’re doing well❤️ .
+[00:00, 15/02/2024] Anjola (Data Lead): Also  two things  1. whenever you get a certificate on DataCamp or any good thing  please share it on social media with the hashtags  #DCDonates and #GDSCBabcock 🤲  2. There’s this RADAR free virtual event DataCamp will be hosting in March. As part of our partnership with them  it’s important for GDSC Babcock Members to attend… I’ll be sharing the flyers soon  please save the date😊😁
+[00:00, 15/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 15/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 15/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 15/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 15/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 15/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 15/02/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 15/02/2024] chibuzor: I still haven't gotten mine 😭
+[00:00, 15/02/2024] Anjola (Data Lead): When did you apply?
+[00:00, 15/02/2024] chibuzor: 9th of this month
+[00:00, 15/02/2024] Anjola (Data Lead): Okay just give it some time  we process the applications in batches
+[00:00, 15/02/2024] Anjola (Data Lead): Keep checking your email (primary  spam  promotion  etc)
+[00:00, 15/02/2024] chibuzor: Alright 🤝
+[00:00, 15/02/2024] chibuzor: Will do
+[00:00, 15/02/2024] Anjola (Data Lead): DataCamp is delighted to invite you and the entire GDSC Babcock community to our free-to-attend virtual Data Analytics conference on March 21  2024  from 9 AM to 3 PM EDT. It's called RADAR: The Analytics Edition  and everyone should attend and invite a friend!  Join the world’s data and analytics leaders from Tableau  Alteryx  JPMorgan Chase  The World Bank  and more. Together  we’ll explore how you can effectively use analytics and business intelligence tools like Power BI  Tableau  and Alteryx to accelerate your career in an AI-driven world.  To register  click this link: https://www.datacamp.com/radar-analytics-edition We'll see you there!  Anjolaoluwa Co-Lead DS/ML/AI Track GDSC Babcock
+[00:00, 15/02/2024] Guy: https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/
+[00:00, 15/02/2024] Tobi: Welcome to another gemini era😂
+[00:00, 15/02/2024] chibuzor: Is it even up to 2 weeks since the last?
+[00:00, 15/02/2024] Guy: Google is beginning to move like a startup.
+[00:00, 15/02/2024] chibuzor: They just want a bullish stock price 🤧
+[00:00, 15/02/2024] Guy: openai.com/sora  And Open AI strikes again!
+[00:00, 15/02/2024] Guy: Today is a blessed day.
+[00:00, 15/02/2024] Tobi: In response to Google's Lumiere AI  a model they would never release  I like that .
+[00:00, 15/02/2024] Tobi: But this is insane. Things are looking scary🤩
+[00:00, 15/02/2024] Michael.: open AI is on something those guys should be investigated 😂  I think ai is improving wayy too fast  I cant catch up😭 .
+[00:00, 15/02/2024] Tobi: I swr I'm seeing homemade video of Lagos Nigeria
+[00:00, 15/02/2024] Michael.: guuyy these guys are moving too fast  it's oppressing small devs like me😭
+[00:00, 15/02/2024] Guy: It’s not a “small devs” problem. The speed at which AI is moving is quite crazy. Everyone even researchers find it hard to keep up.
+[00:00, 15/02/2024] Tobi: I agree text to 3d that's I was thinking would be available 2030 is already here .
+[00:00, 15/02/2024] Michael.: exactly  guy you read my mind
+[00:00, 15/02/2024] Tobi: You can check it out:  https://lumalabs.ai/genie .
+[00:00, 15/02/2024] Tobi: The 3d models it generates are pretty good. You can also download on blender  unity  unreal engines  and many more.
+[00:00, 15/02/2024] Michael.: i want to understand something  do devs really require massive amount of computation power to build models like this?  is it possible for devs with highend gpu's build this
+[00:00, 15/02/2024] Guy: I think ideally you would need a cluster of high end GPUs to do this.
+[00:00, 15/02/2024] Tobi: This model was just published today  February 15  MMXXIV
+[00:00, 15/02/2024] Tobi: 👆That is Sora by OpenAI;  https://openai.com/sora .
+[00:00, 15/02/2024] Tobi: So it's very  very recent
+[00:00, 15/02/2024] Tobi: I'm surprised by how quick you found the model .
+[00:00, 15/02/2024] Guy: Turn on twitter notifications of notable researchers in these companies.  I sent the gemini about 30 mins after Jeff Dean announced it too. .
+[00:00, 15/02/2024] chibuzor: I don't know if you guys saw that video of Will Smith eating spaghetti last year buh mehn they've gone a very long way in just 1 year
+[00:00, 15/02/2024] chibuzor: And also thanks @2347057657787
+[00:00, 15/02/2024] chibuzor: *AI generated video BTW
+[00:00, 17/02/2024] Abolo (Former Data Lead): Yo yo yo
+[00:00, 17/02/2024] Abolo (Former Data Lead): What's up guys
+[00:00, 17/02/2024] Abolo (Former Data Lead): Trust you're kicking it
+[00:00, 17/02/2024] exotic olive oil taster: 🤲
+[00:00, 17/02/2024] Abolo (Former Data Lead): I know I said on Valentines  but unfortunately I was preoccupied with activities (Not the activities you're thinking of).
+[00:00, 17/02/2024] Abolo (Former Data Lead): But here's the Notebook as promised
+[00:00, 17/02/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 17/02/2024] Abolo (Former Data Lead): Please and Please. Take your time to go through this and come up with questions to ask me.
+[00:00, 17/02/2024] Abolo (Former Data Lead): Spent all night working on this. I may or may not go for Sabbath this morning.
+[00:00, 17/02/2024] Abolo (Former Data Lead): That being said  I'm pleased to announce that we've finally made it to the part we've all been waiting for
+[00:00, 17/02/2024] Abolo (Former Data Lead): We're going to be looking into Deep Learning and Neural Networks
+[00:00, 17/02/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 17/02/2024] Abolo (Former Data Lead): What is Deep Learning and Neural Networks?  I consider it programming by optimization
+[00:00, 17/02/2024] Abolo (Former Data Lead): Instead of representing your apps with textual modules and routines  you represent your programs as Vectors.  A typical program is input  process and output. That process is usually represented with a python or Java or C++ function. That's how the regular guys do it
+[00:00, 17/02/2024] Abolo (Former Data Lead): We deep learning engineers use vectors and matrices to represent the process.  We get input (user's vector of numbers)  (our vector of numbers)  and output (Desired output  as vectors of numbers)  Because if you really think about it  the input  process  and output flow looks a lot like *linear transformations*  It is a mathematical way of thinking about software beneficial to Data Scientists and normal programmers.
+[00:00, 17/02/2024] Abolo (Former Data Lead): What makes it an art is that  we program these process vectors by optimizing it iteratively.  The optimization step is heavily based on *Derivatives and calculus* (It's easier than it sounds  trust me).  This way  our process adjusts itself to become the vector that will give the correct linear transformations almost all the time.
+[00:00, 17/02/2024] Abolo (Former Data Lead): We will be having our first study jam on the 25th (Upper Sunday) and it's going to be *physical*  In the meantime  we will be having discussions here to unravel some of the concepts
+[00:00, 17/02/2024] chibuzor: Can't find a data shuffling method? And how necessary is it??
+[00:00, 17/02/2024] chibuzor: A lot of questions 🤯
+[00:00, 17/02/2024] chibuzor: First  why picking just the Good apples in your dependent variable  y
+[00:00, 17/02/2024] chibuzor: And also the Decision Tree Class is my second question just that everything about it
+[00:00, 17/02/2024] Abolo (Former Data Lead): Oh yhh
+[00:00, 17/02/2024] Abolo (Former Data Lead): It's very necessary.   Randomness improves the performance of a decision tree.
+[00:00, 17/02/2024] Abolo (Former Data Lead): There are some datasets that are sorted based on their labels.   It's good to shuffle them
+[00:00, 17/02/2024] Abolo (Former Data Lead): Picking just yhe good apples?  Oh you mean  The line df[target] == 'Good' yh?
+[00:00, 17/02/2024] Abolo (Former Data Lead): So that's actually a boolean expression rather than a filter.
+[00:00, 17/02/2024] Abolo (Former Data Lead): We use that to cast it to true or false.  True is if its good  false is if its not.   Then we cast to an integer (0 or 1)
+[00:00, 17/02/2024] Abolo (Former Data Lead): 0 meaning false  meaning not good  meaning bad.   1 meaning true  meaning good
+[00:00, 17/02/2024] Abolo (Former Data Lead): 😅😅   I'll post a simplified explanation
+[00:00, 17/02/2024] Abolo (Former Data Lead): You can also check out the YouTube video posted earlier.
+[00:00, 17/02/2024] Abolo (Former Data Lead): He explains it very well
+[00:00, 17/02/2024] chibuzor: Owh okay  buh why was the one hot encode not used?
+[00:00, 17/02/2024] chibuzor: And also why just Decision Trees and not Logistics Regression or SVM
+[00:00, 17/02/2024] chibuzor: Is it better  understandable or performs better?
+[00:00, 17/02/2024] chibuzor: And also all classification datasets I've seen so far has just been let's say Good or bad  0 or 1  can it be more than 2 let's say medium  small and large or something like that
+[00:00, 17/02/2024] Abolo (Former Data Lead): OK so one hot encoding is only used when we have categorical values (text data)   We use it to represent them as numbers.  In the apples dataset all the features we're numerical
+[00:00, 17/02/2024] Abolo (Former Data Lead): Great question.  So you can actually try your hands on other classification algorithms.   We specifically looked at decision trees as an example of how classification works.  Decision tress was picked for this study jam because its an elegant algorithm. One that's useful to both data scientists and programmers
+[00:00, 17/02/2024] Abolo (Former Data Lead): Sure. You can pick out a dataset that's multinomial
+[00:00, 17/02/2024] Abolo (Former Data Lead): And use the same decision trees algorithm on it
+[00:00, 17/02/2024] chibuzor: The Quality column wasn't .
+[00:00, 17/02/2024] Abolo (Former Data Lead): Yh  the quality column was the target and not one of the features.
+[00:00, 17/02/2024] chibuzor: And also what is 'inf' you used it somewhere something like float(inf)
+[00:00, 17/02/2024] chibuzor: @2348156713736 this your _find_best_split method gives me serious PTSD  I think it was from one of leetcodes questions
+[00:00, 17/02/2024] Abolo (Former Data Lead): Yh  its used to represent infinity in python
+[00:00, 18/02/2024] Abolo (Former Data Lead): Yhh  so basically  its the method that let's us know which of the conditions and coljmn best splits the dataset
+[00:00, 18/02/2024] Abolo (Former Data Lead): You can lookup something called information gain
+[00:00, 18/02/2024] chibuzor: Okay thanks
+[00:00, 18/02/2024] Abolo (Former Data Lead): And impurity
+[00:00, 18/02/2024] CakeCombat: Pls What time?
+[00:00, 18/02/2024] Abolo (Former Data Lead): What time do you suggest
+[00:00, 18/02/2024] CakeCombat: Probably six or seven
+[00:00, 18/02/2024] Guy: https://github.com/google/magika
+[00:00, 18/02/2024] Abolo (Former Data Lead): Interesting 🔥
+[00:00, 21/02/2024] Guy: https://blog.google/technology/developers/gemma-open-models/
+[00:00, 22/02/2024] Imokut: Will it be recorded?
+[00:00, 22/02/2024] Abolo (Former Data Lead): I'm afraid not
+[00:00, 23/02/2024] Rin: Please has anyone used mediapipe before 🙏
+[00:00, 25/02/2024] Abolo (Former Data Lead): Hi guys
+[00:00, 25/02/2024] Juyi: Hi Samuel
+[00:00, 25/02/2024] Abolo (Former Data Lead): Ya'll pumped for today's study jam?
+[00:00, 25/02/2024] SamToye: Pls if you've ever implemented RAG  kindly DM
+[00:00, 25/02/2024] Abolo (Former Data Lead): Whats up guys.  So some people have concerns about the midsemester exams and are suggesting we move the study jam
+[00:00, 25/02/2024] Abolo (Former Data Lead): POLL: Let's have our study jams today. OPTION: Yes (3 votes) OPTION: No (9 votes) 
+[00:00, 27/02/2024] Imokut: <Media omitted>
+[00:00, 27/02/2024] Imokut: Guys  the organizations list for google summer of code is out. You might want to start researching what projects you'd be contributing to
+[00:00, 27/02/2024] Imokut: https://summerofcode.withgoogle.com/programs/2024/organizations
+[00:00, 01/03/2024] Abolo (Former Data Lead): https://builtin.com/data-science/step-step-explanation-principal-component-analysis
+[00:00, 01/03/2024] Abolo (Former Data Lead): Yo guys
+[00:00, 01/03/2024] Abolo (Former Data Lead): Take a look at this  a nice read on PCA
+[00:00, 08/03/2024] Anjola (Data Lead): *Pssssttttt*  Hellooo everyone 😁  I hope our exams/ internships are going well :-)
+[00:00, 08/03/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 08/03/2024] Anjola (Data Lead): Big congratulations and kudos to her for climbing up the DataCamp leaderboard by consistently learning and building data projects🥳🤩  Let’s all congratulate her😁
+[00:00, 08/03/2024] Mide: Congratulations @2349067073238 💗
+[00:00, 08/03/2024] Favour: Congratulations Boma!✨
+[00:00, 08/03/2024] Kehinde🌸: Congratulations @2349067073238  ❤️
+[00:00, 08/03/2024] Emmerick: Congratulations @2349067073238 🥳
+[00:00, 08/03/2024] AO: Congratulations @2349067073238 👏
+[00:00, 08/03/2024] Chucks: Congratulations @2349067073238 🥳
+[00:00, 08/03/2024] Boma🥰: Thank you 😊
+[00:00, 08/03/2024] Michael Okpechi: https://docs.google.com/forms/d/e/1FAIpQLSf1Prq_pGlyVyY3TpV_dislcjqZaO6PGeDrykiMFcC394YT0g/viewform
+[00:00, 08/03/2024] chibuzor: Congratulations @⁨~B⁩ 🥳
+[00:00, 08/03/2024] Abolo (Former Data Lead): Congrats @2349067073238 💯
+[00:00, 08/03/2024] Michael: Congrats @2349067073238 🔥
+[00:00, 08/03/2024] Boma🥰: Thank you ☺️
+[00:00, 08/03/2024] Riley (GDG Lead): Congratulations @2349067073238 🎉
+[00:00, 20/03/2024] M.I: Hi Guys I have a question  what could possibly cause a model I trained with a lower version of tensorflow to suddenly have a relatively lower accuracy when I updated my tensorflow installation?  And any ideas how to resolve?
+[00:00, 20/03/2024] chibuzor: Did you reshuffle the data?
+[00:00, 20/03/2024] M.I: It’s seeded
+[00:00, 20/03/2024] M.I: So should be the same thing
+[00:00, 20/03/2024] chibuzor: My power is limited from here on out
+[00:00, 20/03/2024] M.I: Thanks  I’ll try tweaking some of the parameters
+[00:00, 20/03/2024] exotic olive oil taster: did the model's architecture change in any way
+[00:00, 20/03/2024] M.I: Nah
+[00:00, 20/03/2024] M.I: Basically updated tensorflow and re ran the notebook
+[00:00, 20/03/2024] M.I: Because for some reason I think the lower version uses more memory when loading the model causing my deployments to keep crashing
+[00:00, 20/03/2024] exotic olive oil taster: how drastic is the drop in accuracy. objectively speaking
+[00:00, 20/03/2024] chibuzor: Is it possible to look for someone with an older version and re-run it
+[00:00, 20/03/2024] M.I: 98. To about 87
+[00:00, 20/03/2024] M.I: And validation accuracy from 97ish to 69
+[00:00, 20/03/2024] M.I: I updated the dropout I was using from .5 to .3 seems to be working but it hasn’t finished training yet so lets see .
+[00:00, 20/03/2024] exotic olive oil taster: alright 🥂
+[00:00, 20/03/2024] M.I: It worked 97 acc and 92 Val acc I’ll take this 😅
+[00:00, 22/03/2024] Abolo (Former Data Lead): My people
+[00:00, 22/03/2024] Chibu: They're asleep
+[00:00, 22/03/2024] Big Memz: 😂😂
+[00:00, 22/03/2024] Abolo (Former Data Lead): The prodigal son has returned 😂😂😂
+[00:00, 22/03/2024] Oluwasemilogo: By this time
+[00:00, 22/03/2024] Abolo (Former Data Lead): Dem no get defense on Tuesday 🤲🏾  Soft life
+[00:00, 22/03/2024] Oluwasemilogo: 😂😂
+[00:00, 22/03/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 22/03/2024] M.I: Our high chief
+[00:00, 22/03/2024] exotic olive oil taster: my oga
+[00:00, 22/03/2024] Abolo (Former Data Lead): Chairman 🙌🏾  I dey see your doings
+[00:00, 22/03/2024] Abolo (Former Data Lead): Egbon 🙌🏾🍷
+[00:00, 22/03/2024] Abolo (Former Data Lead): So yh
+[00:00, 22/03/2024] Abolo (Former Data Lead): Its time for us to say no to Babcock. And have our study jam
+[00:00, 22/03/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 22/03/2024] Chibu: <Media omitted>
+[00:00, 22/03/2024] Chibu: 🤣 .
+[00:00, 22/03/2024] Abolo (Former Data Lead): Saving this for future reference
+[00:00, 24/03/2024] Rin: Is the study jam still holding?
+[00:00, 26/03/2024] Oj: M”w9 sb
+[00:00, 26/03/2024] Abolo (Former Data Lead): Yo
+[00:00, 26/03/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 30/03/2024] Oluwasemilogo: Does anyone use gpt-4 here??
+[00:00, 30/03/2024] Abolo (Former Data Lead): The API?
+[00:00, 30/03/2024] Abolo (Former Data Lead): Yo guys
+[00:00, 30/03/2024] exotic olive oil taster: <Media omitted>
+[00:00, 30/03/2024] Abolo (Former Data Lead): Who's pumped for Sunday
+[00:00, 30/03/2024] Abolo (Former Data Lead): The prodigal son has returned for the third time this month
+[00:00, 30/03/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 30/03/2024] exotic olive oil taster: <Media omitted>
+[00:00, 30/03/2024] Oluwasemilogo: check ur dm
+[00:00, 30/03/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 30/03/2024] Abolo (Former Data Lead): 😂
+[00:00, 30/03/2024] Abolo (Former Data Lead): Who wants to do anonymous
+[00:00, 30/03/2024] Abolo (Former Data Lead): POLL: Lets do Anonymous (Data  software  AI  and everything in between) OPTION: Hell Yeah (11 votes) OPTION: Hell No (2 votes) 
+[00:00, 30/03/2024] Abolo (Former Data Lead): Alright
+[00:00, 30/03/2024] Abolo (Former Data Lead): Firing in the link
+[00:00, 30/03/2024] Abolo (Former Data Lead): https://gdpd.xyz/gdscbabcockdata   Fire in all your data science  machine learning  AI  programming questions  Feel free to shoot one or two off topic questions as well
+[00:00, 31/03/2024] Abolo (Former Data Lead): Yo guys
+[00:00, 31/03/2024] Abolo (Former Data Lead): So today's study jam will take a different form
+[00:00, 31/03/2024] Abolo (Former Data Lead): We will first have a 1 hour jam by 6pm to 7pm
+[00:00, 31/03/2024] Abolo (Former Data Lead): Then we will have an online jam by 10pm to 11pm
+[00:00, 31/03/2024] Abolo (Former Data Lead): In the first one  we will cover the theoretical fundamentals of deep learning and neural network   We will review the 4 math pillars again and relate them to each other in the contdxt of deep learning
+[00:00, 31/03/2024] Abolo (Former Data Lead): In the second  we will implement a neural network from scratch with numpy  I will also introduce everyone to tensorflow
+[00:00, 31/03/2024] Abolo (Former Data Lead): Venue for study jam is SAT B007
+[00:00, 31/03/2024] Abolo (Former Data Lead): Don't be late as we will not stay past 7 (gotta be somewhere by 7)
+[00:00, 31/03/2024] luxury.dev: Cook
+[00:00, 31/03/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 31/03/2024] Abolo (Former Data Lead): People
+[00:00, 31/03/2024] Abolo (Former Data Lead): Lets start pulling up
+[00:00, 31/03/2024] Abolo (Former Data Lead): I would've tagged everyone but you're 269
+[00:00, 31/03/2024] Abolo (Former Data Lead): B007
+[00:00, 31/03/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 31/03/2024] Abolo (Former Data Lead): We've started. Like 15 mins ago
+[00:00, 31/03/2024] Abolo (Former Data Lead): You can still make it
+[00:00, 31/03/2024] Abolo (Former Data Lead): Yo
+[00:00, 31/03/2024] Abolo (Former Data Lead): https://meet.google.com/wis-vkzr-hmj
+[00:00, 31/03/2024] Abolo (Former Data Lead): Yo guys we're starting now
+[00:00, 01/04/2024] Abolo (Former Data Lead): 👀
+[00:00, 01/04/2024] Oj: Mistake
+[00:00, 08/04/2024] Abolo (Former Data Lead): Hello  I appreciate your entrepreneurial spirit.  But ads are prohibited on this channel
+[00:00, 08/04/2024] Abolo (Former Data Lead): Kindly delete the post
+[00:00, 09/04/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 09/04/2024] Anjola (Data Lead): *New Data Science Competition Alert!!!*📣 🎊 https://app.datacamp.com/learn/competitions/python-scholarship-2023  Hi guysss  I hope everyone is doing well 🫶🤩  There's currently a live competition on DataCamp that's very beginner friendly.  You basically have to play with the Data (that's how i see it😅) and bring out useful insights.  The competition is going to be live for the next 50+ days so I think everyone should get their hands on it!  You stand a chance to win up to $5000 :)  This data science/analysis competition is brought to you by our partner: DataCamp :)  Would have sent it as an assignment but I can't cos it's a competition not a course or project etc  But I hope you'll check it out and I wish you Goodluck if you enrolllll🥳
+[00:00, 09/04/2024] zee: Definitely Thanks anji💕
+[00:00, 09/04/2024] Anjola (Data Lead): Awesome! You're welcome girl 😊
+[00:00, 11/04/2024] Anjola (Data Lead): Hellooo everyone 👋  The DataCamp scholarship application will be closing April 30th.  So this is a final call to apply for the scholarship:  https://docs.google.com/forms/d/e/1FAIpQLSeCZ2-cOqhPm93GrsUxnw01-2bUIUEiw6gQanyTIeOkKllBrg/viewform
+[00:00, 11/04/2024] Anjola (Data Lead): Also  if you're already enrolled and you haven't learnt or built any project on DataCamp in the last 30 days  *you will be removed before April 30th*  Please retain your scholarship by learning and building from today.  I hate having to remove people so please learn something. If you don't know what to learn or where to begin  read this: https://medium.com/gdsc-babcock-dataverse/data-camp-x-gdsc-babcock-scholarship-a64d6691d603  You can also text me  ask the DataCamp AI assistant  or take the assignments I've given in the past.  Please use DataCamp today  your future self and I will be very happy😎
+[00:00, 12/04/2024] Chibu: Top class Lead
+[00:00, 12/04/2024] Mileke: “so please learn something”💀😂
+[00:00, 12/04/2024] Anjola (Data Lead): 😂😂
+[00:00, 02/05/2024] Anjola (Data Lead): Heyyyy everyone  I come with amazing news and reminders as usual 🧚🏻
+[00:00, 02/05/2024] Anjola (Data Lead): Better late than never🤩  Let’s celebrate the member of the month of March🎉🎉🥳 @2347012301583    https://x.com/gdscbabcockdata/status/1785975073523871783?s=46 .
+[00:00, 02/05/2024] Anjola (Data Lead): Congrats @2347012301583 🧚🏻🚀🎉
+[00:00, 02/05/2024] Tominsin: Thank youu
+[00:00, 03/05/2024] Chibu: Congratsss
+[00:00, 03/05/2024] Tominsin: Thank you
+[00:00, 06/05/2024] Anjola (Data Lead): https://x.com/gdscbabcock/status/1787195746204180864?s=46
+[00:00, 10/05/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 10/05/2024] Anjola (Data Lead): It’s time 🎉🎉 let’s all join the event please
+[00:00, 10/05/2024] Riley (GDG Lead): can we get the slides from the event
+[00:00, 10/05/2024] Anjola (Data Lead): Yes  I’ll send them as soon as Tosin shares them with me
+[00:00, 12/05/2024] Michael Okpechi: <Media omitted>
+[00:00, 17/05/2024] Fisayomi: Grandeur Events Centre Billings Way  Oregun  Lagos  Lagos https://foursquare.com/v/4e46928bd4c065cb6ba08592
+[00:00, 17/05/2024] Guy: https://github.com/google-ai-edge/model-explorer
+[00:00, 22/05/2024] Anjola (Data Lead): **Compete to Win Up To $5000 from DataCamp!**  Hi my data family   Our friends at DataCamp invite all of us to participate in their exciting "Everyone Can Learn Data 2024" cash scholarship competition. This challenge is designed for DataCamp learners of all skill levels—you just need basic knowledge of SQL and either R or Python—and the datasets are on some fun topics like dinosaurs and movies!  One grand prize winner will receive a $5 000 USD cash prize to support their continued education. Four runner ups will each receive $1 000 USD. The deadline for submission is Monday  June 3  5:00 AM ET.  Please click this link:  https://ow.ly/1B0X50RJtwU to register for the competition! By participating  you have nothing to lose and so much to gain: experience applying your skills  confidence  and a potentially life-changing sum of money!   All the best  Anjolaoluwa  Co-Lead GDSC Babcock Data Track
+[00:00, 22/05/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 22/05/2024] Abolo (Former Data Lead): Yoo  my fam
+[00:00, 22/05/2024] Abolo (Former Data Lead): The prodigal son has returned once again 🌚 (for the last time I promise 😭)
+[00:00, 22/05/2024] Anjola (Data Lead): What did he bring for us🤭
+[00:00, 22/05/2024] Abolo (Former Data Lead): Good tidings 🌚  And a repentant heart 😂😂
+[00:00, 27/05/2024] Abolo (Former Data Lead): Whats up guys
+[00:00, 27/05/2024] Abolo (Former Data Lead): Here's a little ice breaker for everyone
+[00:00, 27/05/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 27/05/2024] Abolo (Former Data Lead): Assume the piece on the bottom right doesn't exisf
+[00:00, 27/05/2024] Abolo (Former Data Lead): Ok ykw  leave it there
+[00:00, 27/05/2024] Abolo (Former Data Lead): Its more fun that way 🌚🌚
+[00:00, 27/05/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 27/05/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 27/05/2024] Abolo (Former Data Lead): Who is more likely to win this game
+[00:00, 27/05/2024] Abolo (Former Data Lead): Show workings 💪 too 🌚
+[00:00, 27/05/2024] Abolo (Former Data Lead): Things to note  it's only one dice and the dice is fair
+[00:00, 27/05/2024] Abolo (Former Data Lead): Another tip  figure out the conditions necessary for each team to win  and calculate the probability of that happening
+[00:00, 27/05/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 27/05/2024] Abolo (Former Data Lead): <Media omitted>
+[00:00, 27/05/2024] Riley (GDG Lead): blue needs just 1/6 on each turn but the probability of red winning on the first turn is zero  till the pieces get closer and then it'll become 1/6 for each turn as well because each dice roll is 1/6 so short term blue is more likely to win  then in the long term it equalises
+[00:00, 27/05/2024] kejleb: <Media omitted>
+[00:00, 27/05/2024] Emmanuel: This question is actually more complicated than it seems on the surface because it depends largely on how many turns are played
+[00:00, 27/05/2024] Emmanuel: It takes red anywhere between 9 turns (only if 6s are rolled) to 50 turns (only if 1s are rolled) to simply get within range of winning and the probability of it taking any given number of turns isn't evenly distributed
+[00:00, 27/05/2024] Emmanuel: It's only after red has gotten within range of winning that both players have equal chances of winning  provided green hasn't already won up until that point
+[00:00, 27/05/2024] Emmanuel: It's easy to observe that green has a far greater chance of winning overall but calculating the actual probability is pretty complicated  so I went for the easier approach and ran a simulation
+[00:00, 27/05/2024] Emmanuel: <Media omitted>
+[00:00, 27/05/2024] Emmanuel: For those that can't run the script  the tl;dr is green has a ~96.08% probability of winning the game
+[00:00, 29/05/2024] kejleb: The community is full  New group - https://chat.whatsapp.com/I7dwE4HtQWH9moHRKVW9zo
+[00:00, 31/05/2024] Riley (GDG Lead): https://youtu.be/krixaEhLnlA?si=zftjIcY22OcFS3Cj
+[00:00, 31/05/2024] Anjola (Data Lead): Hello  hello DataCamp Learners  you have email!  I just want to add that whatever testimonial you provide will go a long way when it's time for a renewed partnership with DataCamp.  If you want another year of free DataCamp resources as a GDSC Babcock member  please click the link in the email and provide a testimonial.  Thank you 🫶🫶
+[00:00, 01/06/2024] Riley (GDG Lead): https://drive.google.com/drive/folders/1BVXALOFEoH_HVQq1hJk3JkVZWrHlqYlG
+[00:00, 01/06/2024] Riley (GDG Lead): <Media omitted>
+[00:00, 01/06/2024] AO: Thanks gee
+[00:00, 01/06/2024] AO: <Media omitted>
+[00:00, 02/06/2024] Onofiok: <Media omitted>
+[00:00, 02/06/2024] Guy: These are very solid papers. Another solid approach towards learning is to pick a paper that interests you and read/study recursively. You can also use chatgpt  blogs and youtube videos to augment your learning.  I feel ml research is moving too fast to be reading all these old papers in depth. Reading recursively will direct you to only important papers. .
+[00:00, 02/06/2024] Riley (GDG Lead): i usually just copy and paste into chatgpt and tell it to explain it for me most of the time
+[00:00, 02/06/2024] Tobi: Concerning this  I'm actually glad ml research is moving faster than we expected. For the research papers  though  most of the time  it's too complex as @2348101694302 said it's better to use a transformer to break it down.
+[00:00, 02/06/2024] Anjola (Data Lead): Thank you for the tip  wise one
+[00:00, 02/06/2024] Guy: wise one bawo? We are learning from you ma.
+[00:00, 03/06/2024] Abolo (Former Data Lead): Yikes  I actually forgot about this 😅
+[00:00, 03/06/2024] Abolo (Former Data Lead): Hmm  interesting 
+[00:00, 03/06/2024] Abolo (Former Data Lead): @2348101694302
+[00:00, 03/06/2024] Abolo (Former Data Lead): I think It depends though  it doesn't hurt to know how most of these algorithms or concepts work under the hood from the researchers perspective to build a story path   Like you said  the industry is moving too fast so you should probably not take reading these papers as a prereq for getting career ready  but from a research perspective  its great to know the intent and thought process behind these papers
+[00:00, 03/06/2024] Abolo (Former Data Lead): Interesting
+[00:00, 03/06/2024] Abolo (Former Data Lead): Will solve this on paper and get it to you by EOD (in this contexr thats probably midnight)
+[00:00, 03/06/2024] Abolo (Former Data Lead): Here's another hint though   Look at this problem in two layers  1. What are the chances red moves forward  or green moves forward 2. If either of them moves forward  whats the chance that the dice brings them closer to victory
+[00:00, 03/06/2024] Abolo (Former Data Lead): Then another hint  for red to win  both of the pieces need to make it to the bin
+[00:00, 03/06/2024] Guy: If you take a research paper and read recursively you would get a clear view of the story path. For example  I am currently trying to replicate chameleon and suppose I haven’t read any paper before. I would have to read for the language part: llama 2  llama1  gpt 3  RMSNorm  layer norm  batch norm  gpt neo  swiglu  original transformers paper  RNNs  wavenet(convolutions in sequence modeling)  a neural probabilistic language model. For the image part  make a scene  vqgan  gan  vqvae  vae  autoencoders and lenet.  You find out that with this you get a clear view of how the whorl thing progressed. You will miss a few solid papers (for example in this  we missed the vit paper  clip paper) on your first read but if you take like 2 or 3 papers you would have covered almost all you need to cover in that field. .
+[00:00, 03/06/2024] M.Blessed: Sensei spitting!
+[00:00, 03/06/2024] Abolo (Former Data Lead): Hmm  true 🤔💡
+[00:00, 03/06/2024] Abolo (Former Data Lead): Omo  na real sensei
+[00:00, 03/06/2024] Guy: Abeg I dey learn from you and @2348145170886. You people are my role models 🤲🏾
+[00:00, 03/06/2024] kejleb: <Media omitted>
+[00:00, 03/06/2024] Abolo (Former Data Lead): Ahhhhhh
+[00:00, 03/06/2024] Anjola (Data Lead): Ah  please o😭😂
+[00:00, 06/06/2024] Riley (GDG Lead): you forgot about us boss🤲🏾
+[00:00, 06/06/2024] Guy: https://www.datacamp.com/datalab/w/acd60c0c-cd37-48c9-af3f-d7daf9654186  @2348145170886 👨🏾‍🍳. Y’all should check it out.
+[00:00, 06/06/2024] Anjola (Data Lead): 🥹❤️❤️
+[00:00, 07/06/2024] X_L.: Didn't know this thing with depend on public upvote 😐
+[00:00, 07/06/2024] X_L.: https://www.datacamp.com/datalab/w/1a7c748c-683e-4efa-911b-80631408ae1e I would appreciate the upvote
+[00:00, 07/06/2024] Guy: Is this a competition within the community?
+[00:00, 07/06/2024] Guy: If anyone else made submission let’s see. .
+[00:00, 07/06/2024] Anjola (Data Lead): Well  not the gdsc community. The whole of Datacamp   But we gdsc members need to support one another by upvoting so our entries will get to judging stage
+[00:00, 07/06/2024] Emmanuel: https://www.datacamp.com/datalab/w/fa49f60b-f993-411b-926f-e44e25148ebb Same  would appreciate upvotes as well
+[00:00, 07/06/2024] Anjola (Data Lead): Yes please  please if you have a Datacamp account  take out a few seconds to upvote all gdsc Babcock members’ submissions 🥹🫶
+[00:00, 07/06/2024] Guy: Are these the final submissions?
+[00:00, 07/06/2024] Guy: And when is the deadline?
+[00:00, 07/06/2024] Anjola (Data Lead): Yeah
+[00:00, 07/06/2024] Anjola (Data Lead): Submissions are over just voting now
+[00:00, 07/06/2024] Anjola (Data Lead): Deadline for voting is 17th June
+[00:00, 07/06/2024] Guy: Oh nice. One of you should win for us 🤲🏾
+[00:00, 12/06/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 14/06/2024] Anjola (Data Lead): It's almost timeeee  Hope everyone has saved a spot
+[00:00, 14/06/2024] Onofiok: https://gdsc.community.dev/virtual/rooms/IARcd8qM22j8g0iuZhqy/ Please join us here
+[00:00, 14/06/2024] Riley (GDG Lead): Here are resources for getting started with ML on the major cloud platforms  AWS: https://drive.google.com/drive/folders/1LCmuiOBRhs_bPOyj4h84YWz5ZzDr6i9b  Google Cloud Platform: https://drive.google.com/drive/folders/1L1PyiSwPgFp_eTjxT85Rj2moQGu7JziJ  Microsoft Azure: https://drive.google.com/drive/folders/1L7MEy42rtG3rdLwgsqB3JkTZz13dmhot
+[00:00, 14/06/2024] Riley (GDG Lead): https://docs.google.com/presentation/d/1w6j1gxGA2thvYDV2gzKWwIuJ0T5hwbwc_-2_m3WnHFY/edit?usp=sharing  The slides used in today's session if anyone wants to go through them
+[00:00, 26/06/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 29/06/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 29/06/2024] Riley (GDG Lead): gegerege @2348149167007
+[00:00, 29/06/2024] Josh: <Media omitted>
+[00:00, 29/06/2024] KingDeZ✨: Thank you
+[00:00, 30/06/2024] Ryan: <Media omitted>
+[00:00, 02/07/2024] kejleb: <Media omitted>
+[00:00, 04/07/2024] M.I: Hi guys  trust we are all good? There’s a little gig I’ve got  looking for someone to help out on a data project for disease classification.  Price is negotiatiable  but the person is looking to pay about 100k.  Reach out here if interested - +44 7459 893052
+[00:00, 04/07/2024] Shepherd: @2349056498001
+[00:00, 04/07/2024] M.I: Thanks role is closed by the way  someone has gotten it.
+[00:00, 06/07/2024] Imokut: https://medium.com/@akinremibunmi111/my-ml-engineering-journey-insights-challenges-and-lessons-learned-f09cb331cce7  Read this guys
+[00:00, 18/07/2024] Anjola (Data Lead): Hello data fam!
+[00:00, 18/07/2024] Anjola (Data Lead): I hope everyone is doing great :)
+[00:00, 18/07/2024] Anjola (Data Lead): Please let's take a moment to celebrate the member of the month of June @2349014307553 !!!  https://x.com/gdscbabcockdata/status/1813951240407244853
+[00:00, 18/07/2024] luxury.dev: Yes ma'am
+[00:00, 18/07/2024] Anjola (Data Lead): Congratulations @2349014307553 🥳🤩👏
+[00:00, 18/07/2024] Anjola (Data Lead): 🤭
+[00:00, 18/07/2024] chibuzor: Thank You 😊
+[00:00, 18/07/2024] Archie Ubong: Congrats @2349014307553
+[00:00, 18/07/2024] chibuzor: Thanks bro
+[00:00, 18/07/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 18/07/2024] Riley (GDG Lead): boss man🙌🏾  @2349014307553
+[00:00, 18/07/2024] chibuzor: Thanks bro 👊
+[00:00, 18/07/2024] Michael: Congrats man🙌🏽 @2349014307553
+[00:00, 18/07/2024] chibuzor: Thanks 🫂
+[00:00, 03/08/2024] Mide: <Media omitted>
+[00:00, 05/08/2024] kejleb: <Media omitted>
+[00:00, 07/08/2024] Abolo (Former Data Lead): Remote Data Analyst At Wynd Labs*  *Job Location:* Remote *Salary:* $35/hr  _We are seeking a Data Analyst who is analytical and brings substantial experience in data analysis._  *Qualifications:*  - Experience with Redshift. - Basic knowledge of SQL and experience with database querying. - Proficiency in data visualization tools - Strong analytical and problem-solving skills. - Attention to detail and a commitment to data accuracy.  *Apply here:*  https://dixcoverhub.com.ng/remote-data-analyst-at-wynd-labs-2/
+[00:00, 08/08/2024] Mide: <Media omitted>
+[00:00, 09/08/2024] Anjola (Data Lead): https://x.com/gdscbabcockdata/status/1821827614094328293?s=46
+[00:00, 09/08/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 09/08/2024] Anjola (Data Lead): Congrats @2348104244919
+[00:00, 09/08/2024] chibuzor: Congrats @2348104244919 🎊
+[00:00, 09/08/2024] Riley (GDG Lead): congratulations @2348104244919
+[00:00, 09/08/2024] Mide: Thank you Anjola❤️
+[00:00, 09/08/2024] Mide: Thank youuu ☺️
+[00:00, 09/08/2024] Mide: Thank youuu ☺️
+[00:00, 20/08/2024] Ola: Good evening everyone I am currently working on a project on how job satisfaction influence individuals outputs and I am taking a survey Would really appreciate if you can spare your time to answer the questions
+[00:00, 20/08/2024] Ola: https://forms.gle/shc6RU6zkoLAUwFx6
+[00:00, 24/08/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 29/08/2024] Freda: <Media omitted>
+[00:00, 15/09/2024] 🥷: Hey fellow students! 👋 I'm thrilled to announce that I'm now a BLACKBOX AI Student Ambassador at Babcock University! 🎉 As part of this program  I'll be working to bring the power of AI and machine learning to our university community. 💻 And  as a special offer  students can get BLACKBOX AI Premium for FREE when they sign up with their university email address! 📧  With BLACKBOX AI Premium  you'll get access to an amazing range of features  including:  ✨ Unlimited AI Chat: Get instant answers to your questions and engage in conversations with our AI assistant (great for research and citations).  ✨ Unlimited Image Generation: Create stunning images and artwork using our AI-powered generator.  ✨ Unlimited PDF Summarization: Quickly summarize long documents and articles with our AI-driven summarization tool. ✨ Unlimited Youtube Summarization: Get instant summaries of your favorite YouTube videos and podcasts.  ✨ Unlimited Image and Design to Code: Convert your designs into code with our AI-powered design-to-code tool. ✨Exclusive updates on upcoming events  competitions  and gifts. We'll be hosting webinars  hackathons  and other exciting activities. ✨ And many more features! 🤩 Sign up now 👉 www.blackbox.ai and stay updated with upcoming events  competitions  and gifts! 🎁 And join the WhatsApp group for more updates and events 👉 https://chat.whatsapp.com/KScmXvTo24ML3gA8hdT603
+[00:00, 16/09/2024] Anjola (Data Lead): Calling all teachers and students: how to get free DataCamp access for your entire academic career. 👇  No hacks  no tricks. Discover how students and teachers qualify for free DataCamp access  including:  💥 470+ interactive data and AI courses 💥 Premium DataLab Access 💥 Bespoke skill and career tracks 💥 Forbes' #1 ranked data certification program  Please help DataCamp democratize data literacy by sharing this amazing offer with every teacher you know! 📚 Teachers can use this link to apply to DataCamp Classrooms. Apply now: https://ow.ly/QWMs50PCo7i  For the full how-to  check out our blog: https://ow.ly/yOL850PAN1g
+[00:00, 16/09/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 16/09/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 16/09/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 16/09/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 16/09/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 16/09/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 25/09/2024] Anjola (Data Lead): Hey DataCamp Learners  please respond to the poll if you achieved any type of success after using DataCamp for the past year.  Success includes but isn’t limited to:  - Jobs - ⁠internship - ⁠promotions - ⁠school admission - ⁠awards - ⁠placing (1st  2nd  3rd positions) in coding competitions/ hackathons - ⁠Built a dashboard  project - ⁠published a research paper
+[00:00, 25/09/2024] Anjola (Data Lead): POLL: I achieved success after using DataCamp OPTION: Yes (11 votes) OPTION: No (0 votes) 
+[00:00, 25/09/2024] Anjola (Data Lead): Dear DataCamp Learners   Please fill this form to guarantee a renewal of your DataCamp scholarship in the next cohort which starts on October 7th:  https://forms.gle/fgY69JZrAYwwKQicA
+[00:00, 25/09/2024] Emmerick: I need a data analyst willing to do some work for free👀 dm if interested
+[00:00, 25/09/2024] Abolo (Former Data Lead): Yoooo
+[00:00, 25/09/2024] Abolo (Former Data Lead): Whats up guys  Its been a while. How's everyone doing
+[00:00, 25/09/2024] Abolo (Former Data Lead): 💀💀💀
+[00:00, 25/09/2024] Abolo (Former Data Lead): I go rough am 🦅
+[00:00, 25/09/2024] Chibu: 😹😹😹
+[00:00, 26/09/2024] Anjola (Data Lead): Hello *AWSome* friends....  Quick reminder! Just 5 days until applications for AWS ML scholarship close....The scholarship covers full-tuition to help you earn the ML nanodegree from Udacity  as well as free AWS Deep Racer Resources.  Check it out.... https://aws.amazon.com/machine-learning/scholarship/
+[00:00, 01/10/2024] Sharon: <Media omitted>
+[00:00, 03/10/2024] Emmerick: I'm still looking. I'm in need of someone with knowledge of web scraping and EDA
+[00:00, 06/10/2024] Anjola (Data Lead): Hello everyone  how are you today?  I want to reintroduce myself as Anjolaoluwa Ajayi  GDG Babcock Data and AI Lead ‘24/25 :)
+[00:00, 06/10/2024] Chucks: <Media omitted>
+[00:00, 06/10/2024] Chucks: Let’s get it!!
+[00:00, 06/10/2024] Kev: 🥳🥳✨✨
+[00:00, 06/10/2024] Kev: <Media omitted>
+[00:00, 06/10/2024] Winner: <Media omitted>
+[00:00, 06/10/2024] Winner: Yo
+[00:00, 06/10/2024] Kev: Hi guysss . I am Tochi Obuzor   GDG Data and AI co lead   24/25 :)
+[00:00, 06/10/2024] ifeoma: Hello Anjola
+[00:00, 06/10/2024] ifeoma: <Media omitted>
+[00:00, 06/10/2024] Winner: <Media omitted>
+[00:00, 06/10/2024] Chucks: <Media omitted>
+[00:00, 06/10/2024] Winner: <Media omitted>
+[00:00, 06/10/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 06/10/2024] Kev: <Media omitted>
+[00:00, 06/10/2024] ifeoma: <Media omitted>
+[00:00, 06/10/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 06/10/2024] Anjola (Data Lead): Heyy Ifeoma
+[00:00, 06/10/2024] Mide: Yayyyy 🥳🥳🎉
+[00:00, 06/10/2024] Mide: Congratulationsss Anjola 🎉💗
+[00:00, 06/10/2024] Mide: <Media omitted>
+[00:00, 06/10/2024] Mide: <Media omitted>
+[00:00, 06/10/2024] Mide: Congratulationssss🎉😚
+[00:00, 06/10/2024] Anjola (Data Lead): Thank you Midee <33
+[00:00, 06/10/2024] Kev: Thank youuu mide ✨✨
+[00:00, 06/10/2024] Emmerick: Congratulations
+[00:00, 06/10/2024] ifeoma: Congratulations to @2348145170886 and @2347044689303 🥳🥳
+[00:00, 06/10/2024] Zeke: <Media omitted>
+[00:00, 06/10/2024] Zeke: Congratulations Anji 🥳
+[00:00, 06/10/2024] Anjola (Data Lead): Thanks Emmanuel!
+[00:00, 06/10/2024] Anjola (Data Lead): Thanks Ifeoma!
+[00:00, 06/10/2024] Anjola (Data Lead): Thank you Zeeks!
+[00:00, 06/10/2024] Kev: Thank youuu  ifeoma !!
+[00:00, 06/10/2024] chibuzor: Congratulations @2348145170886  and @2347044689303  🎊
+[00:00, 06/10/2024] M.Blessed: Congratulations Anjolaaa!!!!🫶🏿❤️
+[00:00, 06/10/2024] Nsikak: congratulations @2348145170886 and @2347044689303 👏
+[00:00, 06/10/2024] Abolo (Former Data Lead): Congrats @2348145170886 and @2347044689303  This is well deserved 🚀🚀🚀🚀
+[00:00, 06/10/2024] Anjola (Data Lead): Thank you Chibuzor!
+[00:00, 06/10/2024] Anjola (Data Lead): Thanks Blesseddd!🫶<33
+[00:00, 06/10/2024] Anjola (Data Lead): Thank you Nsii!
+[00:00, 06/10/2024] Anjola (Data Lead): Thank you Samuel🙇‍♀️ .
+[00:00, 06/10/2024] Guy: Congrats our ogas @2348145170886 and @2347044689303🚀💪🏾 .
+[00:00, 06/10/2024] Kev: Thankssss Nsikak !!
+[00:00, 06/10/2024] Kev: Thank you Samuel 🚀🚀🚀
+[00:00, 06/10/2024] Onofiok: Congratulations guyssssss  well done. E no easy 🤩🥹
+[00:00, 06/10/2024] Kev: <Media omitted>
+[00:00, 06/10/2024] Kev: My boss !!
+[00:00, 06/10/2024] Kev: Thank you sir !!
+[00:00, 06/10/2024] Kev: Lilly ✨✨✨✨>>>>
+[00:00, 06/10/2024] Kev: Thank youuu Lilly
+[00:00, 06/10/2024] Onofiok: You're welcomeeee
+[00:00, 06/10/2024] Michael: congrats @2348145170886  @2347044689303 🦾
+[00:00, 06/10/2024] Anjola (Data Lead): 🙇‍♀️🙇‍♀️ Thank you Tosinnn
+[00:00, 06/10/2024] Anjola (Data Lead): Thanks mama🤗🤗
+[00:00, 06/10/2024] Anjola (Data Lead): Thank you Michael! <3
+[00:00, 07/10/2024] Kev: Hi everyone!!!  We’re kickstarting this GDG Babcock year in our community with a fresh slate of everything!  1. First  to be recognized as an official member of the community for this year !please kindly fill this form:  https://docs.google.com/forms/d/e/1FAIpQLSdLhYwiiCyaahttjPpz2BMuiA2DPvneazxfzJshrcduFh3dyw/viewform?usp=sf_link  2. Follow us on X (formerly Twitter) and turn on post notifications so you don’t miss out on the interesting tips  insights  and fun going on there:  https://x.com/gdgcbabcockdata  3. Find all our datasets  cheatsheets  research papers  resources  and so on here:  https://drive.google.com/drive/folders/1laDRhY0kr70HZFaxrQqh9oK3WYbsM0ia  4. Read articles written by the members and alumni of our data community here:  https://medium.com/gdsc-babcock-dataverse  5. Contribute your own data related articles/ blogs to our data publication (GDSC Babcock Dataverse) here:  https://medium.com/gdsc-babcock-dataverse/write-for-gdsc-babcock-dataverse-86e90b79d260  6. Apply to be considered to have free access to all of datacamp resources for 1 year:  https://forms.gle/4uvVudeotf5XhuvP7  While waiting to receive your DataCamp scholarship  read this written info session (very important):  https://medium.com/gdsc-babcock-dataverse/data-camp-x-gdsc-babcock-scholarship-a64d6691d603
+[00:00, 11/10/2024] Kev: Hi guys :) .
+[00:00, 11/10/2024] Kev: https://docs.google.com/forms/d/e/1FAIpQLSdLhYwiiCyaahttjPpz2BMuiA2DPvneazxfzJshrcduFh3dyw/viewform?usp=sf_link
+[00:00, 11/10/2024] Kev: Please be reminded to fill out our membership form   if you haven’t done so
+[00:00, 11/10/2024] Kev: <Media omitted>
+[00:00, 11/10/2024] Ikotun: Done
+[00:00, 11/10/2024] Ikotun: <Media omitted>
+[00:00, 12/10/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 12/10/2024] chibuzor: Why are the questions soo much? 😭
+[00:00, 12/10/2024] zee: Real😭🤧🤧
+[00:00, 12/10/2024] Anjola (Data Lead): Ah something that I even reduced😭😂
+[00:00, 12/10/2024] Kev: <Media omitted>
+[00:00, 12/10/2024] KingDeZ✨: 😂🤲🏻
+[00:00, 12/10/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 13/10/2024] Ulenyo: Reapplied!✅☺️
+[00:00, 13/10/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 13/10/2024] Kev: Hii data fam 🙌 https://docs.google.com/forms/d/e/1FAIpQLSdLhYwiiCyaahttjPpz2BMuiA2DPvneazxfzJshrcduFh3dyw/viewform?usp=sf_link  Remember to fill this form 👆🏾  if you’re still interested in being a part of our community .
+[00:00, 13/10/2024] ifeoma: Applied ✅
+[00:00, 16/10/2024] Anjola (Data Lead): Hey Guys  to be recognized as an official member of this year’s GDG Babcock Data and AI Track and enjoy all the good stuff we have planned for you this year  kindly fill the form (if you’re yet to):  https://docs.google.com/forms/d/e/1FAIpQLSdLhYwiiCyaahttjPpz2BMuiA2DPvneazxfzJshrcduFh3dyw/viewform?usp=sf_link  This is the final reminder :)  The form will always be available to fill (check the gc description for it) but if you want to be a core team member  today is the last day to fill the form🫶  Thankyewww
+[00:00, 20/10/2024] Anjola (Data Lead): Heyy Data Family!  If you applied for the DataCamp Donates x GDG Babcock Scholarship  you have mail!  If you're yet to apply/ reapply  you can still apply: https://forms.gle/4uvVudeotf5XhuvP7
+[00:00, 25/10/2024] Sharon: <Media omitted>
+[00:00, 01/11/2024] Anjola (Data Lead): Hey guysss!  How is everyone? How are the midsemesters going?
+[00:00, 01/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 01/11/2024] Anjola (Data Lead): Two things...
+[00:00, 01/11/2024] Believe....: We thank God 🤧
+[00:00, 01/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 01/11/2024] ifeoma: Good We thank God
+[00:00, 01/11/2024] zee: One word Omoohhh
+[00:00, 01/11/2024] Anjola (Data Lead): First  I've been receiving some messages about DataCamp no longer being 'free' for some of you who already received the scholarship...  Well  don't worry.  The thing is we're moving to a new DataCamp group and awaiting more licenses. The core team is gradually sending out invites so it'll reach you soon and DataCamp will be free for you again :)  If you're yet to apply/ reapply for the scholarship  you can still apply: https://forms.gle/4uvVudeotf5XhuvP7
+[00:00, 01/11/2024] nekumartins: view once media
+[00:00, 01/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 01/11/2024] Anjola (Data Lead): 😭😭😭 don't worry it's almost Christmas
+[00:00, 01/11/2024] chibuzor: The leaderboard cleared! My legacy 😭😭
+[00:00, 01/11/2024] zee: We go again this year 💪🏾
+[00:00, 01/11/2024] Anjola (Data Lead): NOOO😭😭 So sorry dearie  you'll climb up again won't ya
+[00:00, 01/11/2024] Anjola (Data Lead): Real  we go harder
+[00:00, 01/11/2024] chibuzor: Than before 💪
+[00:00, 01/11/2024] chibuzor: This year has ended already 😪
+[00:00, 01/11/2024] Anjola (Data Lead): No now  there's still time  November just started
+[00:00, 01/11/2024] Anjola (Data Lead): Second thing...
+[00:00, 01/11/2024] Anjola (Data Lead): We're having our first event this Sunday!🥳🤩
+[00:00, 01/11/2024] Anjola (Data Lead): *Starting/ Transforming your Data Career with GDG Babcock*  This event is majorly an info session for the Data and AI Track. If you're new to the track or to data science/ AI  you should come! If you're not  you should still come :)  We're going to: 1. Break down the differences between Data Science  Data Analysis  Data Engineering  Machine Learning Engineering  and Generative AI. 2. Tell you about the career paths in these fields and how GDG Babcock Data Track will help you get started and become THAT data professional you want to be. 3. Get to meet ourselves in person  Pleeease don't miss our very first event for anything  come with your questions and an open mind :)  📅 Date: Sunday  November 3  2024 🕚 Time: 10 a.m. 📍Venue: BuCodeL room 2 (Subject to change but will be communicated early!)  See you there! .
+[00:00, 01/11/2024] chibuzor: 10am 😭💔
+[00:00, 01/11/2024] ifeoma: <Media omitted>
+[00:00, 01/11/2024] ifeoma: I Sha have mid semester by 2
+[00:00, 01/11/2024] ifeoma: <Media omitted>
+[00:00, 01/11/2024] Anjola (Data Lead): It's not early enough abi🥹
+[00:00, 01/11/2024] chibuzor: I don't even wake up by that time on a Sunday 😭
+[00:00, 01/11/2024] chibuzor: Dyg
+[00:00, 01/11/2024] ifeoma: 6am sharp
+[00:00, 01/11/2024] Anjola (Data Lead): Aww  goodluck dearie <3 Now is it not good that the event is by 10? You start your day with data and still have enough time to prepare for your midsemesters
+[00:00, 01/11/2024] Believe....: Hmm it is ooo🤧
+[00:00, 01/11/2024] Believe....: <Media omitted>
+[00:00, 01/11/2024] Anjola (Data Lead): Just sacrifice the extra sleep hours this one Sunday Chibuzor😭 It'll be worth it  trust me
+[00:00, 01/11/2024] chibuzor: How long would it be?
+[00:00, 01/11/2024] Mide: Not started.😌
+[00:00, 01/11/2024] Anjola (Data Lead): Just a little above 1 hour
+[00:00, 01/11/2024] Anjola (Data Lead): How nice🥹
+[00:00, 01/11/2024] Mide: Well.🫢
+[00:00, 03/11/2024] Anjola (Data Lead): *IT’S TODAY!!!*  *Starting/ Transforming your Data Career with GDG Babcock*  📅 Date: Sunday  November 3  2024 🕚 Time: 10 a.m. 📍Venue: BuCodeL room 2  Pleeease don't miss our very first event for anything  come with your questions and an open mind :)  See you there!
+[00:00, 03/11/2024] Anjola (Data Lead): In less than 2 hours <3
+[00:00, 03/11/2024] ifeoma: <Media omitted>
+[00:00, 03/11/2024] Mide: <Media omitted>
+[00:00, 03/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 03/11/2024] Kev: Hi everyone The venue  is Bucodel room 3 We are waiting for you 🚀
+[00:00, 03/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 03/11/2024] Ismail: Alright we are close by 👀
+[00:00, 03/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 03/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 03/11/2024] Anjola (Data Lead): If you want to contribute to GDG Babcock DataVerse  click here please:  https://medium.com/gdsc-babcock-dataverse/write-for-gdsc-babcock-dataverse-86e90b79d260
+[00:00, 03/11/2024] Onofiok: Well done guys 🤩💖
+[00:00, 03/11/2024] Anjola (Data Lead): Thank you mama
+[00:00, 03/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 03/11/2024] Anjola (Data Lead): All the wonderful feedback you guys gave <3 I hope to see you all in the next event ;)
+[00:00, 03/11/2024] Chibu: Arianaa
+[00:00, 04/11/2024] Anjola (Data Lead): Hey my data family   If you've gotten an invitation email to our new DataCamp group  please accept it if you are yet to and if you have  please start learning on DataCamp (take a course  work on a project  complete the assignment given).  We need a 95% adoption rate for our request for more licenses to be granted. So if you've received your scholarship but aren't actively using it  we may be forced to reassign your license to someone else who will make full use of it.  Thank you  and happy learning!
+[00:00, 04/11/2024] Chibu: <Media omitted>
+[00:00, 04/11/2024] nekumartins: Bye bye to you too
+[00:00, 04/11/2024] Daddy D The Designer: Mistake
+[00:00, 04/11/2024] Daddy D The Designer: <Media omitted>
+[00:00, 10/11/2024] izzy: Hey guys How was our week
+[00:00, 10/11/2024] Believe....: Stressful 🤧
+[00:00, 10/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 10/11/2024] Anjola (Data Lead): *UPDATE ON THE DATACAMP SCHOLARSHIP*  Hi my data family   I come with amazing news. The wait is finally over (for some of you)— Our request for more licenses has been granted!  Please keep an eye out for an invitation email to join our new DataCamp group anytime from Wednesday :)  And you know what to do  when you get access to all of DataCamp  please use it  use it  USE IT.  P.S. Thank you to all my amazing data campers that helped us reach a 95% adoption rate.
+[00:00, 11/11/2024] Anjola (Data Lead): Hi my data family!
+[00:00, 11/11/2024] Anjola (Data Lead): Can we all look at this scenario:  The university has built a model that classifies students as 'at risk' and 'not at risk' of failing based on their CA and historical data of previous sets. But their model is performing poorly because many of the students who were classified as 'not at risk' eventually failed... they've called you to improve their model before the next academic year.
+[00:00, 11/11/2024] Anjola (Data Lead): Which classification metric will you prioritize to improve the model?
+[00:00, 11/11/2024] Anjola (Data Lead): If you've not learnt about classification metrics  you can read this and attempt my question:  https://developers.google.com/machine-learning/crash-course/classification/accuracy-precision-recall
+[00:00, 11/11/2024] Anjola (Data Lead): POLL: Which classification metric will you prioritize to improve the model? OPTION: Accuracy (0 votes) OPTION: Recall (6 votes) OPTION: Precision (0 votes) OPTION: FPR (2 votes) 
+[00:00, 11/11/2024] Anjola (Data Lead): If you've voted on the poll  please don't be shy  feel free to shed more light on why you chose your option :)
+[00:00, 11/11/2024] chibuzor: I picked recall because it's the only metric I know here that makes use of the false negatives
+[00:00, 11/11/2024] Smile: Well...Recall because it focuses on the model's ability to correctly identify true positive cases....in other words accurately classifying students who are actually at the risk of failing... But this will result in a trade-off  with precision.
+[00:00, 16/11/2024] Anjola (Data Lead): Hey guys  sorry I disappeared on you all after starting a discussion😭😂
+[00:00, 16/11/2024] Anjola (Data Lead): I can see most people picked recall  while some others picked FPR which stands for false positive rate.  So  I'll respond to the people who gave further context to their chosen answers and explain my own answer and why I feel other options aren't as correct as mine.
+[00:00, 16/11/2024] Anjola (Data Lead): Interesting take  your perspective in itself is fantastic but you should try to link it to the real world problem at hand  what does false negatives represent in that scenario? And how does recall 'make use of false negatives' to solve the problem? What does recall tell you about your model in general?  TL;DR  link your explanation to the problem
+[00:00, 16/11/2024] Anjola (Data Lead): Nice  it's good how you circled back to the scenario. Just that when you say 'correctly identify true positive cases'  it sounds like the explanation of precision.  Precision tries to make sure that all cases marked as positive by the model are truly positive  in other words correctly identifying true positives.  But recall on the other hand tries to identify all true positive cases  correctly  yes  but it doesn't really care if they're al correct  as long as all existing positive cases are identified  it's good to go.  And that's why it'll result in a trade off with precision because if 10 out of 100 are truly positive  and the model says 50 (including the 10) are positive  the recall will be 100% because the model was able to identify all cases. But precision will be way lower (20%) because majority of the cases flagged as positive by the model were actually not positive.  Generally  good perspective  I think the missing keyword is just 'all'.  TL;DR  Recall focuses on the model's ability to correctly identify ALL true positive cases that exist.
+[00:00, 16/11/2024] Anjola (Data Lead): Having said this  I guess we can all agree recall is the metric to optimize for because the school wants to identify ALL students who are at risk.  Their greatest pain point is 'not being able to detect the risk before failure happens'. So  even if they have to provide counsel or whatnot to more students  including students who aren't actually at risk (false positive)  it's better than missing some students who are at risk (false negative).  So as Chibuzor rightly pointed out  we need a metric that will make the model minimize false negatives.  And @2348057342230 mentioned  we still can't overlook the tradeoff between recall and precision because let's be real  if the school isn't trying to reduce the number of students they need to give special counsel to  they won't need a model  they might as well just assume every student is at risk and give them counsel or whatever but that's not the case. They want to identify a (few) select students that truly need this extra attention so that they wouldn't fail...  So... in the real world  we should aim for a model that actually understands the pattern between CA and final grade. But for this scenario  given the constraints and the school's painpoint of missing students who are actually at risk  recall is what should be prioritized.
+[00:00, 16/11/2024] Anjola (Data Lead): Thank you all for not snubbing my poll😂🫶
+[00:00, 16/11/2024] Anjola (Data Lead): Now  over to today's matter :)  I bring TWO amazing news to my data family (you all) tonight.
+[00:00, 16/11/2024] Anjola (Data Lead): First  as promised  DataCamp is now free for the people who applied for the scholarship!  We sent out your invitation email this week.  If you've not accepted your invitation to the GDGoC Babcock DataCamp group  please do so! Check all your email folders please  spam  promotion  social  etc...  If you've accepted your invitation but haven't started using DataCamp  please START! Take a course  do an exercise or project  you know...  Be committed to your data journey  make time for DataCamp <3
+[00:00, 16/11/2024] Anjola (Data Lead): Second  we're having another event tomorrow! But after the numerous complaints about the timing of the last event  we've decided to make tomorrow's own an evening thing :)
+[00:00, 16/11/2024] Anjola (Data Lead): *Workshop: How to Read and Implement ML Research Papers*  📅 Date: Sunday  November 17  2024 🕚 Time: 6 p.m. 📍Venue: BuCodeL room 3  As you may know  our field is a research field. Every day  something new comes up and people often write papers about new ML and AI techniques. So it's absolutely important to be able to understand and actually implement these ML papers.  Come around tomorrow to learn how to do this!  *Hands on sessions:* This will happen after the session on research papers. Each hands on session will go on at the same time  so you can only be in one.  *Data Engineering:* build an ETL pipeline or scraper to scrape data online. *Data Science and Analysis:* Analyze data using your preferred tools (SQL  Power BI  or Python) and give a brief presentation on it. *ML Engineering:* Build a machine learning pipeline that automates the ML workflow.  *SEE YOU TOMORROW!*
+[00:00, 17/11/2024] Anjola (Data Lead): *IT'S HAPPENING IN LESS THAN 1 HOUR!!!*  *Workshop: How to Read and Implement ML Research Papers*  📅 Date: Sunday  November 17  2024 🕚 Time: 6 p.m. 📍Venue: BuCodeL room 3  As you may know  our field is a research field. Every day  something new comes up and people often write papers about new ML and AI techniques. So it's absolutely important to be able to understand and actually implement these ML papers.  Come around tomorrow to learn how to do this!  Hands on sessions: This will happen after the session on research papers. Each hands on session will go on at the same time  so you can only be in one.  Data Engineering: build an ETL pipeline or scraper to scrape data online. Data Science and Analysis: Analyze data using your preferred tools (SQL  Power BI  or Python) and give a brief presentation on it. ML Engineering: Build a machine learning pipeline that automates the ML workflow.  SEE YOU SOON!
+[00:00, 17/11/2024] Anjola (Data Lead): Bring your laptop guys
+[00:00, 17/11/2024] Anjola (Data Lead): Pass the front door
+[00:00, 17/11/2024] Kenjaku: Sorry I won't be able to make it
+[00:00, 17/11/2024] Anjola (Data Lead): Inform the security you’re coming for GDG Babcock Data Study jam please
+[00:00, 17/11/2024] Mide: Omll  I’m just seeing this😭 At the monthly prayer.🥹
+[00:00, 17/11/2024] Anjola (Data Lead): Aww  okay
+[00:00, 17/11/2024] Anjola (Data Lead): We’re waiting for you guys
+[00:00, 17/11/2024] Anjola (Data Lead): It’s time :)
+[00:00, 17/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/11/2024] Anjola (Data Lead): This is the paper we're using
+[00:00, 17/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/11/2024] Oba: https://prodigy-ds-3.vercel.app/   Link to the data analytics project
+[00:00, 17/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/11/2024] Anjola (Data Lead): GitHub link if you want to contribute:  https://github.com/lifewjola/salary-prediction-app
+[00:00, 17/11/2024] Mide: hey! can I text you pls? I missed today's meeting
+[00:00, 17/11/2024] Anjola (Data Lead): Yes of course!
+[00:00, 17/11/2024] Mide: @2349073287098 this was for you.🫢
+[00:00, 17/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 17/11/2024] Mide: sorrryyyy😭😂
+[00:00, 17/11/2024] Anjola (Data Lead): Hey guys  if you opted in for the GDG Babcock mentorship program  kindly check your email for a message from your mentor and respond if you’re yet to please🙏🫶   Check all folders - spam  primary  promotion  etc.
+[00:00, 20/11/2024] Sharon: <Media omitted>
+[00:00, 22/11/2024] Sharon: <Media omitted>
+[00:00, 23/11/2024] Anjola (Data Lead): Hey guysss  happy weekend!  We recently added a new field to our membership form  we need your *nickname* (what you prefer to be called) and *phone number* (WhatsApp number) please so we can know ourselves better...  So  if you previously filled the membership form  please kindly edit your response by adding your nickname and phone number.  Membership form: https://docs.google.com/forms/d/e/1FAIpQLSdLhYwiiCyaahttjPpz2BMuiA2DPvneazxfzJshrcduFh3dyw/viewform?usp=sf_link  It takes only a few seconds  please.  If you've not filled it before but you are part of us this year  kindly do so now  thank youuuu a bunch.
+[00:00, 29/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 29/11/2024] M.Blessed: <Media omitted>
+[00:00, 29/11/2024] Riley (GDG Lead): <Media omitted>
+[00:00, 29/11/2024] Anjola (Data Lead): *So you Want to Be a Data Professional?* ~A Data and AI study jam event  📆 Date: Sunday  December 1  2024 🕚 Time: 10 a.m. 📍Venue: BuCodeL room 3  Join us on Sunday for a session packed with: - Data career advice - ⁠Mistakes to avoid while starting out your data career. - ⁠Essential skills (beyond technical skills) for success in your chosen data path.   *Breakout sessions:* - Data Exploratory and Preprocessing Techniques - Concept and evaluation of ML with practical examples - Building a RAG application with Langchain - Data Modeling Techniques
+[00:00, 29/11/2024] Anjola (Data Lead): Save the date and set your reminders!!!🤩
+[00:00, 29/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 29/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 29/11/2024] Ulenyo: <Media omitted>
+[00:00, 29/11/2024] Anjola (Data Lead): Hello dear  we moved to a new DataCamp group and the applications were reviewed with some new criteria.  So two things  check for another invitation email in case you got accepted again  if you didn’t  your application probably didn’t meet the new requirements and you’ll need to re-apply.
+[00:00, 29/11/2024] Anjola (Data Lead): Speaking of the GDG Babcock X DataCamp Donates Scholarship…  Please if you applied and got accepted into the new group  kindly accept your invitation and if you have accepted your invitation  kindly start using DataCamp by taking a course or doing a project.  Please guys  do these things before Sunday or we might have to withdraw your license and give it to someone else who would use it🥹🙏❤️
+[00:00, 29/11/2024] izzy: @2348123400527 @2349067073238 @2349014307553 @2348098618219 @2348028670086 @2348121824455 @2348057342230 @2348149167007 @2349073739338 @2348086673100 @2349023094110 @2348146282883 Y’all should try and make it 🤲🏾
+[00:00, 30/11/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 01/12/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 01/12/2024] Kev: https://www.kaggle.com/code/ddosad/spam-email-classifier
+[00:00, 01/12/2024] Kev: the dataset for today
+[00:00, 02/12/2024] Favourrr: Read “Sphinx: Easy documentation for your python projects“ by Obuzortochi on Medium: https://medium.com/gdsc-babcock-dataverse/sphinx-easy-documentation-for-your-python-projects-f8a413e3441e
+[00:00, 02/12/2024] Favourrr: Read “5 Free Ways to Get Data for Your Data Science and ML Projects“ by Anjolaoluwa Ajayi on Medium: https://medium.com/gdsc-babcock-dataverse/5-free-ways-to-get-data-for-your-data-science-and-ml-projects-6249a9b8e6fb
+[00:00, 02/12/2024] Favourrr: Read “Why Python Is More Widely Used Than R“ by Obalabi adepoju on Medium: https://medium.com/gdsc-babcock-dataverse/why-python-is-more-widely-used-than-r-166f38224034
+[00:00, 02/12/2024] Favourrr: Read “Top 5 Generative AI Libraries for Python Beginners“ by Oluwatunmibi Favour on Medium: https://medium.com/gdsc-babcock-dataverse/top-5-generative-ai-libraries-for-python-beginners-4beab230b9b5
+[00:00, 02/12/2024] M.Blessed: Love this👏🏿👏🏿 Concise  informative and really helpful.
+[00:00, 02/12/2024] Favourrr: Good morning everyone.  These are some of the latest submissions to the GDG Dataverse and just like our lead @2348145170886 always says  everyone is encouraged to write!  So please  if you have any idea or any topic to write about  write it!  If you encounter any issue submitting your article for review to the GDG Dataverse medium publication  don't hesitate to reach out to me🫶🏽  Also  engage the already published articles to encourage the writers✨ .
+[00:00, 04/12/2024] Freda: Hi everyone! 👋  I’m conducting a quick survey (5–10 minutes) to gather insights from data professionals like data analysts  engineers  scientists  and business analysts. The survey focuses on understanding the challenges we face in our field  particularly when working with e-commerce  marketing  and sales data.  Your input will help highlight common hurdles and explore ways to improve workflows and solutions across the data community.  Here’s the survey link: https://s.surveyplanet.com/uoy5wr9g   Your participation is greatly appreciated! Feel free to share this with others who might want to contribute. Thank you for your time and expertise! 🙏
+[00:00, 07/12/2024] D: <Media omitted>
+[00:00, 23/12/2024] Kev: 🚀 *Contribute to _DIY Analytics_ - GDG Babcock Data and AI Open-Source Project!*  Hi everyone!  Season greetings to us all ✨  DIY Analytics  our Data & AI Community Project is open for contributions.  DIY Analytics is a no-code tool for analyzing and visualizing data using 'natural language' and drag-drop-click features. All you have to do is upload a dataset!! How interesting that is!  You can try out the current version here: https://diy-analytics.streamlit.app/  *CONTRIBUTE TO THE DEVELOPMENT OF THE TOOL* Whether you’re fixing bugs  adding features  or improving documentation  your input is welcome!  For example  you may notice the platform currently only works with CSV file  you can add a feature so that it will be able to process Excel  json  and many other file formats. Cool  right?  You can raise issues for necessary suggestions.  *PREREQUISITES* To contribute seamlessly  knowledge on the following will be helpful; - Git and GitHub - Python Programming and useful libraries such as: Pandas for data manipulation  Streamlit for the interface - Prompt engineering & LLMs  *BENEFITS* What's in it for you? - Become an open source contributor - Earn GDG Babcock Open source contribution to data and AI certificate - A unique portfolio project that will help you stand out - GDG Babcock Community recognition and appreciation  All members who makes a contribution between now and 3rd of March 2025 will be eligible for all the benefits.  What are you waiting for? Contribute to DIY Analytics now 👉 https://github.com/GDGBabcockUniversity/ds-ml-ai-track/tree/main/diy-analytics
+[00:00, 23/12/2024] Anjola (Data Lead): <Media omitted>
+[00:00, 23/12/2024] Anjola (Data Lead): If you need more guidance on how to contribute  please refer to the README file:  https://github.com/GDGBabcockUniversity/ds-ml-ai-track/blob/main/diy-analytics/README.md
+[00:00, 23/12/2024] Kev: <Media omitted>
