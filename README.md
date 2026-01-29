@@ -1,6 +1,8 @@
-# Nexus 🧠
+<p align="center">
+  <img src="media/Nexus Logo.png" alt="Logo" width="200" />
+</p>
 
-**AI-Powered Chat Topic Disentanglement & Analysis**
+# Nexus 🧠 - **AI-Powered Chat Topic Disentanglement & Analysis**
 
 Nexus is a local web application that turns chaotic linear group chats into structured, navigable topics. You upload a WhatsApp chat exports, and Nexus automatically splits the conversation into **topics (threads)**. You can then browse topics, read summaries, and switch between a full timeline view and a focused topic view.
 
