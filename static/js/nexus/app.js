@@ -1,39 +1,65 @@
+/**
+ * Nexus Frontend Controller
+ *
+ * This module manages the Single Page Application (SPA) logic for Nexus.
+ * It handles:
+ * 1. State Management (Active chat, current topic, viewing mode).
+ * 2. API Communication (Polling jobs, fetching chats/messages).
+ * 3. DOM Manipulation (Rendering message lists, handling scroll).
+ * 4. User Interactions (Right-click menus, settings, search).
+ */
+
+/**
+ * Global UI State
+ * Acts as the single source of truth for the interface.
+ */
 const state = {
     activeChatId: null,
     activeChatName: null,
 
+    // Current View Mode: 'focus' (Topic-based) or 'timeline' (Chronological)
     mode: "focus",
     activeTopicId: null,
 
-    // Timeline paging (from the bottom)
+    // Timeline paging (Infinite scroll from the bottom up)
     timelineLimit: 80,
     timelineOffset: 0,
     timelineMessages: [],
     timelineHasMore: false,
 
-    // Focus gaps expansion: key "a|b" -> array of messages between
+    // Focus gaps expansion: Maps "msgIdA|msgIdB" -> [Messages in between]
+    // Used to un-collapse messages in Focus Mode.
     expandedBetween: {},
 
+    // Cache to prevent UI flickering during tab switches
     cachedTopics: [],
     cachedChats: [],
+
+    // Search State
     isSearching: false,
-    lastMode: "focus",
+    lastMode: "focus", // To restore view after closing search
     searchMinThreadSim: 0.10,
     searchMinMsgSim: 0.25,
     searchTopThreads: 5,
     searchTopMsgsPerThread: 5
 };
 
+// ----------------------------------------------------------------------------
+// DOM & Math Helpers
+// ----------------------------------------------------------------------------
+
 function $(id) {
     return document.getElementById(id);
 }
 
+/** Clamps a number between 0 and 1 (for similarity scores) */
 function clamp01(x) {
     x = Number(x);
     if (!Number.isFinite(x)) return 0;
     return Math.max(0, Math.min(1, x));
 }
 
+/** Clamps an integer between low and high (for limit settings) */
 function clampInt(x, lo, hi, fallback) {
     const v = parseInt(x, 10);
     if (!Number.isFinite(v)) return fallback;
@@ -44,6 +70,14 @@ function refreshSearchSettingsHint() {
     // Settings are now in the overlay, no hint to update
 }
 
+// ----------------------------------------------------------------------------
+// Settings & Configuration Logic
+// ----------------------------------------------------------------------------
+
+/**
+ * Initializes the Search Settings sliders in the Settings Overlay.
+ * Syncs values between LocalStorage, State, and DOM elements.
+ */
 function initSearchSettings() {
     const t = $("minThreadSim");
     const m = $("minMsgSim");
@@ -104,6 +138,10 @@ function initSearchSettings() {
     });
 }
 
+/**
+ * Initializes Buffer/Pending size sliders.
+ * These are dynamic per-chat, so they fetch config from backend on load.
+ */
 async function initBufferSettings() {
     const bufferSize = $("bufferSizeLimit");
     const pendingSize = $("pendingSizeLimit");
@@ -172,6 +210,10 @@ async function initBufferSettings() {
     };
 }
 
+/**
+ * Manually forces the buffered messages to be processed (clustered),
+ * regardless of whether the buffer limit has been reached.
+ */
 async function flushCurrentChat() {
     if (!state.activeChatId) {
         alert("No chat is currently active.");
@@ -224,6 +266,10 @@ async function flushCurrentChat() {
     }
 }
 
+/**
+ * Destructive action: Wipes all threads and reclusters the entire chat from scratch.
+ * Used when the topic model has degraded or the user wants a fresh start.
+ */
 async function reclusterAll() {
     if (!state.activeChatId) {
         alert("No chat is currently active.");
@@ -275,6 +321,12 @@ async function reclusterAll() {
     }
 }
 
+/**
+ * Generic polling function for long-running jobs (Upload, Recluster).
+ * @param {string} jobId - The backend job ID.
+ * @param {number} intervalMs - Polling frequency.
+ * @param {function} onUpdate - Callback for UI updates during poll.
+ */
 async function pollJobUntilDone(jobId, intervalMs = 500, onUpdate = null) {
     while (true) {
         const job = await apiGet(`/api/jobs/${encodeURIComponent(jobId)}`);
@@ -302,6 +354,10 @@ setRightCollapsed(localStorage.getItem("nexus:rightCollapsed") === "1");
 
 $("rightCollapseBtn").onclick = () => setRightCollapsed(true);
 $("rightExpandBtn").onclick = () => setRightCollapsed(false);
+
+// ----------------------------------------------------------------------------
+// API Utilities
+// ----------------------------------------------------------------------------
 
 function esc(s) {
     return String(s ?? "")
@@ -378,7 +434,7 @@ function setJobUI({stage, progress, detail, error, status}) {
     $("closeOverlay").disabled = !(status === "done" || status === "error");
 }
 
-// Deterministic color per username
+/** Deterministic color generator based on username hash */
 function userColor(name) {
     if (!name) return "var(--text)";
     let h = 0;
@@ -516,14 +572,23 @@ async function loadUsers() {
         users.map(u => `<option value="${esc(u)}">${esc(u)}</option>`).join("");
 }
 
-// -----------------------------
-// Render messages WhatsApp-like:
-// - chronological order
-// - date separators
-// - system notifications centered
-// - name color per user
-// - newest at bottom (scroll down)
-// -----------------------------
+// ----------------------------------------------------------------------------
+// Core Rendering Logic (Message List)
+// ----------------------------------------------------------------------------
+
+/**
+ * Renders a list of messages into the Main View (#content).
+ *
+ * Capabilities:
+ * - Chronological sorting (implicit in input).
+ * - Date separators ("Yesterday", "12/01/2024").
+ * - System notification styling.
+ * - Topic Pills (visual indicators of thread assignment).
+ * - "Load Older" button for pagination.
+ *
+ * @param {Array} messages - The message objects.
+ * @param {Object} opts - Options: showTopicPills, prependLoadOlder, loadOlderHandler.
+ */
 function renderMessageList(messages, opts) {
     const {
         showTopicPills = false,
@@ -605,7 +670,10 @@ function scrollToBottom() {
     c.scrollTop = c.scrollHeight;
 }
 
-// Helper: Scroll to message and flash it
+/**
+ * Scrolls a specific message into view and applies a CSS flash animation.
+ * Used when jumping to a message from Search or Gap Expansion.
+ */
 function scrollToMessage(mid, doFlash = true) {
     setTimeout(() => {
         const el = document.getElementById(`msg_${mid}`);
@@ -629,6 +697,14 @@ function scrollToMessage(mid, doFlash = true) {
     }, 50);
 }
 
+// ----------------------------------------------------------------------------
+// Scroll Anchoring (Crucial for Timeline/Focus switching)
+// ----------------------------------------------------------------------------
+
+/**
+ * Captures the message currently at the top of the user's viewport.
+ * Used to restore reading position when switching modes or loading older messages.
+ */
 function captureScrollAnchor() {
     const c = $("content");
     if (!c) return null;
@@ -655,6 +731,7 @@ function captureScrollAnchor() {
     };
 }
 
+/** Restores the scroll position to the captured anchor message. */
 function restoreScrollAnchor(anchor) {
     if (!anchor) return;
     const c = $("content");
@@ -742,6 +819,7 @@ async function loadFocus(topicId, maintainPosition = false) {
         }
     }
 
+    // Process messages and inject gaps/expanded content
     for (let i = 0; i < focus.length; i++) {
         const m = focus[i];
         pushDateIfNeeded(m.timestamp);
@@ -755,11 +833,13 @@ async function loadFocus(topicId, maintainPosition = false) {
                 const key = `${a.id}|${b.id}`;
                 const expanded = state.expandedBetween[key];
                 if (expanded && expanded.length) {
+                    // Render expanded messages (dimmed)
                     for (const x of expanded) {
                         pushDateIfNeeded(x.timestamp);
                         items.push({type: "msg", msg: x, dim: true});
                     }
                 } else {
+                    // Render "Uncollapse" button
                     items.push({type: "gap", from: a.id, to: b.id, count: gap});
                 }
             }
@@ -845,6 +925,10 @@ async function loadFocus(topicId, maintainPosition = false) {
 // -----------------------------
 // Mode switching
 // -----------------------------
+/**
+ * Switches the main view between 'focus' (single topic) and 'timeline' (chronological).
+ * Handles scroll anchor preservation so user doesn't lose their place.
+ */
 setMode = async function (mode) {
     if (mode !== "focus" && mode !== "timeline") return;
 
